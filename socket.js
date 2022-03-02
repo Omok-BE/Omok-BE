@@ -21,6 +21,7 @@ function countRoom(roomName){
   return io.sockets.adapter.rooms.get(roomName)?.size
 }
 
+let theRoom; // 접속한 방
 io.on("connection", (socket) => {
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
@@ -30,6 +31,7 @@ io.on("connection", (socket) => {
 
     socket.on("enterRoomPlayer", async (roomName) => {                            // 플레이어로 방 입장시
       const state = "player"
+      theRoom = roomName;
       socket.join(roomName)                                                       // 방 이름 지정
       socket.join(state)                                                         // status 지정
       const playerCnt = countRoom(state)                                         // 플레이어 Cnt
@@ -39,6 +41,7 @@ io.on("connection", (socket) => {
     });
   
     socket.on("enterRoomObserver", async (roomName) => {                            // 관전자로 방 입장시
+      theRoom = roomName;
       const state = "observer"
       socket.join(roomName)                                                       // 방 이름 지정
       socket.join(state)                                                         // status 지정
@@ -53,8 +56,15 @@ io.on("connection", (socket) => {
         socket.to(roomName).emit("chat", data); // 방에 있는 모든 사람에게 메시지 전송
     });
     
-    socket.on("disconnecting", () => {                                                 // 방 퇴장시
-        socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname));  // 방에 bye 전달 
+    socket.on("disconnecting", () => {                                         // 방 퇴장시
+      socket.to(theRoom).emit("bye", socket.nickname)                          // 방에 bye 전달
+      if(socket.rooms.has("player")){                                          // 나가는 사람이 플레이어라면
+        const playerCnt = countRoom("player") -1                               // 플레이어 한명 나가면 -1
+        await Rooms.updateOne({ roomName }, { $set: { playerCnt }})            // 실시간 업데이트
+      } else {                                                                 // 나가는 사람이 관전자면
+        const observerCnt = countRoom("observer") -1
+        await Rooms.updateOne({ roomName }, { $set: { observerCnt }})
+      }
     })
 
   });
