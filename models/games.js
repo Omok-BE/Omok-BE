@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const gamesSchema = new mongoose.Schema({
-    roomNum: Number,
+    gameNum: Number,
+    gameName: String,
     black: Array,
     white: Array,
     blackTeam: Array,
