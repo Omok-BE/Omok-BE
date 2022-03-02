@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
       socket.join(state)                                                         // status 지정
       const playerCnt = countRoom(state)                                         // 플레이어 Cnt
       await Rooms.updateOne({ roomName }, { $set: { playerCnt }})                 // 방 playerCnt 업데이트
-      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, status: true })  // 유저 정보 조회
+      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })  // 유저 정보 조회
       socket.to(roomName).emit("welcome", socket.nickname, userInfo)              // 채팅창에 입장 알림
     });
   
@@ -44,7 +44,7 @@ io.on("connection", (socket) => {
       socket.join(state)                                                         // status 지정
       const observerCnt = countRoom(state)                                         // 플레이어 Cnt
       await Rooms.updateOne({ roomName }, { $set: { observerCnt }})                 // 방 playerCnt 업데이트
-      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, status: true })  // 유저 정보 조회
+      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })  // 유저 정보 조회
       socket.to(roomName).emit("welcome", socket.nickname, userInfo)              // 채팅창에 입장 알림
     });
 
