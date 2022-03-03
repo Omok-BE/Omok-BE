@@ -21,7 +21,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.use("/", [usersRouter]);
-app.use("/", [lobbyRouter]);
+app.use("/", [usersRouter, lobbyRouter]);
 
 module.exports = app;
