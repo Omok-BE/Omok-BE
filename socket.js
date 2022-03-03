@@ -17,7 +17,7 @@ instrument(io, {
 });
 
 
-// 대기실 socket
+// 대기실 socket 시작
 const waitingRoom = io.of('/waiting')
 let theRoom; // 접속한 방
 // 방 참가 인원 카운트 함수
@@ -54,7 +54,25 @@ waitingRoom.on("connection", (socket) => {
       socket.to(roomName).emit("welcome", socket.nickname, userInfo)              // 채팅창에 입장 알림
     });
 
-    socket.on("chat", (roomName, chat) => {                // 메시지 전송시    
+    socket.on("changeToPlayer", async (player) => {        // 관전자에서 플레이어로 변경
+      const previousTeam = "observer"
+      socket.leave(previousTeam)                           // 관전자 팀에서 나옴
+      socket.join(player)                                  // 플레이어 팀으로 들어감
+      const playerCnt = waitingRoomCount(player)           // 대기실 내의 플레이어 카운트
+      const observerCnt = waitingRoomCount(previousTeam)   // 대기실 내의 관전자 카운트
+      await Rooms.updateMany({ roomName: theRoom }, { $set: { playerCnt, observerCnt }})  // 대기실 내의 플레이어, 관전자 숫자 최신화
+    })
+
+    socket.on("changeToObserver", async (observer) => {        // 관전자에서 플레이어로 변경
+      const previousTeam = "player"
+      socket.leave(previousTeam)                               // 플레이어 팀에서 나옴
+      socket.join(observer)                                    // 관전자 팀으로 들어감
+      const playerCnt = waitingRoomCount(previousTeam)         // 대기실 내의 플레이어 카운트
+      const observerCnt = waitingRoomCount(observer)           // 대기실 내의 관전자 카운트
+      await Rooms.updateMany({ roomName: theRoom }, { $set: { playerCnt, observerCnt }})  // 대기실 내의 플레이어, 관전자 숫자 최신화
+    })
+
+    socket.on("chat", (roomName, chat) => {                // 메시지 전송시 // 나중에 theRoom으로 교체하자
         const data = { nickname: socket.nickname, chat } 
         socket.to(roomName).emit("chat", data); // 방에 있는 모든 사람에게 메시지 전송
     });
