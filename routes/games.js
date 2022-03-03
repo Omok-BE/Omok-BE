@@ -7,16 +7,19 @@ const Games = require('../models/games')
 router.post('/game/userInfo', async (req, res) => {
     try {
         const { blackTeam, whiteTeam, roomNum} = req.body;
-        const room = await Rooms.findOne({ roomNum })
+        const state = "게임중"
+        await Rooms.updateOne({ roomNum }, { set: { state }});
+
+        const room = await Rooms.findOne({ roomNum });
         await Games.create({
             gameNum: roomNum,
             gameName: room.Name,
             blackTeam,
             whiteTeam,
         });
-        res.json({ ok: true })
+        res.json({ ok: true });
     } catch(error) {
-        res.status(400).json({ ok: false })
+        res.status(400).json({ ok: false });
     }
 })
 
