@@ -6,6 +6,7 @@ require("dotenv").config();
 connect();
 
 const usersRouter = require("./routes/users");
+const lobbyRouter = require('./routes/lobby');
 
 const requestMiddleware = (req, res, next) => {
   console.log("Request URL:", req.originalUrl, " - ", new Date());
@@ -21,5 +22,6 @@ app.use(cors({
 }));
 
 app.use("/", [usersRouter]);
+app.use("/", [lobbyRouter]);
 
 module.exports = app;
