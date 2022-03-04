@@ -4,9 +4,9 @@ const Rooms = require('../models/rooms');
 const Games = require('../models/games')
 
 //대기실 => 게임방 입장시 게임방 생성
-router.post('/game/userInfo', async (req, res) => {
+router.post('/game/create', async (req, res) => {
     try {
-        const { blackTeam, whiteTeam, roomNum} = req.body;
+        const { roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver} = req.body;
         const state = "게임중"
         await Rooms.updateOne({ roomNum }, { set: { state }});
 
@@ -14,8 +14,10 @@ router.post('/game/userInfo', async (req, res) => {
         await Games.create({
             gameNum: roomNum,
             gameName: room.Name,
-            blackTeam,
-            whiteTeam,
+            blackTeamPlayer,
+            blackTeamObserver,
+            whiteTeamPlayer,
+            whiteTeamObserver
         });
         res.json({ ok: true });
     } catch(error) {
