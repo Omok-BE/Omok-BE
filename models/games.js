@@ -5,8 +5,10 @@ const gamesSchema = new mongoose.Schema({
     gameName: String,
     black: Array,
     white: Array,
-    blackTeam: Array,
-    whiteTeam: Array,
+    blackTeamPlayer: String,
+    blackTeamObserver: Array,
+    whiteTeamPlayer: String,
+    whiteTeamObserver: Array,
 });
 
 module.exports = mongoose.model('Games', gamesSchema)
