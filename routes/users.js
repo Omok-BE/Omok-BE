@@ -77,6 +77,10 @@ router.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, 'my-secret-key');
+        //user state값 online으로 만들어주는거
+        if(token){
+            await User.updateOne({ id: user.id }, {$set: { state: "online"}})
+        }
         res.send({
             token,
             ok: true,
