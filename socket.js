@@ -61,6 +61,7 @@ waitingRoom.on("connection", (socket) => {
       const playerCnt = waitingRoomCount(player)           // 대기실 내의 플레이어 카운트
       const observerCnt = waitingRoomCount(previousTeam)   // 대기실 내의 관전자 카운트
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})  // 대기실 내의 플레이어, 관전자 숫자 최신화
+      socket.to(roomNum).emit("moveToPlayer", socket.nickname)
     })
 
     socket.on("changeToObserver", async (observer) => {        // 관전자에서 플레이어로 변경
@@ -70,6 +71,7 @@ waitingRoom.on("connection", (socket) => {
       const playerCnt = waitingRoomCount(previousTeam)         // 대기실 내의 플레이어 카운트
       const observerCnt = waitingRoomCount(observer)           // 대기실 내의 관전자 카운트
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})  // 대기실 내의 플레이어, 관전자 숫자 최신화
+      socket.to(roomNum).emit("moveToObserver", socket.nickname)
     })
 
     socket.on("chat", (chat) => {                // 메시지 전송시 // 나중에 theRoom으로 교체하자
