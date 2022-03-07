@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Rooms = require('../models/rooms');
 const Games = require('../models/games')
+const Users = require('../models/users');
+const games = require('../models/games');
 
 //대기실 => 게임방 입장시 게임방 생성
 router.post('/game/create', async (req, res) => {
@@ -24,6 +26,7 @@ router.post('/game/create', async (req, res) => {
         res.status(400).json({ ok: false });
     }
 })
+
 
 //게임방 입장해서 정보가져오기
 router.get('/game/start/:gameNum', async (req, res)=>{
@@ -61,18 +64,80 @@ router.get('/game/start/:gameNum', async (req, res)=>{
 });
 
 
-
-
-//결과창
+//결과창-- 다시 확인하기
 router.post("/gameFinish", async (req, res) => {
     try {                           //승패결과
         const { userInfo, gameInfo, result } = req.body;
-        //userInfo안에 id, socre, point, state를 Users디비에 업뎃
-        await findOne({id, score, point, state});
-        console.log(`userInfo>${userInfo}`);
+        // 중첩된 객체 접근
+        // userInfo.user.id
+        // userInfo.user['id']
+        // Object.keys(userInfo)[0]  -user
+        //userInfo.user.객체 접근(중첩된 객체 접근)
+        const existId = userInfo[Object.keys(userInfo)[0]].id;
+        const findId = existId.id;
 
+        //userInfo.user안에 id를 기준으로 score, point, state를 Users디비에서 찾음
+        userInfo = await Users.find({id:findId}, {_id:false, id:true, score:true, point:true, state:true});
+        console.log(`결과창 userInfo>${userInfo}`);
+        
 
+        //userInfo.user.id가 gameInfo안의 어느 팀 포지션인지 찾음
+        const id = userInfo.id;
+        
+        btp = gameInfo.blackTeamPlayer
+        bto = gameInfo.blackTeamObserver
+        wtp = gameInfo.whiteTeamPlayer
+        wto = gameInfo.whiteTeamObserver
 
+        for ( let i = 0; i < btp.length; i++) {
+            if ( btp[i] === id ){
+                blackTeamPlayer = await games.updateOne({id}, {$set: {blackTeamPlayer:btp[i]} });
+            } else if ( bto[i] === id ){
+                blackTeamObserver = await games.updateOne({id}, {$set: {blackTeamObserver:bto[i]} });
+            } else if ( wtp[i] === id ){
+                whiteTeamPlayer = await games.updateOne({id}, {$set: {whiteTeamPlayer:wtp[i]} });
+            } else if ( wto[i] === id ){
+                whiteTeamObserver = await games.updateOne({id}, {$set: {whiteTeamObserver:wto[i]} });
+            }
+        }
+        for ( let i = 0; i < bto.length; i++) {
+            if ( bto[i] === id ){
+                blackTeamObserver = await games.updateOne({id}, {$set: {blackTeamObserver:bto[i]} });
+            } else if ( wtp[i] === id ){
+                whiteTeamPlayer = await games.updateOne({id}, {$set: {whiteTeamPlayer:wtp[i]} });
+            } else if ( wto[i] === id ){
+                whiteTeamObserver = await games.updateOne({id}, {$set: {whiteTeamObserver:wto[i]} });
+            } else if ( btp[i] === id ){
+                blackTeamPlayer = await games.updateOne({id}, {$set: {blackTeamPlayer:btp[i]} });
+            }
+        }
+        for ( let i = 0; i < wtp.length; i++) {
+            if ( wtp[i] === id ){
+                whiteTeamPlayer = await games.updateOne({id}, {$set: {whiteTeamPlayer:wtp[i]} });
+            } else if ( wto[i] === id ){
+                whiteTeamObserver = await games.updateOne({id}, {$set: {whiteTeamObserver:wto[i]} });
+            } else if ( btp[i] === id ){
+                blackTeamPlayer = await games.updateOne({id}, {$set: {blackTeamPlayer:btp[i]} });
+            } else if ( bto[i] === id ){
+                blackTeamObserver = await games.updateOne({id}, {$set: {blackTeamObserver:bto[i]} });
+            }
+        }
+        for ( let i = 0; i < wto.length; i++) {
+            if ( wto[i] === id ){
+                whiteTeamObserver = await games.updateOne({id}, {$set: {whiteTeamObserver:wto[i]} });
+            } else if ( btp[i] === id ){
+                blackTeamPlayer = await games.updateOne({id}, {$set: {blackTeamPlayer:btp[i]} });
+            } else if ( bto[i] === id ){
+                blackTeamObserver = await games.updateOne({id}, {$set: {blackTeamObserver:bto[i]} });
+            } else if ( wtp[i] === id ){
+                whiteTeamPlayer = await games.updateOne({id}, {$set: {whiteTeamPlayer:wtp[i]} });
+            }
+        }
+
+        gameInfo = { whiteTeamObserver, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer };
+
+        //result= Users.score
+        result = await Users.create({score:result});
 
         res.status(200).json({
             userInfo,
@@ -87,16 +152,12 @@ router.post("/gameFinish", async (req, res) => {
 
     } catch(err){
         res.status(400).json({
-
             ok:false,
             errorMessage:"결과창 실패"
         });
         console.log(`결과창 에러: ${err}`);
 
     }
-
-
-
 });
 
 
