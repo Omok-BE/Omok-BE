@@ -7,6 +7,7 @@ connect();
 
 const usersRouter = require("./routes/users");
 const lobbyRouter = require('./routes/lobby');
+const gameRouter = require('./routes/games');
 
 const requestMiddleware = (req, res, next) => {
   console.log("Request URL:", req.originalUrl, " - ", new Date());
@@ -21,6 +22,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.use("/", [usersRouter, lobbyRouter]);
+app.use("/", [usersRouter, lobbyRouter, gameRouter]);
 
 module.exports = app;
