@@ -45,6 +45,9 @@ router.post('/lobby/create', async (req, res) => {
     await newRoom.save();
     // 방생성자의 state값 Aplayer로 바꿔주는거 (post메서드 put으로 바꿔줘야 하나?)
     await User.updateOne({ id: id}, {$set: {state: "Aplayer"}});
+    // roomNum 받아오는지 확인하기
+    const roomNum = await newRoom.roomNum;
+    res.send(roomNum);
 });
 
 // [방 입장 모달창 ]
@@ -57,7 +60,24 @@ router.get('/lobby/joinroom/:roomNumber', async (req, res) => {
 });
 
 // [방 입장 모달창]: 버튼 입력
-router.post()
+router.post('/lobby/joinroom', async (req, res) => {
+    const { roomNum, id, state } = req.body;
+
+    try{
+        const user = await User.updateOne({ id: id }, {$set: { state: state }})
+        console.log(user);
+        
+        const userInfo = {"id": user.id, "state": user.state}
+        res.status(201).send(userInfo);
+    }catch(err){
+        console.log(err);
+        res.status(400).send({
+            errorMessage: '/lobby/joinroom POST 에러'
+        });
+    }
+})
+
+
 
 
 module.exports = router;
