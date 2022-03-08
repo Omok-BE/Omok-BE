@@ -8,28 +8,28 @@ const router = express.Router();
 router.get('/lobby', async (req, res) => {
     const allRoom = await Room.find()
 
-    res.send({allRoom});
+    res.send(allRoom);
 });
 
 //로비 유저리스트
 router.get('/lobby/userList', async (req, res) => {
     const allUser = await User.find({ state: "online"});
 
-    res.send({allUser});
+    res.send(allUser);
 });
 
 // 로비 간이 리더리스트
 router.get('/lobby/leaderList', async (req, res) => {
     const leaderList = await User.find({}).sort({"point": -1}).limit(5);
 
-    res.send({leaderList});
+    res.send(leaderList);
 });
 
 // 리더보드 50개 정보띄워주기용
 router.get('/leaderBoard', async (req, res) => {
     const leaderList = await User.find({}).sort({"point": -1}).limit(50);
 
-    res.send({leaderList});
+    res.send(leaderList);
 });
 
 router.post('/lobby/create', async (req, res) => {
@@ -56,7 +56,7 @@ router.get('/lobby/joinroom/:roomNumber', async (req, res) => {
 
     const room = await Room.findOne({ roomNumber: roomNumber });
 
-    res.send({room});
+    res.send(room);
 });
 
 // [방 입장 모달창]: 버튼 입력
