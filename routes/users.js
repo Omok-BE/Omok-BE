@@ -81,8 +81,10 @@ router.post('/login', async (req, res) => {
         if(token){
             await User.updateOne({ id: user.id }, {$set: { state: "online"}})
         }
+
         res.send({
             token,
+            id: id,
             ok: true,
             message: '로그인 성공'
         })
