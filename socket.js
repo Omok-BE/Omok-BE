@@ -94,4 +94,74 @@ waitingRoom.on("connection", (socket) => {
 });
 
 
+//게임방 socket 시작
+const gameRoom = io.of('/game');
+//접속자 수
+function gameRoomCount(gameNum){
+  return gameRoom.adapter.rooms.get(gameNum)?.size
+}
+
+// 닉네임 설정
+socket.on("nickname", (nickname) => socket["nickname"] = nickname); 
+
+//game방 연결  
+gameRoom.on("connect", async (socket) =>{
+  console.log("game 소켓 연결됨");
+  
+
+
+  //socket.join(방 아이디)
+  socket.on("joinGame", (gameNum) => {
+      //"일번방"이름의 방에 조인
+      socket.join(gameNum);
+  });
+  
+
+
+
+
+  //game방 채팅
+  socket.on("chat", (chat) => {
+      const data = {id:socket.nickname, chat};
+      console.log(`게임쳇 data:${data}`);
+      socket.to(gameNum).emit("chat", data);
+  });
+
+  //game방 훈수채팅(귓속말)
+  socket.on("teaching", (chat) => {
+      const data = {id:socket.nickname, chat};
+      console.log(`훈수쳇 data:${data}`);
+      socket.to(socket.nickname).emit("teaching", data);  //소켓 아이디에 전달
+  });
+  
+
+  // game방 퇴장
+  //플레이어 퇴장시 소켓만으로 방폭 가능 or API만들기?
+  socket.on("disconnecting", async () => {
+      //game방 퇴장 메시지
+      socket.to(gameNum).emit("bye", socket.id);
+      if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
+          await Rooms.destroy({ where: { gameNum }})          //게임방 자동 삭제 
+        } else {                                                         
+          const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
+          await Rooms.updateOne({ gameNum }, { $set: { observerCnt }})
+        }
+
+    console.log("게임 disconnecting");
+
+  });
+
+  //게임결과
+  // socket.on("result", (winner, loser) => {
+
+  //     const score = await users.findOne({id}, {_id:false, socre:true});
+  //     socket.to(gameNum).emit("result", {winner : , loser: b})
+  // });
+
+
+
+
+
+});
+
 module.exports = { httpServer };
