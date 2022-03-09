@@ -56,120 +56,128 @@ router.get('/game/start/:gameNum', async (req, res)=>{
 });
 
 
-// //결과창-- 작업중
-// router.post("/gameFinish", async (req, res) => {
-//     try {                      //blackPlayer     //승패결과
-//         const { id, score, point, state, gameNum, result } = req.body;
-//         // id를 기준으로 디비에서 총인원에 대한 
-//         // score, point, state를 찾는다.
-//         // req로 들어온 result에서 승자 id를 찾는다.
-//         // Object.assign({}, )
-        
-//         //req의 id를 기준으로 score, point, state를 Users디비에서 찾음
-//         const user = await Users.find({id:id}, {_id:false, score, point, state});
-    
-//         const resultId = result.win;     //result 에서 우승자 id만 찾기
-        
-//         console.log(`결과창 userInfo>${user}`);
-
+//결과창 post
+router.post("/gameFinish", async (req, res) => {
+    try {                      //blackPlayer     //승패결과
+        const { id, score, point, state, gameNum, result } = req.body;
+        // id를 기준으로 디비에서 총인원에 대한 
+        // score, point, state를 찾는다.
        
-
-
+         //승자id 
+        const resultId = result.win;    
+        console.log(`결과창 resultId>${resultId}`); 
+        const winPlayer = {};
+        //Player 
+        //state가 blackTeamPlayer와 whiteTeamPlayer같고  (player일때)
+        if (state === blackTeamPlayer && state === whiteTeamPlayer){
+            //resultId가 id와 같으면 (우승자 id일떄)
+            if(resultId === id){    //승Player
+                winPlayer = await Users.findOne({ id:resultId }, { score:score, point:point, state:state }); 
+                await Users.updateOne({ id:resultId }, { $inc: { "score.$.win":1 } });  //승 +1
+                await Users.updateOne({ id:resultId }, { $set: { point:point + 700 } }) //포인트 +700
+                console.log(`우승자 score에 1승, point에 +700이 추가되었습니다.`);
+            } else {   //패Player
+                await Users.updateOne({ id:resultId }, { $inc: {"score.$.lose":1 }}); //패 +1
+                await Users.updateOne({ id:resultId }, { $set: { point:point - 500 } }); //포인트 -500
+                console.log(`패자 score에 1패, point에 -500이 추가되었습니다.`);
+            };
+        };
         
-//         //우승자 id찾기
-//         const winnerId = playersId.findIndex((i) =>  i === existId );
-
-//         //score + point 지급 
-//         //if players가 resultId와 같으면 디비score.win에 +1 아니면 lose에 +1
-//         for(let key in players) {
-//             if (players[key] === resultId){
-//                 //player 
-//                 //score안에 win에만 +1하는 방법: {$inc: {"score.$.win":1}}
-//                 await Users.updateOne({id:resultId}, { $inc: {"score.$.win":1}});
-//                 await Users.updateOne({id:resultId}, { $set: {point:usersInfo.point + 700} });
-//                 console.log(`우승자 score에 1승, point에 +700이 추가되었습니다.`);
-//             } else {
-//                 await Users.updateOne({id:resultId}, { $inc: {"score.$.lose":1}});
-//                 await Users.updateOne({id:resultId}, { $set: {point:usersInfo.point - 500} });
-//                 console.log(`패자 score에 1패, point에 -500이 추가되었습니다.`);
-//             };
-//         };
-        
-        
-      
-        
-  
-        
-//         //observer 
-//         //1)이겼을때  2)졌을때
-//         //게임디비에 저장된 observer들과 teaching관련 정보를 가져온다
-//         //훈수채팅소켓에서 보낸 채팅 카운트하기 + teachingPoint에 저장하기
-//         //  --> 게임디비에 teachingPoint, teachingCnt만들기
-//         // 우승자Id의 팀 찾기
-        
-        
-//         // resultId와 앞에 5글자가 같은 아이디 찾기- indexOf()이용. 없으면 -1반환.
-        
-        
-        
-
-//         //existId가 game디비중 어느 팀에 있는지 찾기
-//         const winnerPlayer = await Games.find({id:resultId}, 
-//            {_id:false, blackTeamPlayer:true, blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
-
-//         //디비에서 팀별 옵저버를 찾는다.
-//         const [observers] = await Games.find({id:existId}, 
-//                              {_id:false, blackTeamObserver:true, whiteTeamObserver:true});
-//         console.log(`옵져버들정보는?${observersInfo}`);
-        
-//         //옵저버가 우승팀인지 아닌지 확인해서 포인트 지급하기
-//         // resultId와 앞에 5글자가 같은 아이디 찾기- indexOf()이용. 없으면 -1반환.
-//         const findWInTeam = observers; 
-//         const winTeamMembers = {}; 
-//         for(let i = 0; i < findWInTeam.length; i++){
-//             //resultId의 문자가 들어간 이긴팀 옵저버들을 찾았을때
-//             if (findWInTeam.indexOf(resultId) !== -1){ 
-//                 //찾은 이긴팀 옵저버들의 teachingPoint, teachingCnt 찾기
-//                 const [winTeamObservers] = await Games.find({id:winTeamMembers[i]}, 
-//                                             {_id:false, teachingPoint:true, teachingCnt:true});
-//                 //쓴 포인트
-//                 const spendPoint = winTeamObservers.teachingCnt * 100;
-//                 //얻은 포인트
-//                 const getPoint = spendPoint * 0.5;
-                
-
-//                 await Users.updateOne({id:winTeamMember[i]}, { $set {point:updateTeachingPoint} });
-//             };
-//         }
-
-
-//         // 쓴 포인트: 훈수 채팅 횟수*100
-//         // 얻은 포인트: 이겼는지 확인해서 쓴포인트 * 2
+        //Observer 
+        //이긴팀 whiteTeamObserver 포인트 지급   
+        if (winPlayer.state === whiteTeamPlayer){ 
+            if(whiteTeamObserver){
+            //훈수채팅 수
+            const winExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
+                                                                  { _id:false, teachingCnt:true });
+            const winUseTeachingPoint = winExistTeachingCnt * 100;            //쓴 포인트 
+            const winGetTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
+            const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint;  //총 포인트 
+            //포인트 업데이트
+            const winPointUp = await Users.updateOne({ id:state.whiteTeamObserver }, 
+                                                                { $set: { point:winTotalPoint} }); 
+            console.log(`이긴팀 observer포인트업: ${ winPointUp }`);
+                res.status(200).json({
+                    ok:true,
+                    message: "결과창 성공!"
+                });
+            } else (state === blackTeamObserver); {  //진팀 blackTeamObserver 포인트 지급
+            //훈수채팅 수
+            const loseExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
+                                                                      { _id:false, teachingCnt:true });
+            const loseUseTeachingPoint = loseExistTeachingCnt * 100;   //쓴 포인트 
+            const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
+            const losePointDown = await Users.updateOne( { id:state.blackTeamObserver },    //포인트 업데이트
+                                                            { $set: { point:loseTotalPoint } });  
+            console.log(`진팀 observer총포인트: ${ losePointDown }`);  
+            };
+        } else (winPlayer.state === blackTeamPlayer); {   //이긴팀 blackTeamObserver 포인트 지급  
+            if(blackTeamObserver){
+                //훈수채팅 수
+                const winExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
+                                                                        { _id:false, teachingCnt:true });
+                const winUseTeachingPoint = winExistTeachingCnt * 100;         //쓴 포인트 
+                const getTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
+                const winTotalPoint = getTeachingPoint + winUseTeachingPoint;  //총 포인트
+                //포인트 업데이트
+                const winPointUp = await Users.updateOne({ id:state.blackTeamObserver }, 
+                                                                  { $set: { point:winTotalPoint} }); 
+                console.log(`이긴팀 observer포인트업: ${ winPointUp }`);
+                    res.status(200).json({
+                        ok:true,
+                        message: "결과창 성공!"
+                    });
+            } else (state === whiteTeamObserver); {  //진팀 whiteTeamObserver 포인트 지급
+                //훈수채팅 수
+                const loseExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
+                                                                       { _id:false, teachingCnt:true });
+                const loseUseTeachingPoint = loseExistTeachingCnt * 100;   //쓴 포인트 
+                const loseTotalPoint = point - loseUseTeachingPoint;       //게임후 총 포인트 
+                //포인트 업데이트
+                const losePointDown = await Users.updateOne( { id:state.whiteTeamObserver }, 
+                                                              { $set: { point:loseTotalPoint } });
+                console.log(`진팀 observer총포인트: ${ losePointDown }`);    
+            };
+        };        
+    } catch(err){
+        res.status(400).json({
+            ok:false,
+            errorMessage:"결과창get 실패"
+        });
+        console.log(`결과창get 에러: ${err}`);
+    };
+});
 
 
+//결과창 get-- 작업중
+router.get("/gameFinish", async (req, res) => {
+    try{
+        //user를 찾는 기준은? ex) id
+        //point:[쓴포인트, 얻은포인트]나누는 방법?
+        let user = await Users.findOne({id}, {_id:false, score:true, point:true, state:true});
+        const userInfo = user;
 
-       
+        //gameInfo 찾는 기준은? ex) gameNum
+        const gameInfo = await Games.findOne({gameNum}, {_id:false, blackTeamPlayer:true, 
+                                    blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
 
-//         res.status(200).json({
-//             userInfo,
-//             gameInfo,
-//             result,
-//             ok:true,
-//             message: "결과창 성공!"
-//         });
-//         console.log(`결과창 userInfo: ${userInfo}`);
-//         console.log(`결과창 gameInfo: ${gameInfo}`);
-//         console.log(`결과창 result: ${result}`);
+        res.status(200).json({
+            userInfo,
+            gameInfo,
+            result,
+            ok:true,
+            message: "결과창get 성공!"
+        });
 
-//     } catch(err){
-//         res.status(400).json({
-//             ok:false,
-//             errorMessage:"결과창 실패"
-//         });
-//         console.log(`결과창 에러: ${err}`);
+    } catch(err){
+        res.status(400).json({
+            ok:false,
+            errorMessage:"결과창get 실패"
+        });
+        console.log(`결과창get 에러: ${err}`);
+    };
+});
 
-//     }
-// });
 
 
 
