@@ -8,7 +8,7 @@ const gamesSchema = new mongoose.Schema({
     blackTeamPlayer: String,
     blackTeamObserver: Array,
     whiteTeamPlayer: String,
-    whiteTeamObserver: Array,
+    whiteTeamObserver: Array
 });
 
 module.exports = mongoose.model('Games', gamesSchema)
