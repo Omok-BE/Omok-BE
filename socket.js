@@ -33,8 +33,8 @@ waitingRoom.on("connection", (socket) => {
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
     //대기실 플레이어로 입장시 정보 업데이트_210303
     socket.on("enterRoomPlayer", async (roomNum) => {
-      const state = "player"
       theRoomNumber = roomNum;
+      const state = "player"
       socket.join(roomNum)
       socket.join(state)
       const playerCnt = waitingRoomCount(state)
