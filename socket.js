@@ -39,7 +39,9 @@ waitingRoom.on("connection", (socket) => {
       const state = "player"
       theRoomNumber = roomNum;
       socket.join(roomNum)
+      console.log("test1")
       socket.join(state)
+      console.log("test2")
       const playerCnt = waitingRoomCount(state)
       await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       console.log(socket.nickname)
