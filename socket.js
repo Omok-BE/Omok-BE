@@ -39,7 +39,7 @@ waitingRoom.on("connection", (socket) => {
       socket.join(roomNum)
       socket.join(state)
       const playerCnt = waitingRoomCount(state)
-      await Rooms.ㅋupdateOne({ roomNum }, { $set: { playerCnt }})
+      await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
     });
