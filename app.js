@@ -10,7 +10,11 @@ const lobbyRouter = require('./routes/lobby');
 const gameRouter = require('./routes/games');
 
 const requestMiddleware = (req, res, next) => {
-  console.log("Request URL:", req.originalUrl, " - ", new Date());
+  console.log("Request URL:", req.originalUrl, " - ", new Date(+new Date() + 3240 * 10000)
+  .toISOString()
+      .replace("T", " ")
+      .replace(/\..*/, "")
+  );
   next();
 };
 

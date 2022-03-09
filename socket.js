@@ -96,54 +96,53 @@ waitingRoom.on("connection", (socket) => {
 });
 
 
+
+
 //게임방 socket 시작
 const gameRoom = io.of('/game');
+
 //접속자 수
 function gameRoomCount(gameNum){
   return gameRoom.adapter.rooms.get(gameNum)?.size
 }
 
-
 //game방 연결  
 gameRoom.on("connect", async (socket) =>{
   console.log("game 소켓 연결됨");
   
-  // 닉네임 설정
+  // 유저 id를 닉네임 설정
   socket.on("nickname", (nickname) => socket["nickname"] = nickname); 
-  
 
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
       //"일번방"이름의 방에 조인
       socket.join(gameNum);
   });
-  
-
-
-
 
   //game방 채팅
   socket.on("chat", (chat) => {
-      const data = {id:socket.nickname, chat};
+      const data = {name:socket.nickname, chat};
       console.log(`게임쳇 data:${data}`);
       socket.to(gameNum).emit("chat", data);
   });
 
   //game방 훈수채팅(귓속말)
   socket.on("teaching", (chat) => {
-      const data = {id:socket.nickname, chat};
+      const data = {name:socket.nickname, chat};
       console.log(`훈수쳇 data:${data}`);
-      socket.to(socket.nickname).emit("teaching", data);  //소켓 아이디에 전달
+      socket.to(gameNum).emit("teaching", data);  //소켓 아이디에 전달
   });
-  
 
   // game방 퇴장
-  //플레이어 퇴장시 소켓만으로 방폭 가능 or API만들기?
+  //플레이어 퇴장시 방폭
+  //게임끝나고 유저들이 대기방가면 state(A팀, B팀)표시
+  //소켓에서 대기방 연결하기.
   socket.on("disconnecting", async () => {
       //game방 퇴장 메시지
       socket.to(gameNum).emit("bye", socket.id);
       if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
-          await Rooms.destroy({ where: { gameNum }})          //게임방 자동 삭제 
+          await Rooms.destroy({ where: { gameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
+                                                              //waiting룸 on.             
         } else {                                                         
           const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
           await Rooms.updateOne({ gameNum }, { $set: { observerCnt }})
@@ -160,6 +159,9 @@ gameRoom.on("connect", async (socket) =>{
   //     socket.to(gameNum).emit("result", {winner : , loser: b})
   // });
 
+  //오목 게임
+  //흑돌-짝, 백돌-홀 순서로 디비저장
+  //teachingCnt 저장 + teachingCnt 
 
 
 
