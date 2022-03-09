@@ -39,7 +39,7 @@ waitingRoom.on("connection", (socket) => {
       socket.join(roomNum)
       socket.join(state)
       const playerCnt = waitingRoomCount(state)
-      await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
+      await Rooms.ㅋupdateOne({ roomNum }, { $set: { playerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
     });
@@ -101,14 +101,14 @@ function gameRoomCount(gameNum){
   return gameRoom.adapter.rooms.get(gameNum)?.size
 }
 
-// 닉네임 설정
-socket.on("nickname", (nickname) => socket["nickname"] = nickname); 
 
 //game방 연결  
 gameRoom.on("connect", async (socket) =>{
   console.log("game 소켓 연결됨");
   
-
+  // 닉네임 설정
+  socket.on("nickname", (nickname) => socket["nickname"] = nickname); 
+  
 
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
