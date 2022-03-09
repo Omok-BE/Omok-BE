@@ -52,9 +52,9 @@ router.post('/lobby/create', async (req, res) => {
 
 // [방 입장 모달창 ]
 router.get('/lobby/joinroom/:roomNumber', async (req, res) => {
-    const { roomNumber } = req.params;
+    const { roomNum } = req.params;
 
-    const room = await Room.findOne({ roomNumber: roomNumber });
+    const room = await Room.findOne({ roomNum: roomNum });
 
     res.send(room);
 });
