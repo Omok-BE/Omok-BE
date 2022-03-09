@@ -22,10 +22,10 @@ let theRoomNumber;
 
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
-  return waitingRoom.adapter.rooms.get(roomName)?.size
+  return io.adapter.rooms.get(roomName)?.size
 }
 
-waitingRoom.on("connection", (socket) => {
+io.on("connection", (socket) => {
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
@@ -40,7 +40,7 @@ waitingRoom.on("connection", (socket) => {
       const playerCnt = waitingRoomCount(state)
       await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+      socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
       // socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
       // socket.emit("welcome", socket.nickname, userInfo)
       console.log(socket.rooms)
