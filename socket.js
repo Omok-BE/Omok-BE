@@ -22,10 +22,10 @@ let theRoomNumber;
 
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
-  return io.sockets.adapter.rooms.get(roomName)?.size
+  return waitingRoom.adapter.rooms.get(roomName)?.size
 }
 
-io.on("connection", (socket) => {
+waitingRoom.on("connection", (socket) => {
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
@@ -41,8 +41,7 @@ io.on("connection", (socket) => {
       await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
-      // socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
-      // socket.emit("welcome", socket.nickname, userInfo)
+      socket.emit("welcome", socket.nickname, userInfo)
       console.log(socket.rooms)
     });
     //대기실 옵져버로 입장시 정보 업데이트_210303
