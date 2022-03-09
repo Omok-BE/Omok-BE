@@ -41,6 +41,7 @@ waitingRoom.on("connection", (socket) => {
       const playerCnt = waitingRoomCount(state)
       await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
+      console.log(userInfo)
       socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
     });
     //대기실 옵져버로 입장시 정보 업데이트_210303
