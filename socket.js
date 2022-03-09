@@ -35,6 +35,7 @@ waitingRoom.on("connection", (socket) => {
     //대기실 플레이어로 입장시 정보 업데이트_210303
     socket.on("enterRoomPlayer", async (roomNum) => {
       console.log("실행")
+      console.log(roomNum)
       const state = "player"
       theRoomNumber = roomNum;
       socket.join(roomNum)
