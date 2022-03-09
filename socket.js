@@ -11,16 +11,10 @@ const io = new Server(httpServer, {
     credentials: true
   })
 });
-// const io = new Server(httpServer, {
-//   cors : ({
-//     origin: true,
-//     credentials: true
-//   })
-// });
+
 instrument(io, {
   auth: false,
 });
-// io.path("/test/");
 
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting')
