@@ -52,16 +52,16 @@ waitingRoom.on("connection", (socket) => {
     //   socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
     });
     //대기실 옵져버로 입장시 정보 업데이트_210303
-    socket.on("enterRoomObserver", async (roomNum) => {
-      theRoomNumber = roomNum;
-      const state = "observer"
-      socket.join(roomNum)
-      socket.join(state)
-      const observerCnt = waitingRoomCount(state)
-      await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
-      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
-    });
+    // socket.on("enterRoomObserver", async (roomNum) => {
+    //   theRoomNumber = roomNum;
+    //   const state = "observer"
+    //   socket.join(roomNum)
+    //   socket.join(state)
+    //   const observerCnt = waitingRoomCount(state)
+    //   await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
+    //   const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
+    //   socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
+    // });
     //플레이어로 변경시 정보 업데이트_210304
     socket.on("changeToPlayer", async (player) => {
       const previousTeam = "observer"
