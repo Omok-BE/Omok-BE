@@ -48,6 +48,7 @@ waitingRoom.on("connection", (socket) => {
       // const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       // console.log(userInfo)
       socket.to(roomNum).emit("welcome", socket.nickname)
+      console.log("완료")
     });
     //대기실 옵져버로 입장시 정보 업데이트_210303
     socket.on("enterRoomObserver", async (roomNum) => {
