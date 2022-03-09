@@ -22,7 +22,7 @@ let theRoomNumber;
 
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
-  return io.adapter.rooms.get(roomName)?.size
+  return sockets.adapter.rooms.get(roomName)?.size
 }
 
 io.on("connection", (socket) => {
