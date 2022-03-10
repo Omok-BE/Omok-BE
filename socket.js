@@ -29,42 +29,41 @@ function waitingRoomCount(roomName){
 waitingRoom.on("connection", (socket) => {
     countForOnce = 0
     countForChat = 0
+
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
+
     //socket nickname 설정_210303
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
+
     //대기실 플레이어로 입장시 정보 업데이트_210303
     socket.on("enterRoomPlayer", async (roomNum) => {
-      console.log("시작",countForOnce)
       if (countForOnce === 0) {
-      countForOnce++
-      theRoomNumber = roomNum;
-      const state = "player"
-      console.log("어디쯤")
-      socket.join(roomNum)
-      socket.join(state)
-      console.log("있나요")
-      const playerCnt = waitingRoomCount(state)
-      await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
-      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-      console.log("대기실 입장", socket.rooms)
-    } else {
-      console.log("커트함")
-    }
-    });
+        countForOnce++
+        theRoomNumber = roomNum;
+        const state = "player"
+        socket.join(roomNum)
+        socket.join(state)
+        const playerCnt = waitingRoomCount(state)
+        await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
+        const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
+        waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+    }});
+
     //대기실 옵져버로 입장시 정보 업데이트_210303
     socket.on("enterRoomObserver", async (roomNum) => {
-      theRoomNumber = roomNum;
-      const state = "observer"
-      socket.join(roomNum)
-      socket.join(state)
-      const observerCnt = waitingRoomCount(state)
-      await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
-      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-    });
+      if (countForOnce === 0) {
+        countForOnce++  
+        theRoomNumber = roomNum;
+        const state = "observer"
+        socket.join(roomNum)
+        socket.join(state)
+        const observerCnt = waitingRoomCount(state)
+        await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
+        const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
+        waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+    }});
     //플레이어로 변경시 정보 업데이트_210304
     socket.on("changeToPlayer", async (player) => {
       const previousTeam = "observer"
@@ -72,8 +71,8 @@ waitingRoom.on("connection", (socket) => {
       socket.join(player)
       const playerCnt = waitingRoomCount(player)
       const observerCnt = waitingRoomCount(previousTeam)
-      // await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
-      waitingRoom.to(roomNum).emit("moveToPlayer", socket.nickname)
+      await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
+      waitingRoom.to(theRoomNumber).emit("moveToPlayer", socket.nickname)
     })
     //옵져버로 변경시 정보 업데이트_210304
     socket.on("changeToObserver", async (observer) => {
@@ -82,8 +81,8 @@ waitingRoom.on("connection", (socket) => {
       socket.join(observer)
       const playerCnt = waitingRoomCount(previousTeam)
       const observerCnt = waitingRoomCount(observer)
-      // await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
-      waitingRoom.to(roomNum).emit("moveToObserver", socket.nickname)
+      await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
+      waitingRoom.to(theRoomNumber).emit("moveToObserver", socket.nickname)
     })
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
@@ -93,20 +92,17 @@ waitingRoom.on("connection", (socket) => {
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
         console.log(countForChat)
-      } else {
-        console.log("커트함")
-      }
-    });
+      }});
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
       waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
-      // if(socket.rooms.has("player")){
-      //   const playerCnt = waitingRoomCount("player") -1
-      //   await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
-      // } else {
-      //   const observerCnt = waitingRoomCount("observer") -1
-      //   await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
-      // }
+      if(socket.rooms.has("player")){
+        const playerCnt = waitingRoomCount("player") -1
+        await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
+      } else {
+        const observerCnt = waitingRoomCount("observer") -1
+        await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
+      }
     })
   });
 });
