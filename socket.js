@@ -114,6 +114,8 @@ function gameRoomCount(gameNum){
 //game방 연결  
 gameRoom.on("connect", async (socket) =>{
   console.log("game 소켓 연결됨★★");
+  console.log("겜방연결후 bboard",bboard);
+    console.log("겜방연결후count",count);
   socket.onAny((event) => {
   console.log(`게임방 이벤트: ${event}`);
 
@@ -129,9 +131,8 @@ gameRoom.on("connect", async (socket) =>{
   socket.on("joinGame", (gameNum) => {
       thisgameNum = gameNum;
 
-
       //"일번방"이름의 방에 조인
-      console.log(`게임쳇 조인게임:${gameNum}`);
+      console.log(`조인게임방번호:${gameNum}`);
       socket.join(gameNum);
   });
 
