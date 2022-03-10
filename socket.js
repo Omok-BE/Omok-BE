@@ -133,6 +133,7 @@ gameRoom.on("connect", async (socket) =>{
     
     //game방 훈수채팅(귓속말)
     socket.on("teaching", (chat) => {
+      console.log(chat)
       const data = {name:socket.nickname, chat};
       console.log("훈수쳇소켓닉네임:",socket.nickname);
       console.log("훈수쳇 data:", data);
