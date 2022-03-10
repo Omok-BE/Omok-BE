@@ -114,7 +114,8 @@ function gameRoomCount(gameNum){
 
 //game방 연결  
 gameRoom.on("connect", async (socket) =>{
-
+  bboard = new Array(Math.pow(19, 2)).fill(-1);
+  
   console.log("game 소켓 연결됨★★");
   console.log("겜방연결후 bboard",bboard);
   console.log("겜방연결후count",count);
@@ -162,7 +163,7 @@ gameRoom.on("connect", async (socket) =>{
 
   //오목 게임
   socket.on("omog", (data, state) => {
-    bboard = new Array(Math.pow(19, 2)).fill(-1);
+    
 
     console.log("오목게임data@@",data);
     console.log("오목게임state@@",state);
