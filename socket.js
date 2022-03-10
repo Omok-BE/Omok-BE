@@ -19,17 +19,12 @@ instrument(io, {
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting')
 let theRoomNumber;
-let countForOnce;
-let countForChat;
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
 }
 
 waitingRoom.on("connection", (socket) => {
-    countForOnce = 0
-    countForChat = 0
-
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
@@ -39,9 +34,6 @@ waitingRoom.on("connection", (socket) => {
 
     //대기실 플레이어로 입장시 정보 업데이트_210303
     socket.on("enterRoomPlayer", async (roomNum) => {
-      // if (countForOnce === 0) {
-      //   countForOnce++
-      console.log("방입장")
         theRoomNumber = roomNum;
         const state = "player"
         socket.join(roomNum)
@@ -55,8 +47,6 @@ waitingRoom.on("connection", (socket) => {
 
     //대기실 옵져버로 입장시 정보 업데이트_210303
     socket.on("enterRoomObserver", async (roomNum) => {
-      if (countForOnce === 0) {
-        countForOnce++  
         theRoomNumber = roomNum;
         const state = "observer"
         socket.join(roomNum)
@@ -65,7 +55,7 @@ waitingRoom.on("connection", (socket) => {
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-    }});
+    });
     //플레이어로 변경시 정보 업데이트_210304
     socket.on("changeToPlayer", async (player) => {
       const previousTeam = "observer"
@@ -88,8 +78,6 @@ waitingRoom.on("connection", (socket) => {
     })
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
-      // if (countForChat === 0) {
-      //   countForChat++
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
