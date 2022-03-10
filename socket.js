@@ -45,7 +45,8 @@ waitingRoom.on("connection", (socket) => {
       // const playerCnt = waitingRoomCount(state)
       // await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       // const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+      // waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+      waitingRoom.to(roomNum).emit("welcome", socket.nickname)
       console.log("대기실 입장", socket.rooms)
       countForOnce++
     } else {
