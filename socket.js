@@ -129,7 +129,9 @@ gameRoom.on("connect", async (socket) =>{
   socket.on("chat", (chat) => {
     console.log(chat)
     const data = {name:socket.nickname, chat};
-      socket.to(thisgameNum).emit("chat", data);
+    console.log(data)
+    console.log(thisgameNum)
+    socket.to(thisgameNum).emit("chat", data);
     });
     
     //game방 훈수채팅(귓속말)
