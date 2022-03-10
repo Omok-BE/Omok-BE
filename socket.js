@@ -95,7 +95,6 @@ waitingRoom.on("connection", (socket) => {
 
 
 
-
 //게임방 socket 시작
 const gameRoom = io.of('/game');
 let thisgameNum
@@ -108,7 +107,7 @@ function gameRoomCount(gameNum){
 gameRoom.on("connect", async (socket) =>{
   console.log("game 소켓 연결됨★★");
   socket.onAny((event) => {
-    console.log(`게임방 이벤트: ${event}`);
+  console.log(`게임방 이벤트: ${event}`);
 
   // 유저 id를 닉네임 설정
   socket.on("nickname", (nickname) => {
@@ -116,7 +115,8 @@ gameRoom.on("connect", async (socket) =>{
     console.log("게임방 닉네임은?",nickname);
     console.log("소켓닉네임은???",socket.nickname);
 
-  }); 
+  });
+
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
       thisgameNum = gameNum;
@@ -127,37 +127,39 @@ gameRoom.on("connect", async (socket) =>{
 
   //game방 채팅
   socket.on("chat", (chat) => {
-    console.log(chat)
     const data = {name:socket.nickname, chat};
-    console.log(data)
-    console.log(thisgameNum)
-    console.log(socket.rooms)
-    gameRoom.to(thisgameNum).emit("chat", data);
-    // socket.to(thisgameNum).emit("chat", data);
-    });
-    
-    //game방 훈수채팅(귓속말)
-    socket.on("teaching", (chat) => {
-      const data = {name:socket.nickname, chat};
-      console.log("훈수쳇소켓닉네임:",socket.nickname);
-      console.log("훈수쳇 data:", data);
-      gameRoom.to(thisgameNum).emit("teaching", data);  //소켓 아이디에 전달
+    socket.to(thisgameNum).emit("chat", data);
+   });
+  //game방 훈수채팅
+  socket.on("teaching", (chat) => {
+    const data = {name:socket.nickname, chat};
+    console.log("훈수쳇소켓닉네임:",socket.nickname);
+    console.log("훈수쳇 data:", data);
+    socket.to(thisgameNum).emit("teaching", data);  
   });
+  //game방 플라잉채팅
+  socket.on("flyingWord", (chat) => {
+    const data = {name:socket.nickname, chat};
+    console.log("플라잉채팅소켓 닉네임♬♪:",socket.nickname);
+    console.log("플라잉채팅소켓 data♬♪:", data);
+    socket.to(thisgameNum).emit("flyingWord", data);  
+  });
+
 
   // game방 퇴장
   //플레이어 퇴장시 방폭
   //게임끝나고 유저들이 대기방가면 state(A팀, B팀)표시
   //소켓에서 대기방 연결하기.
   socket.on("disconnecting", async () => {
-      //game방 퇴장 메시지
-      socket.to(thisgameNum).emit("bye", socket.id);
-      // if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
-      //     await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
-      //                                                         //waiting룸 on.             
-      //   } else {                                                         
-      //     const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
-      //     await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
-      //   }
+    //game방 퇴장 메시지
+    socket.to(thisgameNum).emit("bye", socket.id);
+    // if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
+    //     await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
+    //                                                         //waiting룸 on.             
+    //   } else {                                                         
+    //     const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
+    //     await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
+    //   }
 
     console.log("게임 disconnecting");
   });
