@@ -96,6 +96,7 @@ waitingRoom.on("connection", (socket) => {
     socket.on("disconnecting", async () => {
       try {
       waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
+      await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
       console.log(socket.rooms)
       if(socket.rooms.has("player")){
         const playerCnt = waitingRoomCount("player") -1
