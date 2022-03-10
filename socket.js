@@ -97,13 +97,14 @@ waitingRoom.on("connection", (socket) => {
 
 //게임방 socket 시작
 const gameRoom = io.of('/game');
-let thisgameNum
+let thisgameNum 
 
 // x,y 좌표를 배열의 index값으로 변환
 let xyToIndex = (x, y) => {
   return x + y * 19;
 };
-let bboard = new Array(Math.pow(19, 2)).fill(-1);
+// let bboard = new Array(Math.pow(19, 2)).fill(-1);
+let bboard 
 let count = 0;
 
 //접속자 수
@@ -113,6 +114,7 @@ function gameRoomCount(gameNum){
 
 //game방 연결  
 gameRoom.on("connect", async (socket) =>{
+
   console.log("game 소켓 연결됨★★");
   console.log("겜방연결후 bboard",bboard);
   console.log("겜방연결후count",count);
@@ -160,10 +162,12 @@ gameRoom.on("connect", async (socket) =>{
 
   //오목 게임
   socket.on("omog", (data, state) => {
-    console.log("1212",data);
-    console.log(7878,state);
-    console.log(bboard);
-    console.log(555,count);
+    bboard = new Array(Math.pow(19, 2)).fill(-1);
+
+    console.log("오목게임data@@",data);
+    console.log("오목게임state@@",state);
+    console.log("오목게임bboard@@",bboard);
+    console.log("오목게임count@@",count);
 
     if (bboard[xyToIndex(data.x, data.y)] != -1) {
       console.log("돌아가");
