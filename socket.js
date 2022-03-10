@@ -93,12 +93,12 @@ waitingRoom.on("connection", (socket) => {
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
       waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
-      if(socket.rooms.has("player")){
-        const playerCnt = waitingRoomCount("player") -1
-        await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
-      } else {
-        const observerCnt = waitingRoomCount("observer") -1
-        await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
+      // if(socket.rooms.has("player")){
+      //   const playerCnt = waitingRoomCount("player") -1
+      //   await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
+      // } else {
+      //   const observerCnt = waitingRoomCount("observer") -1
+      //   await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
       }
     })
   });
