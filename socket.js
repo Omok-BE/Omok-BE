@@ -138,23 +138,22 @@ gameRoom.on("connect", async (socket) =>{
   //game방 채팅
   socket.on("chat", (chat) => {
     const data = {name:socket.nickname, chat};
-    socket.to(thisgameNum).emit("chat", data);
+    gameRoom.to(thisgameNum).emit("chat", data);
    });
   //game방 훈수채팅
   socket.on("teaching", (chat) => {
     const data = {name:socket.nickname, chat};
     console.log("훈수쳇소켓닉네임:",socket.nickname);
     console.log("훈수쳇 data:", data);
-    socket.to(thisgameNum).emit("teaching", data);  
+    gameRoom.to(thisgameNum).emit("teaching", data);  
   });
   //game방 플라잉채팅
   socket.on("flyingWord", (chat) => {
     const data = {name:socket.nickname, chat};
     console.log("플라잉채팅소켓 닉네임♬♪:",socket.nickname);
     console.log("플라잉채팅소켓 data♬♪:", data);
-    socket.to(thisgameNum).emit("flyingWord", data);  
+    gameRoom.to(thisgameNum).emit("flyingWord", data);  
   });
-
 
   //오목 게임
   socket.on("omog", (data, state) => {
@@ -173,12 +172,10 @@ gameRoom.on("connect", async (socket) =>{
       // data.order
       count++;
       data.count = count;
-      console.log(count, state);
-      io.emit("omog", data);
+      console.log("오목게임",count, state);
+      gameRoom.to(thisgameNum).emit("omog", data);
     }
   });
-
-
 
 
 
@@ -188,7 +185,7 @@ gameRoom.on("connect", async (socket) =>{
   //소켓에서 대기방 연결하기.
   socket.on("disconnecting", async () => {
     //game방 퇴장 메시지
-    socket.to(thisgameNum).emit("bye", socket.id);
+    gameRoom.to(thisgameNum).emit("bye", socket.id);
     // if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
     //     await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
     //                                                         //waiting룸 on.             
