@@ -114,7 +114,7 @@ gameRoom.on("connect", async (socket) =>{
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
       //"일번방"이름의 방에 조인
-      socket.join(gameNum);
+      socket.join(gameNum); 
   });
 
   //game방 채팅
