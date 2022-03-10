@@ -111,16 +111,16 @@ gameRoom.on("connect", async (socket) =>{
     console.log(`게임방 이벤트: ${event}`);
 
   // 유저 id를 닉네임 설정
-  socket.on("nickname", (nickname) => socket["nickname"] = nickname); 
-
+  socket.on("nickname", (nickname) => {
+    socket["nickname"] = nickname
+    console.log("게임방 닉네임은?",nickname)
+  }); 
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
       thisgameNum = gameNum;
       //"일번방"이름의 방에 조인
-
       console.log(`게임쳇 조인게임:${gameNum}`);
       socket.join(gameNum);
-
   });
 
   //game방 채팅
