@@ -61,12 +61,7 @@ waitingRoom.on("connection", (socket) => {
       socket.join(player)
       const playerCnt = waitingRoomCount(player)
       const observerCnt = waitingRoomCount(previousTeam)
-      if (playerCnt) {
-        await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt }})
-      }
-      if (observerCnt) {
-        await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { observerCnt }})
-      }
+      // await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(roomNum).emit("moveToPlayer", socket.nickname)
     })
     //옵져버로 변경시 정보 업데이트_210304
@@ -76,12 +71,7 @@ waitingRoom.on("connection", (socket) => {
       socket.join(observer)
       const playerCnt = waitingRoomCount(previousTeam)
       const observerCnt = waitingRoomCount(observer)
-      if (playerCnt) {
-        await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt }})
-      }
-      if (observerCnt) {
-        await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { observerCnt }})
-      }
+      // await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(roomNum).emit("moveToObserver", socket.nickname)
     })
     //대기실 내 채팅_210303
