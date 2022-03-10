@@ -98,6 +98,14 @@ waitingRoom.on("connection", (socket) => {
 //게임방 socket 시작
 const gameRoom = io.of('/game');
 let thisgameNum
+
+// x,y 좌표를 배열의 index값으로 변환
+let xyToIndex = (x, y) => {
+  return x + y * 19;
+};
+let bboard = new Array(Math.pow(19, 2)).fill(-1);
+let count = 0;
+
 //접속자 수
 function gameRoomCount(gameNum){
   return gameRoom.adapter.rooms.get(gameNum)?.size
@@ -120,6 +128,8 @@ gameRoom.on("connect", async (socket) =>{
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
       thisgameNum = gameNum;
+
+
       //"일번방"이름의 방에 조인
       console.log(`게임쳇 조인게임:${gameNum}`);
       socket.join(gameNum);
@@ -144,6 +154,31 @@ gameRoom.on("connect", async (socket) =>{
     console.log("플라잉채팅소켓 data♬♪:", data);
     socket.to(thisgameNum).emit("flyingWord", data);  
   });
+
+
+  //오목 게임
+  socket.on("omog", (data, state) => {
+    if (bboard[xyToIndex(data.x, data.y)] != -1) {
+      console.log("돌아가");
+    } else if (
+      (state == "playerW" && count % 2 == 0) ||
+      (state == "playerB" && count % 2 !== 0)
+    ) {
+      console.log("너의 순서가 아니다 돌아가");
+    } else {
+      count % 2 == 0
+        ? (bboard[xyToIndex(data.x, data.y)] = 1)
+        : (bboard[xyToIndex(data.x, data.y)] = 2);
+      data.board = bboard;
+      // data.order
+      count++;
+      data.count = count;
+      console.log(count, state);
+      io.emit("omog", data);
+    }
+
+
+
 
 
   // game방 퇴장
