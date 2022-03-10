@@ -110,6 +110,7 @@ router.get('/lobby/joinroom/:roomNumber', async (req, res) => {
 // [방 입장 모달창]: 버튼 입력
 router.post('/lobby/joinroom', async (req, res) => {
     const { roomNum, id, state } = req.body;
+    console.log(roomNum,id, state)
 
     try{
         const user = await User.updateOne({ id: id }, {$set: { state: state }})
