@@ -176,6 +176,7 @@ gameRoom.on("connect", async (socket) =>{
       console.log(count, state);
       io.emit("omog", data);
     }
+  });
 
 
 
