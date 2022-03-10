@@ -19,8 +19,6 @@ instrument(io, {
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting')
 let theRoomNumber;
-let playerCnt;
-let observerCnt;
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
@@ -40,12 +38,11 @@ waitingRoom.on("connection", (socket) => {
         const state = "player"
         socket.join(roomNum)
         socket.join(state)
-        playerCnt = waitingRoomCount(state)
+        const playerCnt = waitingRoomCount(state)
         await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
         console.log(socket.rooms)
-        console.log("플레이어방", playerCnt)
     });
 
     //대기실 옵져버로 입장시 정보 업데이트_210303
@@ -54,7 +51,7 @@ waitingRoom.on("connection", (socket) => {
         const state = "observer"
         socket.join(roomNum)
         socket.join(state)
-        observerCnt = waitingRoomCount(state)
+        const observerCnt = waitingRoomCount(state)
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
@@ -64,8 +61,8 @@ waitingRoom.on("connection", (socket) => {
       const previousTeam = "observer"
       socket.leave(previousTeam)
       socket.join(player)
-      playerCnt = waitingRoomCount(player)
-      observerCnt = waitingRoomCount(previousTeam)
+      const playerCnt = waitingRoomCount(player)
+      const observerCnt = waitingRoomCount(previousTeam)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(theRoomNumber).emit("moveToPlayer", socket.nickname)
     })
@@ -74,8 +71,8 @@ waitingRoom.on("connection", (socket) => {
       const previousTeam = "player"
       socket.leave(previousTeam)
       socket.join(observer)
-      playerCnt = waitingRoomCount(previousTeam)
-      observerCnt = waitingRoomCount(observer)
+      const playerCnt = waitingRoomCount(previousTeam)
+      const observerCnt = waitingRoomCount(observer)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(theRoomNumber).emit("moveToObserver", socket.nickname)
     })
@@ -92,11 +89,11 @@ waitingRoom.on("connection", (socket) => {
       await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
       console.log("소켓방", socket.rooms)
       if(socket.rooms.has("player")){
-        playerCnt--
+        const playerCnt = waitingRoomCount("player") -1
         console.log("퇴장시 플레이", playerCnt)
         await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
       } else {
-        observerCnt--
+        const observerCnt = waitingRoomCount("observer") -1
         console.log("퇴장시 관전자", observerCnt)
         await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
       }} catch(error) {
