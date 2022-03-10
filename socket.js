@@ -45,6 +45,7 @@ waitingRoom.on("connection", (socket) => {
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
       console.log("대기실 입장", socket.rooms)
       countForOnce++
+      console.log(countForOnce)
     } else {
       console.log("커트함")
     }
@@ -88,6 +89,7 @@ waitingRoom.on("connection", (socket) => {
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
         countForOnce++
+        console.log(countForOnce)
       } else {
         console.log("커트함")
       }
