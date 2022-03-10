@@ -20,6 +20,7 @@ instrument(io, {
 const waitingRoom = io.of('/waiting')
 let theRoomNumber;
 let countForOnce;
+let countForChat;
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
@@ -27,6 +28,7 @@ function waitingRoomCount(roomName){
 
 waitingRoom.on("connection", (socket) => {
     countForOnce = 0
+    countForChat = 0
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
@@ -85,13 +87,12 @@ waitingRoom.on("connection", (socket) => {
     })
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
-      countForOnce = 0
-      if (countForOnce === 0) {
-        countForOnce++
+      if (countForChat === 0) {
+        countForChat++
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
-        console.log(countForOnce)
+        console.log(countForChat)
       } else {
         console.log("커트함")
       }
