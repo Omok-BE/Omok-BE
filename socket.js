@@ -99,7 +99,7 @@ waitingRoom.on("connection", (socket) => {
       // } else {
       //   const observerCnt = waitingRoomCount("observer") -1
       //   await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
-      }
+      // }
     })
   });
 });
