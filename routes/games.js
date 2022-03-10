@@ -149,7 +149,7 @@ router.post("/gameFinish", async (req, res) => {
 });
 
 
-//결과창 get-- 작업중
+//결과창 get-- 작업중 
 router.get("/gameFinish", async (req, res) => {
     try{
         //user를 찾는 기준은? ex) id
