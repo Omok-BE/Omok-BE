@@ -238,7 +238,7 @@ gameRoom.on("connect", async (socket) =>{
     
     //게임결과
     // 해야하는일: 승, 패 정보를 users디비에 저장.
-    socket.on("result", (winner, loser) => {
+    socket.on("result", async (winner, loser) => {
       
       const score = await Users.findOne({id:winner.id}, {_id:false, id:true});
       gameRoom.to(thisgameNum).emit("result", {winner, loser})
