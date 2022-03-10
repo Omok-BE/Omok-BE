@@ -25,7 +25,7 @@ function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
 }
 
-waitingRoom.on("connection", (socket) => {
+waitingRoom.on("connection", async (socket) => {
      countForOnce = 0
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
