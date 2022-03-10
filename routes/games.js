@@ -91,7 +91,8 @@ router.post("/gameFinish", async (req, res) => {
             const winExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
                                                                   { _id:false, teachingCnt:true });
             console.log("winExistTeachingCnt는?", winExistTeachingCnt);
-
+            
+            //Number형 values값
             const findWinTeamCnt = winExistTeachingCnt.teachingCnt;  
             console.log("findWinTeamCnt값은?", findWinTeamCnt);
             console.log("findWinTeamCnt타입은?", typeof(findWinTeamCnt));    
@@ -174,7 +175,7 @@ router.post("/gameFinish", async (req, res) => {
             };
         };        
     } catch(err){
-        res.status(500).json({
+        res.status(400).json({
             ok:false,
             errorMessage:"결과창post 실패"
         });

@@ -126,7 +126,7 @@ function gameRoomCount(gameNum){
 gameRoom.on("connect", async (socket) =>{
   bboard = new Array(Math.pow(19, 2)).fill(-1);
   
-  console.log("game 소켓 연결됨★★");
+  console.log("★★game 소켓 연결됨★★");
   console.log("겜방연결후 bboard",bboard);
   console.log("겜방연결후count",count);
   console.log("겜방연결후socket.id",socket.id);
@@ -172,6 +172,8 @@ gameRoom.on("connect", async (socket) =>{
     });
 
     //오목 게임
+    //흑돌-짝, 백돌-홀 순서로 디비저장
+    //teachingCnt 저장 + teachingCnt
     socket.on("omog", (data, state) => {
       console.log("오목게임data@@",data);
       console.log("오목게임state@@",state);
@@ -197,8 +199,6 @@ gameRoom.on("connect", async (socket) =>{
         gameRoom.to(thisgameNum).emit("omog", data);
       };
     });
-    //흑돌-짝, 백돌-홀 순서로 디비저장
-    //teachingCnt 저장 + teachingCnt
   
   
   
@@ -206,30 +206,34 @@ gameRoom.on("connect", async (socket) =>{
 
 
     // game방 퇴장
-    //플레이어 퇴장시 방폭
-    //게임끝나고 유저들이 대기방가면 state(A팀, B팀)표시
-    //소켓에서 대기방 연결하기.
     socket.on("disconnecting", async () => {
       //game방 퇴장 메시지
       gameRoom.to(thisgameNum).emit("bye", socket.id);
-      // if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
-      //     await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
-      //                                                         //waiting룸 on.             
-      //   } else {                                                         
-      //     const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
-      //     await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
-      //   }
+                                                               
+      const observerCnt = gameRoomCount(thisgameNum) -3    //(-2 플레이어)+(-1 나가는 옵저버)            
+      await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
 
       console.log("게임 disconnecting");
     });
     
     
-    //게임결과
-    // 해야하는일: 승, 패 정보를 users디비에 저장.
-    socket.on("result", async (winner, loser) => {
+    //게임결과---역할확인하기
+    //해야하는일: 승, 패 정보를 users디비에 저장
+    socket.on("result", (winner, loser) => {
+      //win +1 저장
+      const winScore = await Users.findOne({id:winner}, {_id:false, score:true});
+      const addWinScore = winScore.score[0].win + 1;
+      console.log("게임결과 승+1>", addWinScore);
+
+      const updateWin = await Users.updateOne({id:winner}, {$set: {"score.0.win":addWinScore}});
       
-      const score = await Users.findOne({id:winner.id}, {_id:false, id:true});
-      gameRoom.to(thisgameNum).emit("result", {winner, loser})
+      //lose +1 저장
+      const loseScore = await Users.findOne({id:loser}, {_id:false, score:true});
+      const addLoseScore = loseScore.score[1].lose + 1;
+      console.log("게임결과 패+1>", addLoseScore);
+      
+      const updateLose = await Users.updateOne({id:winner}, {$set: {"score.1.lose":addLoseScore}});
+      gameRoom.to(thisgameNum).emit("result", {winner, loser});
     });
     
     
