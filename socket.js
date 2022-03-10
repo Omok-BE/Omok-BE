@@ -95,6 +95,7 @@ waitingRoom.on("connection", (socket) => {
       }});
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
+      try {
       waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
       if(socket.rooms.has("player")){
         const playerCnt = waitingRoomCount("player") -1
@@ -102,6 +103,8 @@ waitingRoom.on("connection", (socket) => {
       } else {
         const observerCnt = waitingRoomCount("observer") -1
         await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
+      }} catch(error) {
+        console.log(error)
       }
     })
   });
