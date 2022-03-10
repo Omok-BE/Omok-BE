@@ -52,7 +52,7 @@ waitingRoom.on("connection", (socket) => {
       const observerCnt = waitingRoomCount(state)
       await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      socket.to(roomNum).emit("welcome", socket.nickname, userInfo)
+      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
     });
     //플레이어로 변경시 정보 업데이트_210304
     socket.on("changeToPlayer", async (player) => {
@@ -62,7 +62,7 @@ waitingRoom.on("connection", (socket) => {
       const playerCnt = waitingRoomCount(player)
       const observerCnt = waitingRoomCount(previousTeam)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
-      socket.to(roomNum).emit("moveToPlayer", socket.nickname)
+      waitingRoom.to(roomNum).emit("moveToPlayer", socket.nickname)
     })
     //옵져버로 변경시 정보 업데이트_210304
     socket.on("changeToObserver", async (observer) => {
@@ -72,7 +72,7 @@ waitingRoom.on("connection", (socket) => {
       const playerCnt = waitingRoomCount(previousTeam)
       const observerCnt = waitingRoomCount(observer)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
-      socket.to(roomNum).emit("moveToObserver", socket.nickname)
+      waitingRoom.to(roomNum).emit("moveToObserver", socket.nickname)
     })
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
@@ -81,7 +81,7 @@ waitingRoom.on("connection", (socket) => {
     });
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
-      socket.to(theRoomNumber).emit("bye", socket.nickname)
+      waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
       if(socket.rooms.has("player")){
         const playerCnt = waitingRoomCount("player") -1
         await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
