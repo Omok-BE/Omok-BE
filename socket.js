@@ -160,6 +160,7 @@ gameRoom.on("connect", async (socket) =>{
     console.log("1212",data);
     console.log(7878,state);
     console.log(bboard);
+    console.log(555,count);
 
     if (bboard[xyToIndex(data.x, data.y)] != -1) {
       console.log("돌아가");
