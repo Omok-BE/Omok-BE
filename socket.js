@@ -141,7 +141,7 @@ gameRoom.on("connect", async (socket) =>{
       const data = {name:socket.nickname, chat};
       console.log("훈수쳇소켓닉네임:",socket.nickname);
       console.log("훈수쳇 data:", data);
-      socket.to(thisgameNum).emit("teaching", data);  //소켓 아이디에 전달
+      gameRoom.to(thisgameNum).emit("teaching", data);  //소켓 아이디에 전달
   });
 
   // game방 퇴장
