@@ -131,6 +131,7 @@ gameRoom.on("connect", async (socket) =>{
     const data = {name:socket.nickname, chat};
     console.log(data)
     console.log(thisgameNum)
+    console.log(socket.rooms)
     socket.to(thisgameNum).emit("chat", data);
     });
     
