@@ -32,7 +32,7 @@ waitingRoom.on("connection", (socket) => {
     //socket nickname 설정_210303
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
     //대기실 플레이어로 입장시 정보 업데이트_210303
-    socket.on("enterRoomPlayer", async (roomNum) => {
+    socket.on("enterRoomPlayer", (roomNum) => {
       countForOnce = 0
       console.log("시작",countForOnce)
       if (countForOnce === 0) {
@@ -42,9 +42,9 @@ waitingRoom.on("connection", (socket) => {
       socket.join(roomNum)
       socket.join(state)
       console.log("있나요")
-      const playerCnt = waitingRoomCount(state)
-      await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
-      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
+      // const playerCnt = waitingRoomCount(state)
+      // await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
+      // const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
       console.log("대기실 입장", socket.rooms)
       countForOnce++
