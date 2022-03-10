@@ -120,6 +120,7 @@ router.post('/lobby/joinroom', async (req, res) => {
         console.log('2',postuser.id)
         console.log('3',postuser.state)
         const userInfo = {"id": postuser.id, "state": postuser.state}
+        console.log('4',userInfo)
         res.status(201).send(userInfo);
     }catch(err){
         console.log(err);
