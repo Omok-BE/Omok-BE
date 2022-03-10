@@ -44,7 +44,7 @@ router.post('/lobby/create', async (req, res) => {
     });
     await newRoom.save();
     // 방생성자의 state값 Aplayer로 바꿔주는거 (post메서드 put으로 바꿔줘야 하나?)
-    await User.updateOne({ id: id}, {$set: {state: "Aplayer"}});
+    await User.updateOne({ id: id}, {$set: {state: "blackPlayer"}});
     // roomNum 받아오는지 확인하기
     const roomNum = await newRoom.roomNum;
     res.send({roomNum});
