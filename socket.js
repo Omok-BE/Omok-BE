@@ -113,7 +113,7 @@ gameRoom.on("connect", async (socket) =>{
   // 유저 id를 닉네임 설정
   socket.on("nickname", (nickname) => {
     socket["nickname"] = nickname
-    console.log("게임방 닉네임은?",nickname)
+    console.log("게임방 닉네임은?",nickname);
   }); 
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
@@ -126,13 +126,15 @@ gameRoom.on("connect", async (socket) =>{
   //game방 채팅
   socket.on("chat", (chat) => {
       const data = {name:socket.nickname, chat};
+      console.log("게임방소켓닉네임:",socket.nickname);
       console.log("게임쳇 data:", data);
       socket.to(thisgameNum).emit("chat", data);
-  });
-
-  //game방 훈수채팅(귓속말)
-  socket.on("teaching", (chat) => {
+    });
+    
+    //game방 훈수채팅(귓속말)
+    socket.on("teaching", (chat) => {
       const data = {name:socket.nickname, chat};
+      console.log("훈수쳇소켓닉네임:",socket.nickname);
       console.log("훈수쳇 data:", data);
       socket.to(thisgameNum).emit("teaching", data);  //소켓 아이디에 전달
   });
