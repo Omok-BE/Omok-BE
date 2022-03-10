@@ -114,6 +114,8 @@ gameRoom.on("connect", async (socket) =>{
   socket.on("nickname", (nickname) => {
     socket["nickname"] = nickname
     console.log("게임방 닉네임은?",nickname);
+    console.log("소켓닉네임은???",socket.nickname);
+
   }); 
   //socket.join(방 아이디)
   socket.on("joinGame", (gameNum) => {
@@ -126,10 +128,6 @@ gameRoom.on("connect", async (socket) =>{
   //game방 채팅
   socket.on("chat", (chat) => {
       const data = {name:socket.nickname, chat};
-      console.log("게임방소켓닉네임:",socket.nickname);
-      console.log("게임방소켓>>",socket);
-      console.log("게임방소켓adapter>>",socket.adapter);
-      console.log("게임쳇 data:", data);
       socket.to(thisgameNum).emit("chat", data);
     });
     
