@@ -149,16 +149,25 @@ router.post("/gameFinish", async (req, res) => {
 });
 
 
-//결과창 get-- 작업중 
+//결과창 get 
 router.get("/gameFinish", async (req, res) => {
     try{
-        //user를 찾는 기준은? ex) id
-        //point:[쓴포인트, 얻은포인트]나누는 방법?
-        let user = await Users.findOne({id}, {_id:false, score:true, point:true, state:true});
+        const { id, gameNum, result } = req.body;
+        
+        //훈수채팅 수
+        const existTeachingCnt = await Teaching.findOne({ id:id }, { _id:false, teachingCnt:true });
+        const useTeachingPoint = existTeachingCnt * 100;         //쓴 포인트 
+        const getTeachingPoint = useTeachingPoint * 0.5;         //얻은 포인트
+        let point = [];
+        point.push(useTeachingPoint);    
+        point.push(getTeachingPoint);    
+        
+        //score, point
+        let user = await Users.findOne({id:id}, {_id:false, id:true, score:true, state:true});
+        user.point = point;
         const userInfo = user;
 
-        //gameInfo 찾는 기준은? ex) gameNum
-        const gameInfo = await Games.findOne({gameNum}, {_id:false, blackTeamPlayer:true, 
+        const gameInfo = await Games.findOne({gameNum:gameNum}, {_id:false, blackTeamPlayer:true, 
                                     blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
 
         res.status(200).json({
@@ -177,9 +186,5 @@ router.get("/gameFinish", async (req, res) => {
         console.log(`결과창get 에러: ${err}`);
     };
 });
-
-
-
-
 
 module.exports = router;
