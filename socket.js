@@ -44,6 +44,7 @@ waitingRoom.on("connection", (socket) => {
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
       console.log("대기실 입장", socket.rooms)
+      countForOnce++
     } else {
       console.log("커트함")
     }
@@ -86,6 +87,7 @@ waitingRoom.on("connection", (socket) => {
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
+        countForOnce++
       } else {
         console.log("커트함")
       }
