@@ -90,61 +90,95 @@ router.post("/gameFinish", async (req, res) => {
             //훈수채팅 수
             const winExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
                                                                   { _id:false, teachingCnt:true });
-            const winUseTeachingPoint = winExistTeachingCnt * 100;            //쓴 포인트 
+            console.log("winExistTeachingCnt는?", winExistTeachingCnt);
+
+            const findWinTeamCnt = winExistTeachingCnt.teachingCnt;  
+            console.log("findWinTeamCnt값은?", findWinTeamCnt);
+            console.log("findWinTeamCnt타입은?", typeof(findWinTeamCnt));    
+            
+            //point
+            const winUseTeachingPoint = findWinTeamCnt * 100;            //쓴 포인트 
             const winGetTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
             const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint;  //총 포인트 
             //포인트 업데이트
             const winPointUp = await Users.updateOne({ id:state.whiteTeamObserver }, 
                                                                 { $set: { point:winTotalPoint} }); 
-            console.log(`이긴팀 observer포인트업: ${ winPointUp }`);
+            console.log(`이긴백팀 포인트업: ${ winPointUp }`);
                 res.status(200).json({
                     ok:true,
-                    message: "결과창 성공!"
+                    message: "이긴백팀 포인트업 성공!"
                 });
             } else (state === blackTeamObserver); {  //진팀 blackTeamObserver 포인트 지급
             //훈수채팅 수
             const loseExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
-                                                                      { _id:false, teachingCnt:true });
-            const loseUseTeachingPoint = loseExistTeachingCnt * 100;   //쓴 포인트 
+                                                                    { _id:false, teachingCnt:true });
+            console.log("loseExistTeachingCnt>>", loseExistTeachingCnt);
+            const findLoseTeamCnt = loseExistTeachingCnt.teachingCnt;  
+            console.log("findLoseTeamCnt값은?", findLoseTeamCnt);
+            console.log("findLoseTeamCnt타입은?", typeof(findLoseTeamCnt)); 
+            
+            //point
+            const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
             const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
             const losePointDown = await Users.updateOne( { id:state.blackTeamObserver },    //포인트 업데이트
                                                             { $set: { point:loseTotalPoint } });  
-            console.log(`진팀 observer총포인트: ${ losePointDown }`);  
+            console.log(`진흑팀 포인트 다운다운: ${ losePointDown }`);
+                res.status(200).json({
+                    ok:true,
+                    message: "진흑팀 포인트 다운다운"
+                });  
             };
+            
         } else (winPlayer.state === blackTeamPlayer); {   //이긴팀 blackTeamObserver 포인트 지급  
             if(blackTeamObserver){
                 //훈수채팅 수
                 const winExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
                                                                         { _id:false, teachingCnt:true });
-                const winUseTeachingPoint = winExistTeachingCnt * 100;         //쓴 포인트 
+                console.log("winExistTeachingCnt>>", winExistTeachingCnt);
+                const findWinTeamCnt = winExistTeachingCnt.teachingCnt;
+                console.log("findWinTeamCnt값은?", findWinTeamCnt);
+                console.log("findWinTeamCnt타입은?", typeof(findWinTeamCnt));
+                
+                //point
+                const winUseTeachingPoint = findWinTeamCnt * 100;         //쓴 포인트 
                 const getTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
                 const winTotalPoint = getTeachingPoint + winUseTeachingPoint;  //총 포인트
                 //포인트 업데이트
                 const winPointUp = await Users.updateOne({ id:state.blackTeamObserver }, 
                                                                   { $set: { point:winTotalPoint} }); 
-                console.log(`이긴팀 observer포인트업: ${ winPointUp }`);
+                console.log(`이긴흑팀 포인트업업!: ${ winPointUp }`);
                     res.status(200).json({
                         ok:true,
-                        message: "결과창 성공!"
+                        message: "이긴흑팀 포인트업업 성공!"
                     });
             } else (state === whiteTeamObserver); {  //진팀 whiteTeamObserver 포인트 지급
                 //훈수채팅 수
                 const loseExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
                                                                        { _id:false, teachingCnt:true });
-                const loseUseTeachingPoint = loseExistTeachingCnt * 100;   //쓴 포인트 
+                console.log("loseExistTeachingCnt>>", loseExistTeachingCnt);
+                const findLoseTeamCnt = loseExistTeachingCnt.teachingCnt;
+                console.log("findLoseTeamCnt값은?", findLoseTeamCnt);
+                console.log("findLoseTeamCnt타입은?", typeof(findLoseTeamCnt));
+
+                //point            
+                const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
                 const loseTotalPoint = point - loseUseTeachingPoint;       //게임후 총 포인트 
                 //포인트 업데이트
                 const losePointDown = await Users.updateOne( { id:state.whiteTeamObserver }, 
                                                               { $set: { point:loseTotalPoint } });
-                console.log(`진팀 observer총포인트: ${ losePointDown }`);    
+                console.log(`진백팀 포인트 다운다운: ${ losePointDown }`);
+                res.status(200).json({
+                    ok:true,
+                    message: "진백팀 포인트 다운다운"
+                });   
             };
         };        
     } catch(err){
-        res.status(400).json({
+        res.status(500).json({
             ok:false,
-            errorMessage:"결과창get 실패"
+            errorMessage:"결과창post 실패"
         });
-        console.log(`결과창get 에러: ${err}`);
+        console.log(`결과창post 에러: ${err}`);
     };
 });
 
@@ -156,13 +190,19 @@ router.get("/gameFinish", async (req, res) => {
         
         //훈수채팅 수
         const existTeachingCnt = await Teaching.findOne({ id:id }, { _id:false, teachingCnt:true });
-        const useTeachingPoint = existTeachingCnt * 100;         //쓴 포인트 
+        console.log("existTeachingCnt>>", existTeachingCnt);
+        const findTeachingCnt = existTeachingCnt.teachingCnt;
+        console.log("findTeachingCnt값은?", findTeachingCnt);
+        console.log("findTeachingCnt타입은?", typeof(findTeachingCnt));
+
+        //point
+        const useTeachingPoint = findTeachingCnt * 100;         //쓴 포인트 
         const getTeachingPoint = useTeachingPoint * 0.5;         //얻은 포인트
         let point = [];
         point.push(useTeachingPoint);    
         point.push(getTeachingPoint);    
         
-        //score, point
+        //score
         let user = await Users.findOne({id:id}, {_id:false, id:true, score:true, state:true});
         user.point = point;
         const userInfo = user;
@@ -177,7 +217,6 @@ router.get("/gameFinish", async (req, res) => {
             ok:true,
             message: "결과창get 성공!"
         });
-
     } catch(err){
         res.status(400).json({
             ok:false,
