@@ -126,14 +126,14 @@ gameRoom.on("connect", async (socket) =>{
   //game방 채팅
   socket.on("chat", (chat) => {
       const data = {name:socket.nickname, chat};
-      console.log(`게임쳇 data:${data}`);
+      console.log("게임쳇 data:", data);
       socket.to(thisgameNum).emit("chat", data);
   });
 
   //game방 훈수채팅(귓속말)
   socket.on("teaching", (chat) => {
       const data = {name:socket.nickname, chat};
-      console.log(`훈수쳇 data:${data}`);
+      console.log("훈수쳇 data:", data);
       socket.to(thisgameNum).emit("teaching", data);  //소켓 아이디에 전달
   });
 
