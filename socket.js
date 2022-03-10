@@ -114,6 +114,7 @@ waitingRoom.on("connection", (socket) => {
 });
 
 
+
 //게임방 socket
 const gameRoom = io.of('/game');
 let thisgameNum 
@@ -141,105 +142,106 @@ gameRoom.on("connect", async (socket) =>{
   console.log("겜방연결후socket.id",socket.id);
 
   socket.onAny((event) => {
-  console.log(`게임방 이벤트: ${event}`);
+    console.log(`게임방 이벤트: ${event}`);
 
-  // 유저 id를 닉네임 설정
-  socket.on("nickname", (nickname) => {
-    socket["nickname"] = nickname
-    console.log("게임방 닉네임은?",nickname);
-    console.log("소켓닉네임은???",socket.nickname);
+    // 유저 id를 닉네임 설정
+    socket.on("nickname", (nickname) => {
+      socket["nickname"] = nickname
+      console.log("게임방 닉네임은?",nickname);
+      console.log("소켓닉네임은???",socket.nickname);
 
-  });
+    });
 
-  //개별 game방 Join 
-  socket.on("joinGame", (gameNum) => {
-      thisgameNum = gameNum;
+    //개별 game방 Join 
+    socket.on("joinGame", (gameNum) => {
+        thisgameNum = gameNum;
 
-      //"일번방"이름의 방에 조인
-      console.log(`조인게임방번호:${gameNum}`);
-      socket.join(gameNum);
-  });
+        //"일번방"이름의 방에 조인
+        console.log(`조인게임방번호:${gameNum}`);
+        socket.join(gameNum);
+    });
 
-  //game방 채팅
-  socket.on("chat", (chat) => {
-    const data = {name:socket.nickname, chat};
-    gameRoom.to(thisgameNum).emit("chat", data);
-   });
-  //game방 훈수채팅
-  socket.on("teaching", (chat) => {
-    const data = {name:socket.nickname, chat};
-    console.log("훈수쳇소켓닉네임:",socket.nickname);
-    console.log("훈수쳇 data:", data);
-    gameRoom.to(thisgameNum).emit("teaching", data);  
-  });
-  //game방 플라잉채팅
-  socket.on("flyingWord", (chat) => {
-    const data = {name:socket.nickname, chat};
-    console.log("플라잉채팅소켓 닉네임♬♪:",socket.nickname);
-    console.log("플라잉채팅소켓 data♬♪:", data);
-    gameRoom.to(thisgameNum).emit("flyingWord", data);  
-  });
+    //game방 채팅
+    socket.on("chat", (chat) => {
+      const data = {name:socket.nickname, chat};
+      gameRoom.to(thisgameNum).emit("chat", data);
+    });
+    //game방 훈수채팅
+    socket.on("teaching", (chat) => {
+      const data = {name:socket.nickname, chat};
+      console.log("훈수쳇소켓닉네임:",socket.nickname);
+      console.log("훈수쳇 data:", data);
+      gameRoom.to(thisgameNum).emit("teaching", data);  
+    });
+    //game방 플라잉채팅
+    socket.on("flyingWord", (chat) => {
+      const data = {name:socket.nickname, chat};
+      console.log("플라잉채팅소켓 닉네임♬♪:",socket.nickname);
+      console.log("플라잉채팅소켓 data♬♪:", data);
+      gameRoom.to(thisgameNum).emit("flyingWord", data);  
+    });
 
-  //오목 게임
-  socket.on("omog", (data, state) => {
-    console.log("오목게임data@@",data);
-    console.log("오목게임state@@",state);
-    console.log("오목게임bboard@@",bboard);
-    console.log("오목게임count@@",count);
+    //오목 게임
+    socket.on("omog", (data, state) => {
+      console.log("오목게임data@@",data);
+      console.log("오목게임state@@",state);
+      console.log("오목게임bboard@@",bboard);
+      console.log("오목게임count@@",count);
+      
+      if (bboard[xyToIndex(data.x, data.y)] != -1) {
+        console.log("돌아가");
+      } else if (
+        (state == "playerW" && count % 2 == 0) ||
+        (state == "playerB" && count % 2 !== 0)
+      ) {
+        console.log("너의 순서가 아니다 돌아가");
+      } else {
+        count % 2 == 0
+          ? (bboard[xyToIndex(data.x, data.y)] = 1)
+          : (bboard[xyToIndex(data.x, data.y)] = 2);
+        data.board = bboard;
+        // data.order
+        count++;
+        data.count = count;
+        console.log("오목게임",count, state);
+        gameRoom.to(thisgameNum).emit("omog", data);
+      };
+    });
+    //흑돌-짝, 백돌-홀 순서로 디비저장
+    //teachingCnt 저장 + teachingCnt
+  
+  
+  
+  
+
+
+    // game방 퇴장
+    //플레이어 퇴장시 방폭
+    //게임끝나고 유저들이 대기방가면 state(A팀, B팀)표시
+    //소켓에서 대기방 연결하기.
+    socket.on("disconnecting", async () => {
+      //game방 퇴장 메시지
+      gameRoom.to(thisgameNum).emit("bye", socket.id);
+      // if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
+      //     await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
+      //                                                         //waiting룸 on.             
+      //   } else {                                                         
+      //     const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
+      //     await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
+      //   }
+
+      console.log("게임 disconnecting");
+    });
     
-    if (bboard[xyToIndex(data.x, data.y)] != -1) {
-      console.log("돌아가");
-    } else if (
-      (state == "playerW" && count % 2 == 0) ||
-      (state == "playerB" && count % 2 !== 0)
-    ) {
-      console.log("너의 순서가 아니다 돌아가");
-    } else {
-      count % 2 == 0
-        ? (bboard[xyToIndex(data.x, data.y)] = 1)
-        : (bboard[xyToIndex(data.x, data.y)] = 2);
-      data.board = bboard;
-      // data.order
-      count++;
-      data.count = count;
-      console.log("오목게임",count, state);
-      gameRoom.to(thisgameNum).emit("omog", data);
-    };
-  });
-  //흑돌-짝, 백돌-홀 순서로 디비저장
-  //teachingCnt 저장 + teachingCnt
-  
-  
-  
-  
-
-
-  // game방 퇴장
-  //플레이어 퇴장시 방폭
-  //게임끝나고 유저들이 대기방가면 state(A팀, B팀)표시
-  //소켓에서 대기방 연결하기.
-  socket.on("disconnecting", async () => {
-    //game방 퇴장 메시지
-    gameRoom.to(thisgameNum).emit("bye", socket.id);
-    // if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
-    //     await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
-    //                                                         //waiting룸 on.             
-    //   } else {                                                         
-    //     const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
-    //     await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
-    //   }
-
-    console.log("게임 disconnecting");
-  });
-  
-  
-  //게임결과
-  //해야하는일: 승, 패 정보를 users디비에 저장.
-  // socket.on("result", (winner, loser) => {
     
-    //     const score = await users.findOne({id:winner.id}, {_id:false, id:true});
-    //     gameRoom.to(thisgameNum).emit("result", {winner : , loser: b})
-    // });
+    //게임결과
+    // 해야하는일: 승, 패 정보를 users디비에 저장.
+    socket.on("result", (winner, loser) => {
+      
+      const score = await Users.findOne({id:winner.id}, {_id:false, id:true});
+      gameRoom.to(thisgameNum).emit("result", {winner, loser})
+    });
+    
     
   });
 });
