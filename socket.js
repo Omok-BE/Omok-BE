@@ -91,7 +91,6 @@ waitingRoom.on("connection", (socket) => {
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
-        console.log(countForChat)
       }});
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
@@ -109,7 +108,6 @@ waitingRoom.on("connection", (socket) => {
     })
   });
 });
-
 
 
 //게임방 socket
