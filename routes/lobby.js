@@ -112,15 +112,13 @@ router.post('/lobby/joinroom', async (req, res) => {
     const { roomNum, id, state } = req.body;
 
     try{
-        console.log('받아온 id', id)
+        
         const user = await User.updateOne({ id: id }, {$set: { state: state }})
         
         const postuser = await User.findOne({id: id})
-        console.log('1',postuser)
-        console.log('2',postuser.id)
-        console.log('3',postuser.state)
+        
         const userInfo = {"id": postuser.id, "state": postuser.state}
-        console.log('4',userInfo)
+        
         res.status(201).send(userInfo);
     }catch(err){
         console.log(err);
