@@ -87,7 +87,7 @@ waitingRoom.on("connection", (socket) => {
       try {
       waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
       await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
-      console.log(socket.rooms)
+      console.log("소켓방", socket.rooms)
       if(socket.rooms.has("player")){
         const playerCnt = waitingRoomCount("player") -1
         console.log("퇴장시 플레이", playerCnt)
@@ -97,7 +97,7 @@ waitingRoom.on("connection", (socket) => {
         console.log("퇴장시 관전자", observerCnt)
         await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
       }} catch(error) {
-        console.log(error)
+        console.log("errorMessage",error)
       }
     })
   });
