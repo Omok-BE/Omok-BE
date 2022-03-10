@@ -34,6 +34,7 @@ waitingRoom.on("connection", (socket) => {
     //대기실 플레이어로 입장시 정보 업데이트_210303
     socket.on("enterRoomPlayer", async (roomNum) => {
       countForOnce = 0
+      console.log("시작",countForOnce)
       if (countForOnce === 0) {
       theRoomNumber = roomNum;
       const state = "player"
@@ -45,7 +46,6 @@ waitingRoom.on("connection", (socket) => {
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
       console.log("대기실 입장", socket.rooms)
       countForOnce++
-      console.log(countForOnce)
     } else {
       console.log("커트함")
     }
