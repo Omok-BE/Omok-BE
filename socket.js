@@ -132,7 +132,7 @@ gameRoom.on("connect", async (socket) =>{
     console.log(data)
     console.log(thisgameNum)
     console.log(socket.rooms)
-    io.to(thisgameNum).emit("chat", data);
+    gameRoom.to(thisgameNum).emit("chat", data);
     // socket.to(thisgameNum).emit("chat", data);
     });
     
