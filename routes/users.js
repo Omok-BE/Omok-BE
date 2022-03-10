@@ -97,15 +97,24 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/userinfo/:id', async (req, res) => {
-    const { id } = req.params;
+    try{
+        const { id } = req.params;
 
-    const userinfo = await User.findOne({ id });
-    res.send({
-        'id': userinfo.id,
-        'nickname': userinfo.nickname,
-        'score': userinfo.score,
-        'point': userinfo.point,
-    })
+        const userinfo = await User.findOne({ id });
+        res.send({
+            'id': userinfo.id,
+            'nickname': userinfo.nickname,
+            'score': userinfo.score,
+            'point': userinfo.point,
+        })
+    }catch(err){
+        console.log(err);
+        res.status(401).send({
+            errorMessage: '/로그인 체크 err'
+        })
+    }
+    
+    
 })
 
 module.exports = router;
