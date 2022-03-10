@@ -157,8 +157,10 @@ gameRoom.on("connect", async (socket) =>{
 
   //오목 게임
   socket.on("omog", (data, state) => {
-    console.log("1212",data)
-    console.log(7878,state)
+    console.log("1212",data);
+    console.log(7878,state);
+    console.log(bboard);
+
     if (bboard[xyToIndex(data.x, data.y)] != -1) {
       console.log("돌아가");
     } else if (
