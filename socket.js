@@ -145,11 +145,11 @@ gameRoom.on("connect", async (socket) =>{
       //game방 퇴장 메시지
       socket.to(thisgameNum).emit("bye", socket.id);
       if(socket.rooms.has("player")){                         // 나가는 사람이 플레이어라면
-          await Rooms.destroy({ where: { gameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
+          await Rooms.destroy({ where: { gameNum:thisgameNum }})          //소켓게임방 자동 삭제후 유저들이 대기방으로가면
                                                               //waiting룸 on.             
         } else {                                                         
           const observerCnt = gameRoomCount("observer") -1    // 나가는 사람이 관전자면 -1            
-          await Rooms.updateOne({ gameNum }, { $set: { observerCnt }})
+          await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
         }
 
     console.log("게임 disconnecting");
