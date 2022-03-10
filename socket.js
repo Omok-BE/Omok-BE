@@ -45,6 +45,7 @@ waitingRoom.on("connection", (socket) => {
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
         console.log(socket.rooms)
+        console.log("플레이어방", playerCnt)
     });
 
     //대기실 옵져버로 입장시 정보 업데이트_210303
