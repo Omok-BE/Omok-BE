@@ -87,10 +87,10 @@ waitingRoom.on("connection", (socket) => {
     socket.on("chat", (chat) => {
       countForOnce = 0
       if (countForOnce === 0) {
+        countForOnce++
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
         console.log("채팅", data)
-        countForOnce++
         console.log(countForOnce)
       } else {
         console.log("커트함")
