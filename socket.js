@@ -36,6 +36,7 @@ waitingRoom.on("connection", (socket) => {
     socket.on("enterRoomPlayer", async (roomNum) => {
       console.log("시작",countForOnce)
       if (countForOnce === 0) {
+      countForOnce++
       theRoomNumber = roomNum;
       const state = "player"
       console.log("어디쯤")
@@ -47,7 +48,6 @@ waitingRoom.on("connection", (socket) => {
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
       console.log("대기실 입장", socket.rooms)
-      countForOnce++
     } else {
       console.log("커트함")
     }
