@@ -26,6 +26,7 @@ function waitingRoomCount(roomName){
 }
 
 waitingRoom.on("connection", (socket) => {
+     countForOnce = 0
     console.log("client와 연결됨 ✅");
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
@@ -33,7 +34,6 @@ waitingRoom.on("connection", (socket) => {
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
     //대기실 플레이어로 입장시 정보 업데이트_210303
     socket.on("enterRoomPlayer", (roomNum) => {
-      countForOnce = 0
       console.log("시작",countForOnce)
       if (countForOnce === 0) {
       theRoomNumber = roomNum;
@@ -42,11 +42,10 @@ waitingRoom.on("connection", (socket) => {
       socket.join(roomNum)
       socket.join(state)
       console.log("있나요")
-      // const playerCnt = waitingRoomCount(state)
-      // await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
-      // const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-      // waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-      waitingRoom.to(roomNum).emit("welcome", socket.nickname)
+      const playerCnt = waitingRoomCount(state)
+      await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
+      const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
+      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
       console.log("대기실 입장", socket.rooms)
       countForOnce++
     } else {
