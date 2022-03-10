@@ -41,7 +41,7 @@ waitingRoom.on("connection", (socket) => {
       await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
       const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-      console.log(socket.rooms)
+      console.log("대기실 입장", socket.rooms)
     });
     //대기실 옵져버로 입장시 정보 업데이트_210303
     socket.on("enterRoomObserver", async (roomNum) => {
@@ -78,6 +78,7 @@ waitingRoom.on("connection", (socket) => {
     socket.on("chat", (chat) => {
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
+        console.log("채팅", data)
     });
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
