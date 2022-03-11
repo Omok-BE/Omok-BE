@@ -12,6 +12,7 @@ router.post('/room/userInfo', async (req,res) => {
             userInfo
         })
     } catch(error){
+        console.log(error)
         res.status(400).json({ ok: false })
     }
 })

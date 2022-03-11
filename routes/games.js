@@ -21,8 +21,9 @@ router.post('/game/create', async (req, res) => {
             whiteTeamPlayer,
             whiteTeamObserver
         });
-        res.json({ ok: true });
+        res.status(201).json({ ok: true });
     } catch(error) {
+        console.log(error)
         res.status(400).json({ ok: false });
     }
 })
