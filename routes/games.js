@@ -183,8 +183,8 @@ router.post("/gameFinish", async (req, res) => {
 });
 
 
-//결과창 get 
-router.get("/gameFinish", async (req, res) => {
+//결과창 post 
+router.post("/gameFinish/show", async (req, res) => {
     try{
         const { id, gameNum, result } = req.body;
         
