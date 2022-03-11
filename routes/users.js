@@ -113,6 +113,7 @@ router.get('/userinfo/:id', async (req, res) => {
             'nickname': userinfo.nickname,
             'score': userinfo.score,
             'point': userinfo.point,
+            'state': userinfo.state,
         })
     }catch(err){
         console.log(err);
