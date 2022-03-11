@@ -129,7 +129,7 @@ const gameFinish = async (req, res) => {
             };
             
         } else (winPlayer.state === "blackPlayer"); {   //이긴팀 blackTeamObserver 포인트 지급  
-            if(blackTeamObserver){
+            if(blackObserver){
                 //훈수채팅 수
                 const winExistTeachingCnt = await Teaching.findOne({ id:state }, 
                                                                         { _id:false, teachingCnt:true });
