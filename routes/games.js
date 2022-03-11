@@ -4,6 +4,7 @@ const Rooms = require('../models/rooms');
 const Games = require('../models/games');
 const Users = require('../models/users');
 const Teaching = require('../models/teaching');
+const { exist } = require('joi');
 
 //대기실 => 게임방 입장시 게임방 생성
 router.post('/game/create', async (req, res) => {
@@ -33,7 +34,7 @@ router.post('/game/create', async (req, res) => {
 router.get('/game/start/:gameNum', async (req, res)=>{
     try {
         const { gameNum } = req.params;
-        const gameInfo = await Games.findOne({ gameNum }, 
+        const gameInfo = await Games.findOne({ gameNum:gameNum }, 
                             { _id:false, blackTeamPlayer:true, blackTeamObserver:true, 
                             whiteTeamPlayer:true, whiteTeamObserver:true });
         console.log(`gameNum?${gameNum}`);
@@ -228,14 +229,34 @@ router.get("/gameFinish", async (req, res) => {
     };
 });
 
-// //방에서 나가기 delete, remove
-// //플레이어가 2명 중 한명이라도 나가면 방 삭제 후 결과창으로 이동
+//방에서 나가기 delete, remove
+//플레이어가 2명 중 한명이라도 나가면 방 삭제 후 결과창으로 이동
+//플레이어 수를 센다
+//플레이어가 1이면 방을 삭제한다
+//나머지 인원을 결과창으로 이동시키는 방법..? 프론트?
 // router.delete("/game/delete", async (req, res) => {
+//     //id가 현재 있는 플레이어 1명인건지 2명인건지 확인 ?
 //     const { id, gameNum } = req.body;
-
-//     const existGameNum = await Games.findOne({ gameNum });
+//     const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
+//                                         { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
+//     //겜방에서 유저 찾기
+//     let players = [];      //[ "user1", "user2" ]
+//     const blackplayer = existGamePlayers[0].blackTeamPlayer;
+//     const whiteplayer = existGamePlayers[0].whiteTeamPlayer;
+//     players.push(blackplayer);
+//     players.push(whiteplayer);
     
+//     // const findId = {};
+//     for(let i = 0; i < players.length;  i++){
+//         //만약 id가 현재 방에 있는 1명만 들어오면
+//         if(id !== players[i]){
+//             await Games.delete({gameNum});
+//         }
+//     };
 
+
+    //프론트에 보내야 할것??
+    //나머지 플레이어 1명의 정보? 이유?
 
 
 // });
