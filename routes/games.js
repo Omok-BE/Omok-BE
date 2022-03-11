@@ -219,7 +219,7 @@ router.get("/gameFinish", async (req, res) => {
             result,
             ok:true,
             message: "결과창get 성공!"
-        });
+        }); 
     } catch(err){
         console.log(`API_결과창get 에러: ${err}`);
         res.status(400).json({
