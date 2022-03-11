@@ -95,9 +95,7 @@ router.post('/lobby/create', async (req, res) => {
 router.get('/lobby/joinroom/:roomNum', async (req, res) => {
     try{
         const { roomNum } = req.params;
-        console.log(roomNum)
         const room = await Room.findOne({ roomNum: roomNum });
-        console.log(room)
         res.send(room);
     }catch(err){
         console.log(err);
