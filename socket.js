@@ -183,8 +183,8 @@ gameRoom.on("connect", async (socket) =>{
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
         console.log("돌아가");
       } else if (
-        (state == "playerW" && count % 2 == 0) ||
-        (state == "playerB" && count % 2 !== 0)
+        (state == "whitePlayer" && count % 2 == 0) ||
+        (state == "blackPlayer" && count % 2 !== 0)
       ) {
         console.log("너의 순서가 아니다 돌아가");
       } else {
