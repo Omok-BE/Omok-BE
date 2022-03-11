@@ -1,20 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const Users = require('../models/users');
+const { userInfo } = require('../controller/room');
 
 // 대기실 입장시 유저 정보 전달
-router.post('/room/userInfo', async (req,res) => {
-    try {
-        const { id } = req.body;
-        const userInfo = await Users.findOne({ id }, { _id: false, id: true, score: true, state: true,  })
-        res.status(200).json({
-            userInfo
-        })
-    } catch(error){
-        console.log(error)
-        res.status(400).json({ ok: false })
-    }
-})
+router.post('/room/userInfo', userInfo);
 
 module.exports = router;

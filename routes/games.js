@@ -196,17 +196,19 @@ router.get("/gameFinish", async (req, res) => {
         console.log("API_findTeachingCnt타입은?", typeof(findTeachingCnt));
 
         //point
-        const useTeachingPoint = findTeachingCnt * 100;      //쓴 포인트 
-        const getTeachingPoint = useTeachingPoint * 0.5;     //얻은 포인트
-        let point = [];
-        point.push(useTeachingPoint);    
-        point.push(getTeachingPoint);    
-        console.log("API_결과창get point:", point);
+        const usePoint = findTeachingCnt * 100;      //쓴 포인트 
+        const getPoint = useTeachingPoint * 0.5;     //얻은 포인트
+        console.log("API_결과창get usePoint:", usePoint);
+        console.log("API_결과창get getPoint:", getPoint);
         
         //score
         let userInfo = [];
-        const user = await Users.findOne({id:id}, {_id:false, id:true, score:true, state:true});
+        const user = await Users.findOne({id:id}, {_id:false, id:true, score:true});
+        const score = await Users.findOne({id:id}, {_id:false, state:true});
         userInfo.push(user);
+        userInfo.usePoint = usePoint;
+        userInfo.getPoint = getPoint;
+        userInfo.push(score);
         console.log("API_결과창get userInfo:", userInfo);
         
         const gameInfo = await Games.findOne({gameNum:gameNum}, {_id:false, blackTeamPlayer:true, 
