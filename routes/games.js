@@ -204,15 +204,13 @@ router.get("/gameFinish", async (req, res) => {
         console.log("API_결과창get point:", point);
         
         //score
-        let user = await Users.findOne({id:id}, {_id:false, id:true, score:true, state:true});
-        user.point = point;
-        const userInfo = [];
+        let userInfo = [];
+        const user = await Users.findOne({id:id}, {_id:false, id:true, score:true, state:true});
         userInfo.push(user);
-        console.log("API_결과창get user:", user);
         console.log("API_결과창get userInfo:", userInfo);
         
         const gameInfo = await Games.findOne({gameNum:gameNum}, {_id:false, blackTeamPlayer:true, 
-            blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
+                                                 blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
         console.log("API_결과창get gameInfo:", gameInfo);
             
         res.status(200).json({
@@ -221,7 +219,7 @@ router.get("/gameFinish", async (req, res) => {
             result,
             ok:true,
             message: "결과창get 성공!"
-        });
+        }); 
     } catch(err){
         console.log(`API_결과창get 에러: ${err}`);
         res.status(400).json({
@@ -234,7 +232,6 @@ router.get("/gameFinish", async (req, res) => {
 //방에서 나가기
 router.delete("/game/delete", async (req, res) => {
     try{
-
         const { gameNum } = req.body;
         const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
             { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
