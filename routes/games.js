@@ -46,11 +46,11 @@ router.get('/game/start/:gameNum', async (req, res)=>{
             message: "게임방 입장해서 정보가져오기 성공!"
         });
     } catch(err) {
+        console.log(`API_게임방 에러: ${err}`);
         res.status(400).json({ 
             ok:false,
             errorMessage:"게임방 입장해서 정보를 가져오지 못했어요"
         });
-        console.log(`API_게임방 에러: ${err}`);
     };
 });
 
@@ -174,11 +174,11 @@ router.post("/gameFinish", async (req, res) => {
             };
         };        
     } catch(err){
+        console.log(`API_결과창post 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"결과창post 실패"
         });
-        console.log(`API_결과창post 에러: ${err}`);
     };
 });
 
@@ -223,44 +223,34 @@ router.get("/gameFinish", async (req, res) => {
             message: "결과창get 성공!"
         });
     } catch(err){
+        console.log(`API_결과창get 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"결과창get 실패"
         });
-        console.log(`API_결과창get 에러: ${err}`);
     };
 });
 
-// //방에서 나가기 delete, remove
-// //플레이어가 2명 중 한명이라도 나가면 방 삭제 후 결과창으로 이동
-// //플레이어 수를 센다
-// //플레이어가 1이면 방을 삭제한다
-// //나머지 인원을 결과창으로 이동시키는 방법..? 프론트?
-// router.delete("/game/delete", async (req, res) => {
-//     //id가 현재 있는 플레이어 1명인건지 2명인건지 확인 ?
-//     const { id, gameNum } = req.body;
-//     const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
-//                                         { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
-//     //겜방에서 유저 찾기
-//     let players = [];      //[ "user1", "user2" ]
-//     const blackplayer = existGamePlayers[0].blackTeamPlayer;
-//     const whiteplayer = existGamePlayers[0].whiteTeamPlayer;
-//     players.push(blackplayer);
-//     players.push(whiteplayer);
-    
-//     // const findId = {};
-//     for(let i = 0; i < players.length;  i++){
-//         //만약 id가 현재 방에 있는 1명만 들어오면
-//         if(id !== players[i]){
-//             await Games.delete({gameNum});
-//         }
-//     };
+//방에서 나가기
+router.delete("/game/delete", async (req, res) => {
+    try{
 
-
-//     //프론트에 보내야 할것??
-//     //나머지 플레이어 1명의 정보? 이유?
-
-
-// // });
+        const { gameNum } = req.body;
+        const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
+            { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
+        if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
+        await Games.delete({gameNum});
+            res.status(200).json({
+                ok:true,
+                message: "방에서 나가기 성공!"
+            });
+        } catch(err){
+            console.log(`API_방에서 나가기 에러: ${err}`);
+            res.status(400).json({
+            ok:false,
+            errorMessage:"방에서 나가기 실패"
+        });
+        }
+});
 
 module.exports = router;
