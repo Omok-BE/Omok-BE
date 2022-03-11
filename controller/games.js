@@ -61,16 +61,13 @@ const gameFinish = async (req, res) => {
         const state = userInfo.state;
         const score = userInfo.score;
         const point = userInfo.point;
-        // id를 기준으로 디비에서 총인원에 대한 
-        // score, point, state를 찾는다.
        
          //승자id 
         const resultId = result.win;    
         console.log(`API_결과창 resultId>${resultId}`); 
         const winPlayer = {};
         //Player 
-        //state가 blackTeamPlayer와 whiteTeamPlayer같고  (player일때)
-        if (state === blackTeamPlayer && state === whiteTeamPlayer){
+        if (state === "blackPlayer" && state === "whitePlayer"){
             //resultId가 id와 같으면 (우승자 id일떄)
             if(resultId === id){    //승Player
                 winPlayer = await Users.findOne({ id:resultId }, { score:score, point:point, state:state }); 
@@ -85,11 +82,11 @@ const gameFinish = async (req, res) => {
         };
         
         //Observer 
-        //이긴팀 whiteTeamObserver 포인트 지급   
-        if (winPlayer.state === whiteTeamPlayer){ 
-            if(whiteTeamObserver){
+        //이긴팀 whiteObserver 포인트 지급   
+        if (winPlayer.state === "whitePlayer"){ 
+            if(whiteObserver){
             //훈수채팅 수
-            const winExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
+            const winExistTeachingCnt = await Teaching.findOne({ id:state }, 
                                                                   { _id:false, teachingCnt:true });
             console.log("API_winExistTeachingCnt는?", winExistTeachingCnt);
             
@@ -103,16 +100,16 @@ const gameFinish = async (req, res) => {
             const winGetTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
             const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint;  //총 포인트 
             //포인트 업데이트
-            const winPointUp = await Users.updateOne({ id:state.whiteTeamObserver }, 
+            const winPointUp = await Users.updateOne({ id:state.whiteObserver }, 
                                                                 { $set: { point:winTotalPoint} }); 
             console.log(`API_이긴백팀 포인트업: ${ winPointUp }`);
                 res.status(200).json({
                     ok:true,
                     message: "이긴백팀 포인트업 성공!"
                 });
-            } else (state === blackTeamObserver); {  //진팀 blackTeamObserver 포인트 지급
+            } else (state === "blackObserver"); {  //진팀 blackObserver 포인트 지급
             //훈수채팅 수
-            const loseExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
+            const loseExistTeachingCnt = await Teaching.findOne({ id:state }, 
                                                                     { _id:false, teachingCnt:true });
             console.log("API_loseExistTeachingCnt>>", loseExistTeachingCnt);
             const findLoseTeamCnt = loseExistTeachingCnt.teachingCnt;  
@@ -122,7 +119,7 @@ const gameFinish = async (req, res) => {
             //point
             const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
             const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
-            const losePointDown = await Users.updateOne( { id:state.blackTeamObserver },    //포인트 업데이트
+            const losePointDown = await Users.updateOne( { id:state },    //포인트 업데이트
                                                             { $set: { point:loseTotalPoint } });  
             console.log(`API_진흑팀 포인트 다운다운: ${ losePointDown }`);
                 res.status(200).json({
@@ -131,10 +128,10 @@ const gameFinish = async (req, res) => {
                 });  
             };
             
-        } else (winPlayer.state === blackTeamPlayer); {   //이긴팀 blackTeamObserver 포인트 지급  
+        } else (winPlayer.state === "blackPlayer"); {   //이긴팀 blackTeamObserver 포인트 지급  
             if(blackTeamObserver){
                 //훈수채팅 수
-                const winExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
+                const winExistTeachingCnt = await Teaching.findOne({ id:state }, 
                                                                         { _id:false, teachingCnt:true });
                 console.log("API_winExistTeachingCnt>>", winExistTeachingCnt);
                 const findWinTeamCnt = winExistTeachingCnt.teachingCnt;
@@ -146,16 +143,16 @@ const gameFinish = async (req, res) => {
                 const getTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
                 const winTotalPoint = getTeachingPoint + winUseTeachingPoint;  //총 포인트
                 //포인트 업데이트
-                const winPointUp = await Users.updateOne({ id:state.blackTeamObserver }, 
+                const winPointUp = await Users.updateOne({ id:state }, 
                                                                   { $set: { point:winTotalPoint} }); 
                 console.log(`API_이긴흑팀 포인트업업!: ${ winPointUp }`);
                     res.status(200).json({
                         ok:true,
                         message: "이긴흑팀 포인트업업 성공!"
                     });
-            } else (state === whiteTeamObserver); {  //진팀 whiteTeamObserver 포인트 지급
+            } else (state === "whiteObserver"); {  //진팀 whiteObserver 포인트 지급
                 //훈수채팅 수
-                const loseExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
+                const loseExistTeachingCnt = await Teaching.findOne({ id:state }, 
                                                                        { _id:false, teachingCnt:true });
                 console.log("API_loseExistTeachingCnt>>", loseExistTeachingCnt);
                 const findLoseTeamCnt = loseExistTeachingCnt.teachingCnt;
@@ -166,7 +163,7 @@ const gameFinish = async (req, res) => {
                 const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
                 const loseTotalPoint = point - loseUseTeachingPoint;       //게임후 총 포인트 
                 //포인트 업데이트
-                const losePointDown = await Users.updateOne( { id:state.whiteTeamObserver }, 
+                const losePointDown = await Users.updateOne( { id:state }, 
                                                               { $set: { point:loseTotalPoint } });
                 console.log(`API_진백팀 포인트 다운다운: ${ losePointDown }`);
                 res.status(200).json({
