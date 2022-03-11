@@ -56,7 +56,11 @@ const gameStart = async (req, res)=>{
 //결과창 post
 const gameFinish = async (req, res) => {
     try {                      //blackPlayer     //승패결과
-        const { id, score, point, state, gameNum, result } = req.body;
+        const { userInfo, gameNum, result } = req.body;
+        const id = userInfo.id;
+        const state = userInfo.state;
+        const score = userInfo.score;
+        const point = userInfo.point;
         // id를 기준으로 디비에서 총인원에 대한 
         // score, point, state를 찾는다.
        
