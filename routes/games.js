@@ -16,7 +16,7 @@ router.post('/game/create', async (req, res) => {
         const room = await Rooms.findOne({ roomNum });
         await Games.create({
             gameNum: roomNum,
-            gameName: room.Name,
+            gameName: room.roomName,
             blackTeamPlayer,
             blackTeamObserver,
             whiteTeamPlayer,
