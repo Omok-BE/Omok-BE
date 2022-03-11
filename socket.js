@@ -201,42 +201,24 @@ gameRoom.on("connect", async (socket) =>{
     });
   
   
-  
-  
-
-
     // game방 퇴장
     socket.on("disconnecting", async () => {
       //game방 퇴장 메시지
       gameRoom.to(thisgameNum).emit("bye", socket.id);
-                                                               
       const observerCnt = gameRoomCount(thisgameNum) -3    //(-2 플레이어)+(-1 나가는 옵저버)            
-      await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }})
-
+      await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }});
       console.log("게임 disconnecting");
     });
     
     
-    //게임결과---역할확인하기
+    //게임결과
     //해야하는일: 승, 패 정보를 users디비에 저장
+    //전체에 게임이 끝났다는걸 알린다. 게임방에서 '~님 승' 메시지를 알린다
     socket.on("result", (winner, loser) => {
-      //win +1 저장
-      const winScore = await Users.findOne({id:winner}, {_id:false, score:true});
-      const addWinScore = winScore.score[0].win + 1;
-      console.log("게임결과 승+1>", addWinScore);
-
-      const updateWin = await Users.updateOne({id:winner}, {$set: {"score.0.win":addWinScore}});
-      
-      //lose +1 저장
-      const loseScore = await Users.findOne({id:loser}, {_id:false, score:true});
-      const addLoseScore = loseScore.score[1].lose + 1;
-      console.log("게임결과 패+1>", addLoseScore);
-      
-      const updateLose = await Users.updateOne({id:winner}, {$set: {"score.1.lose":addLoseScore}});
+      console.log("게임결과winner:", winner);
+      console.log("게임결과loser:", loser);
       gameRoom.to(thisgameNum).emit("result", {winner, loser});
     });
-    
-    
   });
 });
 
