@@ -7,7 +7,7 @@ const Users = require('../models/users');
 router.post('/room/userInfo', async (req,res) => {
     try {
         const { id } = req.body;
-        const userInfo = await Users.findOne({ id }, { _id: false, id: true, state: true })
+        const userInfo = await Users.findOne({ id }, { _id: false, id: true, score: true, state: true,  })
         res.status(200).json({
             userInfo
         })
