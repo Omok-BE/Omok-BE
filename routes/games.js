@@ -198,8 +198,8 @@ router.get("/gameFinish", async (req, res) => {
         console.log("findTeachingCnt타입은?", typeof(findTeachingCnt));
 
         //point
-        const useTeachingPoint = findTeachingCnt * 100;         //쓴 포인트 
-        const getTeachingPoint = useTeachingPoint * 0.5;         //얻은 포인트
+        const useTeachingPoint = findTeachingCnt * 100;      //쓴 포인트 
+        const getTeachingPoint = useTeachingPoint * 0.5;     //얻은 포인트
         let point = [];
         point.push(useTeachingPoint);    
         point.push(getTeachingPoint);    
@@ -227,5 +227,17 @@ router.get("/gameFinish", async (req, res) => {
         console.log(`결과창get 에러: ${err}`);
     };
 });
+
+// //방에서 나가기 delete, remove
+// //플레이어가 2명 중 한명이라도 나가면 방 삭제 후 결과창으로 이동
+// router.delete("/game/delete", async (req, res) => {
+//     const { id, gameNum } = req.body;
+
+//     const existGameNum = await Games.findOne({ gameNum });
+    
+
+
+
+// });
 
 module.exports = router;
