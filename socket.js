@@ -92,13 +92,13 @@ waitingRoom.on("connection", (socket) => {
       console.log(waitingRoom.adapter.rooms)
       console.log(socket.id)
       if(socket.rooms.has("player")){
-        const playerCnt = waitingRoomCount("player") -1
+        // const playerCnt = waitingRoomCount("player") -1
         console.log("퇴장시 플레이", playerCnt)
-        await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
+        // await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
       } else {
-        const observerCnt = waitingRoomCount("observer") -1
+        // const observerCnt = waitingRoomCount("observer") -1
         console.log("퇴장시 관전자", observerCnt)
-        await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
+        // await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})
       }} catch(error) {
         console.log("errorMessage",error)
       }
