@@ -37,8 +37,8 @@ router.get('/game/start/:gameNum', async (req, res)=>{
         const gameInfo = await Games.findOne({ gameNum:gameNum }, 
                             { _id:false, blackTeamPlayer:true, blackTeamObserver:true, 
                             whiteTeamPlayer:true, whiteTeamObserver:true });
-        console.log(`gameNum?${gameNum}`);
-        console.log(`게임인포 정보:${gameInfo}`);
+        console.log(`API_gameNum?${gameNum}`);
+        console.log(`API_게임인포 정보:${gameInfo}`);
 
         res.status(200).json({
             gameInfo,
@@ -50,7 +50,7 @@ router.get('/game/start/:gameNum', async (req, res)=>{
             ok:false,
             errorMessage:"게임방 입장해서 정보를 가져오지 못했어요"
         });
-        console.log(`게임방 에러: ${err}`);
+        console.log(`API_게임방 에러: ${err}`);
     };
 });
 
@@ -64,7 +64,7 @@ router.post("/gameFinish", async (req, res) => {
        
          //승자id 
         const resultId = result.win;    
-        console.log(`결과창 resultId>${resultId}`); 
+        console.log(`API_결과창 resultId>${resultId}`); 
         const winPlayer = {};
         //Player 
         //state가 blackTeamPlayer와 whiteTeamPlayer같고  (player일때)
@@ -74,11 +74,11 @@ router.post("/gameFinish", async (req, res) => {
                 winPlayer = await Users.findOne({ id:resultId }, { score:score, point:point, state:state }); 
                 await Users.updateOne({ id:resultId }, { $inc: { "score.$.win":1 } });  //승 +1
                 await Users.updateOne({ id:resultId }, { $set: { point:point + 700 } }) //포인트 +700
-                console.log(`우승자 score에 1승, point에 +700이 추가되었습니다.`);
+                console.log(`API_우승자 score에 1승, point에 +700이 추가되었습니다.`);
             } else {   //패Player
                 await Users.updateOne({ id:resultId }, { $inc: {"score.$.lose":1 }}); //패 +1
                 await Users.updateOne({ id:resultId }, { $set: { point:point - 500 } }); //포인트 -500
-                console.log(`패자 score에 1패, point에 -500이 추가되었습니다.`);
+                console.log(`API_패자 score에 1패, point에 -500이 추가되었습니다.`);
             };
         };
         
@@ -89,12 +89,12 @@ router.post("/gameFinish", async (req, res) => {
             //훈수채팅 수
             const winExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
                                                                   { _id:false, teachingCnt:true });
-            console.log("winExistTeachingCnt는?", winExistTeachingCnt);
+            console.log("API_winExistTeachingCnt는?", winExistTeachingCnt);
             
             //Number형 values값
             const findWinTeamCnt = winExistTeachingCnt.teachingCnt;  
-            console.log("findWinTeamCnt값은?", findWinTeamCnt);
-            console.log("findWinTeamCnt타입은?", typeof(findWinTeamCnt));    
+            console.log("API_findWinTeamCnt값은?", findWinTeamCnt);
+            console.log("API_findWinTeamCnt타입은?", typeof(findWinTeamCnt));    
             
             //point
             const winUseTeachingPoint = findWinTeamCnt * 100;            //쓴 포인트 
@@ -103,7 +103,7 @@ router.post("/gameFinish", async (req, res) => {
             //포인트 업데이트
             const winPointUp = await Users.updateOne({ id:state.whiteTeamObserver }, 
                                                                 { $set: { point:winTotalPoint} }); 
-            console.log(`이긴백팀 포인트업: ${ winPointUp }`);
+            console.log(`API_이긴백팀 포인트업: ${ winPointUp }`);
                 res.status(200).json({
                     ok:true,
                     message: "이긴백팀 포인트업 성공!"
@@ -112,17 +112,17 @@ router.post("/gameFinish", async (req, res) => {
             //훈수채팅 수
             const loseExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
                                                                     { _id:false, teachingCnt:true });
-            console.log("loseExistTeachingCnt>>", loseExistTeachingCnt);
+            console.log("API_loseExistTeachingCnt>>", loseExistTeachingCnt);
             const findLoseTeamCnt = loseExistTeachingCnt.teachingCnt;  
-            console.log("findLoseTeamCnt값은?", findLoseTeamCnt);
-            console.log("findLoseTeamCnt타입은?", typeof(findLoseTeamCnt)); 
+            console.log("API_findLoseTeamCnt값은?", findLoseTeamCnt);
+            console.log("API_findLoseTeamCnt타입은?", typeof(findLoseTeamCnt)); 
             
             //point
             const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
             const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
             const losePointDown = await Users.updateOne( { id:state.blackTeamObserver },    //포인트 업데이트
                                                             { $set: { point:loseTotalPoint } });  
-            console.log(`진흑팀 포인트 다운다운: ${ losePointDown }`);
+            console.log(`API_진흑팀 포인트 다운다운: ${ losePointDown }`);
                 res.status(200).json({
                     ok:true,
                     message: "진흑팀 포인트 다운다운"
@@ -134,10 +134,10 @@ router.post("/gameFinish", async (req, res) => {
                 //훈수채팅 수
                 const winExistTeachingCnt = await Teaching.findOne({ id:state.blackTeamObserver }, 
                                                                         { _id:false, teachingCnt:true });
-                console.log("winExistTeachingCnt>>", winExistTeachingCnt);
+                console.log("API_winExistTeachingCnt>>", winExistTeachingCnt);
                 const findWinTeamCnt = winExistTeachingCnt.teachingCnt;
-                console.log("findWinTeamCnt값은?", findWinTeamCnt);
-                console.log("findWinTeamCnt타입은?", typeof(findWinTeamCnt));
+                console.log("API_findWinTeamCnt값은?", findWinTeamCnt);
+                console.log("API_findWinTeamCnt타입은?", typeof(findWinTeamCnt));
                 
                 //point
                 const winUseTeachingPoint = findWinTeamCnt * 100;         //쓴 포인트 
@@ -146,7 +146,7 @@ router.post("/gameFinish", async (req, res) => {
                 //포인트 업데이트
                 const winPointUp = await Users.updateOne({ id:state.blackTeamObserver }, 
                                                                   { $set: { point:winTotalPoint} }); 
-                console.log(`이긴흑팀 포인트업업!: ${ winPointUp }`);
+                console.log(`API_이긴흑팀 포인트업업!: ${ winPointUp }`);
                     res.status(200).json({
                         ok:true,
                         message: "이긴흑팀 포인트업업 성공!"
@@ -155,10 +155,10 @@ router.post("/gameFinish", async (req, res) => {
                 //훈수채팅 수
                 const loseExistTeachingCnt = await Teaching.findOne({ id:state.whiteTeamObserver }, 
                                                                        { _id:false, teachingCnt:true });
-                console.log("loseExistTeachingCnt>>", loseExistTeachingCnt);
+                console.log("API_loseExistTeachingCnt>>", loseExistTeachingCnt);
                 const findLoseTeamCnt = loseExistTeachingCnt.teachingCnt;
-                console.log("findLoseTeamCnt값은?", findLoseTeamCnt);
-                console.log("findLoseTeamCnt타입은?", typeof(findLoseTeamCnt));
+                console.log("API_findLoseTeamCnt값은?", findLoseTeamCnt);
+                console.log("API_findLoseTeamCnt타입은?", typeof(findLoseTeamCnt));
 
                 //point            
                 const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
@@ -166,7 +166,7 @@ router.post("/gameFinish", async (req, res) => {
                 //포인트 업데이트
                 const losePointDown = await Users.updateOne( { id:state.whiteTeamObserver }, 
                                                               { $set: { point:loseTotalPoint } });
-                console.log(`진백팀 포인트 다운다운: ${ losePointDown }`);
+                console.log(`API_진백팀 포인트 다운다운: ${ losePointDown }`);
                 res.status(200).json({
                     ok:true,
                     message: "진백팀 포인트 다운다운"
@@ -178,7 +178,7 @@ router.post("/gameFinish", async (req, res) => {
             ok:false,
             errorMessage:"결과창post 실패"
         });
-        console.log(`결과창post 에러: ${err}`);
+        console.log(`API_결과창post 에러: ${err}`);
     };
 });
 
@@ -190,10 +190,10 @@ router.get("/gameFinish", async (req, res) => {
         
         //훈수채팅 수
         const existTeachingCnt = await Teaching.findOne({ id:id }, { _id:false, teachingCnt:true });
-        console.log("existTeachingCnt>>", existTeachingCnt);
+        console.log("API_existTeachingCnt>>", existTeachingCnt);
         const findTeachingCnt = existTeachingCnt.teachingCnt;
-        console.log("findTeachingCnt값은?", findTeachingCnt);
-        console.log("findTeachingCnt타입은?", typeof(findTeachingCnt));
+        console.log("API_findTeachingCnt값은?", findTeachingCnt);
+        console.log("API_findTeachingCnt타입은?", typeof(findTeachingCnt));
 
         //point
         const useTeachingPoint = findTeachingCnt * 100;      //쓴 포인트 
@@ -201,15 +201,20 @@ router.get("/gameFinish", async (req, res) => {
         let point = [];
         point.push(useTeachingPoint);    
         point.push(getTeachingPoint);    
+        console.log("API_결과창get point:", point);
         
         //score
         let user = await Users.findOne({id:id}, {_id:false, id:true, score:true, state:true});
         user.point = point;
-        const userInfo = user;
-
+        const userInfo = [];
+        userInfo.push(user);
+        console.log("API_결과창get user:", user);
+        console.log("API_결과창get userInfo:", userInfo);
+        
         const gameInfo = await Games.findOne({gameNum:gameNum}, {_id:false, blackTeamPlayer:true, 
-                                    blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
-
+            blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
+        console.log("API_결과창get gameInfo:", gameInfo);
+            
         res.status(200).json({
             userInfo,
             gameInfo,
@@ -222,15 +227,15 @@ router.get("/gameFinish", async (req, res) => {
             ok:false,
             errorMessage:"결과창get 실패"
         });
-        console.log(`결과창get 에러: ${err}`);
+        console.log(`API_결과창get 에러: ${err}`);
     };
 });
 
-//방에서 나가기 delete, remove
-//플레이어가 2명 중 한명이라도 나가면 방 삭제 후 결과창으로 이동
-//플레이어 수를 센다
-//플레이어가 1이면 방을 삭제한다
-//나머지 인원을 결과창으로 이동시키는 방법..? 프론트?
+// //방에서 나가기 delete, remove
+// //플레이어가 2명 중 한명이라도 나가면 방 삭제 후 결과창으로 이동
+// //플레이어 수를 센다
+// //플레이어가 1이면 방을 삭제한다
+// //나머지 인원을 결과창으로 이동시키는 방법..? 프론트?
 // router.delete("/game/delete", async (req, res) => {
 //     //id가 현재 있는 플레이어 1명인건지 2명인건지 확인 ?
 //     const { id, gameNum } = req.body;
@@ -252,10 +257,10 @@ router.get("/gameFinish", async (req, res) => {
 //     };
 
 
-    //프론트에 보내야 할것??
-    //나머지 플레이어 1명의 정보? 이유?
+//     //프론트에 보내야 할것??
+//     //나머지 플레이어 1명의 정보? 이유?
 
 
-// });
+// // });
 
 module.exports = router;
