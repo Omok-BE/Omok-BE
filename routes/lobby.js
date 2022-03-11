@@ -92,7 +92,7 @@ router.post('/lobby/create', async (req, res) => {
 });
 
 // [방 입장 모달창 ]
-router.get('/lobby/joinroom/:roomNumber', async (req, res) => {
+router.get('/lobby/joinroom/:roomNum', async (req, res) => {
     try{
         const { roomNum } = req.params;
         console.log(roomNum)
