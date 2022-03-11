@@ -26,6 +26,7 @@ function waitingRoomCount(roomName){
 
 waitingRoom.on("connection", (socket) => {
     console.log("client와 연결됨 ✅");
+    console.log(socket.id)
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
 
