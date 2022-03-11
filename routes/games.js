@@ -45,9 +45,6 @@ router.get('/game/start/:gameNum', async (req, res)=>{
             ok:true,
             message: "게임방 입장해서 정보가져오기 성공!"
         });
-        console.log(`게임방 userInfo: ${userInfo}`);
-        console.log(`게임방 roomInfo: ${gameInfo}`);
-
     } catch(err) {
         res.status(400).json({ 
             ok:false,
