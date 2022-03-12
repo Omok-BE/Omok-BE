@@ -7,7 +7,7 @@ const Users = require('../models/users');
 const gameCreate = async (req, res) => {
     try {
         const { roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver} = req.body;
-        const state = "ingame"
+        const state = "ingame";
         await Rooms.updateOne({ roomNum }, { set: { state }});
 
         const room = await Rooms.findOne({ roomNum });
