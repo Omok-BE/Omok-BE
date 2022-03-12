@@ -19,7 +19,7 @@ const gameCreate = async (req, res) => {
             whiteTeamPlayer,
             whiteTeamObserver
         });
-        await Rooms.deleteOne({ roomNum })
+        await Rooms.deleteOne({ roomNum });
         res.status(201).json({ ok: true });
     } catch(error) {
         console.log(error)
