@@ -30,7 +30,7 @@ const userlist =  async (req, res) => {
     }
 }
 
-const userList = async (req, res) => {
+const leaderList = async (req, res) => {
     try{
         const leaderList = await User.find({}).sort({"point": -1}).limit(5);
 
@@ -112,5 +112,5 @@ const postJoinRoom = async (req, res) => {
 }
 
 module.exports = {
-    lobby, userList, leaderBoard, createRoom, getJoinRoom
+    lobby, userList, leaderList, leaderBoard, createRoom, getJoinRoom, postJoinRoom
 };
