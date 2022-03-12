@@ -181,9 +181,9 @@ gameRoom.on("connect", async (socket) =>{
     //오목 게임
     socket.on("omog", (data, state) => {
       console.log("오목게임data@@",data);
-      console.log("오목게임state@@",state);
-      console.log("오목게임bboard@@",bboard);
-      console.log("오목게임count@@",count);
+      // console.log("오목게임state@@",state);
+      // console.log("오목게임bboard@@",bboard);
+      // console.log("오목게임count@@",count);
       
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
         console.log("돌아가");
