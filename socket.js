@@ -25,8 +25,8 @@ function waitingRoomCount(roomName){
 }
 
 waitingRoom.on("connection", (socket) => {
-    console.log("client와 연결됨 ✅");
-    console.log(socket.id)
+    console.log("connect client on waitingRoom ✅");
+    console.log("waitingRoom socket.id", socket.id)
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
 
@@ -43,7 +43,7 @@ waitingRoom.on("connection", (socket) => {
         await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-        console.log(socket.rooms)
+        console.log("입장시", socket.rooms)
     });
 
     //대기실 옵져버로 입장시 정보 업데이트_210303
@@ -56,6 +56,7 @@ waitingRoom.on("connection", (socket) => {
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+        console.log("입장시", socket.rooms)
     });
     //플레이어로 변경시 정보 업데이트_210304
     socket.on("changeToPlayer", async (player) => {
@@ -66,6 +67,7 @@ waitingRoom.on("connection", (socket) => {
       const observerCnt = waitingRoomCount(previousTeam)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(theRoomNumber).emit("moveToPlayer", socket.nickname)
+      console.log("입장시", socket.rooms)
     })
     //옵져버로 변경시 정보 업데이트_210304
     socket.on("changeToObserver", async (observer) => {
@@ -76,21 +78,22 @@ waitingRoom.on("connection", (socket) => {
       const observerCnt = waitingRoomCount(observer)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(theRoomNumber).emit("moveToObserver", socket.nickname)
+      console.log("입장시", socket.rooms)
     })
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
         const data = { nickname: socket.nickname, chat } 
         waitingRoom.to(theRoomNumber).emit("chat", data);
-        console.log("채팅", data)
+        console.log("대기실 채팅 내용", data)
       });
     //퇴장시 방 최신화_210304    
     socket.on("disconnecting", async () => {
       try {
       waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
       // await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
-      console.log("소켓방", socket.rooms)
-      console.log(waitingRoom.adapter.rooms)
-      console.log(socket.id)
+      console.log("퇴장시 존재하는 소켓방", socket.rooms)
+      console.log("퇴장시 네임스페이스 전체 소켓", waitingRoom.adapter.rooms)
+      console.log('퇴장하는 소켓 id', socket.id)
       // if(socket.rooms.has("player")){
         // const playerCnt = waitingRoomCount("player") -1
         // console.log("퇴장시 플레이", playerCnt)
