@@ -219,6 +219,7 @@ const gameDelete = async (req, res) => {
             if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
             console.log("220번")
         await Games.deleteOne({gameNum});
+        await Rooms.deleteOne({roomNum:gameNum});
             res.status(200).json({
                 ok:true,
                 message: "방에서 나가기 성공!"
