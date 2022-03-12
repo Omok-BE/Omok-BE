@@ -22,7 +22,7 @@ let theRoomNumber;
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
-}
+};
 
 waitingRoom.on("connection", (socket) => {
     console.log("connect client on waitingRoom ✅");
