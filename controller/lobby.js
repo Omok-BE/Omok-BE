@@ -17,7 +17,7 @@ const lobby = async (req, res) => {
     }
 }
 
-const userlist =  async (req, res) => {
+const userList =  async (req, res) => {
     try{
         const allUser = await User.find({ state: "online"});
 
