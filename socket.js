@@ -160,11 +160,14 @@ gameRoom.on("connect", async (socket) =>{
       console.log("게임방 채팅data:", data);
       gameRoom.to(thisgameNum).emit("chat", data);
     });
-    //game방 훈수채팅
-    socket.on("teaching", (chat) => {
+    //game방 훈수채팅 
+    socket.on("teaching", async (teachingCnt, chat) => {
       const data = {name:socket.nickname, chat};
       console.log("훈수쳇소켓닉네임:",socket.nickname);
       console.log("훈수쳇 data:", data);
+
+      //teachingCnt 업데이트  
+      await Users.updateOne( {id: socket.nickname}, { $set: {teachingCnt}});
       gameRoom.to(thisgameNum).emit("teaching", data);  
     });
     //game방 플라잉채팅
