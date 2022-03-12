@@ -209,8 +209,9 @@ const gameFinishShow = async (req, res) => {
     };
 };
 
-//방에서 나가기
+//게임방에서 play가 나갈때
 const gameDelete = async (req, res) => {
+    //먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방폭
     try{
         const { gameNum } = req.params;
         console.log("216번")
@@ -218,7 +219,7 @@ const gameDelete = async (req, res) => {
             { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
             if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
             console.log("220번")
-        await Games.delete({gameNum});
+        await Games.deleteOne({gameNum});
             res.status(200).json({
                 ok:true,
                 message: "방에서 나가기 성공!"
