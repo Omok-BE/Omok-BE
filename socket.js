@@ -22,7 +22,7 @@ let theRoomNumber;
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
-}
+};
 
 waitingRoom.on("connection", (socket) => {
     console.log("connect client on waitingRoom ✅");
@@ -160,11 +160,14 @@ gameRoom.on("connect", async (socket) =>{
       console.log("게임방 채팅data:", data);
       gameRoom.to(thisgameNum).emit("chat", data);
     });
-    //game방 훈수채팅
-    socket.on("teaching", (chat) => {
+    //game방 훈수채팅 
+    socket.on("teaching", async (teachingCnt, chat) => {
       const data = {name:socket.nickname, chat};
       console.log("훈수쳇소켓닉네임:",socket.nickname);
       console.log("훈수쳇 data:", data);
+
+      //teachingCnt 업데이트  
+      await Users.updateOne( {id: socket.nickname}, { $set: {teachingCnt}});
       gameRoom.to(thisgameNum).emit("teaching", data);  
     });
     //game방 플라잉채팅
@@ -178,9 +181,9 @@ gameRoom.on("connect", async (socket) =>{
     //오목 게임
     socket.on("omog", (data, state) => {
       console.log("오목게임data@@",data);
-      console.log("오목게임state@@",state);
-      console.log("오목게임bboard@@",bboard);
-      console.log("오목게임count@@",count);
+      // console.log("오목게임state@@",state);
+      // console.log("오목게임bboard@@",bboard);
+      // console.log("오목게임count@@",count);
       
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
         console.log("돌아가");
@@ -208,9 +211,12 @@ gameRoom.on("connect", async (socket) =>{
       try {
       gameRoom.to(thisgameNum).emit("bye", socket.id);
       const observerCnt = gameRoomCount(thisgameNum) -3    //(-2 플레이어)+(-1 나가는 옵저버)            
-      console.log("게임방 퇴장observerCnt:", observerCnt);
+      console.log("게임방 소켓 퇴장observerCnt:", observerCnt);
       await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }});
-      console.log("게임 disconnecting");
+      console.log("게임방 퇴장 소켓 disconnecting");
+      console.log("게임방 퇴장 소켓 room ", socket.rooms)
+      console.log("게임방 퇴장 네임스페이스 전체 소켓", gameRoom.adapter.rooms)
+      console.log('게임방 퇴장 소켓 id', socket.id)
     } catch(error){
       console.log(error)
     }
