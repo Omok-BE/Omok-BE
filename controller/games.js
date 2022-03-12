@@ -70,12 +70,12 @@ const gameFinish = async (req, res) => {
 
         //Player 
         if (state === "blackPlayer" || state === "whitePlayer"){
-            console.log("결과창 player찾기-state", state);
             //resultId가 id와 같으면 (우승자 id일떄)
             if(resultId === id){    //승Player
-                console.log("결과창 player찾기-state22", state);
                 await Users.updateOne({ id:resultId }, { $inc: { "score.$.win":1 } });  //승 +1
+                console.log("결과창 player찾기-state", state);
                 await Users.updateOne({ id:resultId }, { $set: { point:point + 700 } }) //포인트 +700
+                console.log("78", state);
                 console.log(`API_우승자 score에 1승, point에 +700이 추가되었습니다.`);
             } else {   //패Player
                 await Users.updateOne({ id:resultId }, { $inc: {"score.$.lose":1 }}); //패 +1
