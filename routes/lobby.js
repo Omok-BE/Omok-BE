@@ -4,7 +4,7 @@ const User = require('../models/users');
 
 const router = express.Router();
 
-const { lobby, userList, leaderBoard, createRoom, getJoinRoom } = require('../controller/lobby');
+const { lobby, userList, leaderList, leaderBoard, createRoom, getJoinRoom, postJoinRoom } = require('../controller/lobby');
 
 // 로비첫 화면
 router.get('/lobby', lobby);
@@ -13,7 +13,7 @@ router.get('/lobby', lobby);
 router.get('/lobby/userList', userList);
 
 // 로비 간이 리더리스트
-router.get('/lobby/leaderList', leaderlist);
+router.get('/lobby/leaderList', leaderList);
 
 // 리더보드 50개 정보띄워주기용
 router.get('/leaderBoard',leaderBoard );
