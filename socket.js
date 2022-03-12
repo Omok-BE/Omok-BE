@@ -26,7 +26,7 @@ function waitingRoomCount(roomName){
 
 waitingRoom.on("connection", (socket) => {
     console.log("connect client on waitingRoom ✅");
-    console.log("waitingRoom socket.id", socket.id)
+    console.log("대기실 socket.id", socket.id)
     socket.onAny((event) => {
       console.log(`Socket Event: ${event}`);
 
@@ -43,7 +43,7 @@ waitingRoom.on("connection", (socket) => {
         await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-        console.log("입장시", socket.rooms)
+        console.log("대기실 입장시", socket.rooms)
     });
 
     //대기실 옵져버로 입장시 정보 업데이트_210303
@@ -56,7 +56,7 @@ waitingRoom.on("connection", (socket) => {
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
         const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-        console.log("입장시", socket.rooms)
+        console.log("대기실 입장시", socket.rooms)
     });
     //플레이어로 변경시 정보 업데이트_210304
     socket.on("changeToPlayer", async (player) => {
@@ -67,7 +67,7 @@ waitingRoom.on("connection", (socket) => {
       const observerCnt = waitingRoomCount(previousTeam)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(theRoomNumber).emit("moveToPlayer", socket.nickname)
-      console.log("입장시", socket.rooms)
+      console.log("대기실 입장시", socket.rooms)
     })
     //옵져버로 변경시 정보 업데이트_210304
     socket.on("changeToObserver", async (observer) => {
@@ -78,7 +78,7 @@ waitingRoom.on("connection", (socket) => {
       const observerCnt = waitingRoomCount(observer)
       await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
       waitingRoom.to(theRoomNumber).emit("moveToObserver", socket.nickname)
-      console.log("입장시", socket.rooms)
+      console.log("대기실 입장시", socket.rooms)
     })
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
