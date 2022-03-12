@@ -201,7 +201,7 @@ const gameFinishShow = async (req, res) => {
             message: "결과창get 성공!"
         }); 
     } catch(err){
-        console.log(`API_결과창get 에러: ${err}`);
+        console.log(`API_결과창post 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"결과창get 실패"
