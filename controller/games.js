@@ -152,7 +152,7 @@ const gameFinish = async (req, res) => {
             message: "결과창gameFinish 성공!"
         });
     } catch(err){
-        console.log(`API_결과창post 에러: ${err}`);
+        console.log(`API_결과창gameFinish 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"결과창gameFinish 실패"
@@ -168,16 +168,16 @@ const gameFinishShow = async (req, res) => {
         
         //훈수채팅 수
         const existTeachingCnt = await Users.findOne({ id:id }, { _id:false, teachingCnt:true });
-        console.log("API_existTeachingCnt>>", existTeachingCnt);
+        console.log("API_existTeachingCnt,171번>>", existTeachingCnt);
         const findTeachingCnt = existTeachingCnt.teachingCnt;
-        console.log("API_findTeachingCnt값은?", findTeachingCnt);
-        console.log("API_findTeachingCnt타입은?", typeof(findTeachingCnt));
+        console.log("API_findTeachingCnt값은?173번", findTeachingCnt);
+        console.log("API_findTeachingCnt타입은?174번", typeof(findTeachingCnt));
 
         //point
         const usePoint = findTeachingCnt * 100;      //쓴 포인트 
         const getPoint = useTeachingPoint * 0.5;     //얻은 포인트
-        console.log("API_결과창get usePoint:", usePoint);
-        console.log("API_결과창get getPoint:", getPoint);
+        console.log("API_결과창get usePoint,179:", usePoint);
+        console.log("API_결과창get getPoint,180:", getPoint);
         
         //score
         let userInfo = [];
@@ -187,24 +187,24 @@ const gameFinishShow = async (req, res) => {
         userInfo.usePoint = usePoint;
         userInfo.getPoint = getPoint;
         userInfo.push(score);
-        console.log("API_결과창get userInfo:", userInfo);
+        console.log("API_결과창post userInfo,190:", userInfo);
         
         const gameInfo = await Games.findOne({gameNum:gameNum}, {_id:false, blackTeamPlayer:true, 
                                                  blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
-        console.log("API_결과창get gameInfo:", gameInfo);
+        console.log("API_결과창post gameInfo,194:", gameInfo);
             
         res.status(200).json({
             userInfo,
             gameInfo,
             result,
             ok:true,
-            message: "결과창get 성공!"
+            message: "gameFinishShow 성공!"
         }); 
     } catch(err){
-        console.log(`API_결과창post 에러: ${err}`);
+        console.log(`API_gameFinishShow 에러: ${err}`);
         res.status(400).json({
             ok:false,
-            errorMessage:"결과창get 실패"
+            errorMessage:"gameFinishShow 실패"
         });
     };
 };
@@ -213,9 +213,11 @@ const gameFinishShow = async (req, res) => {
 const gameDelete = async (req, res) => {
     try{
         const { gameNum } = req.params;
+        console.log("216번")
         const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
             { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
-        if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
+            if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
+            console.log("220번")
         await Games.delete({gameNum});
             res.status(200).json({
                 ok:true,
