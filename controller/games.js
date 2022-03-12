@@ -175,7 +175,7 @@ const gameFinishShow = async (req, res) => {
 
         //point
         const usePoint = findTeachingCnt * 100;      //쓴 포인트 
-        const getPoint = useTeachingPoint * 0.5;     //얻은 포인트
+        const getPoint = usePoint * 0.5;     //얻은 포인트
         console.log("API_결과창get usePoint,179:", usePoint);
         console.log("API_결과창get getPoint,180:", getPoint);
         
