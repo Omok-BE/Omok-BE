@@ -173,8 +173,8 @@ gameRoom.on("connect", async (socket) =>{
     //game방 플라잉채팅
     socket.on("flyingWord", (chat) => {
       const data = {name:socket.nickname, chat};
-      console.log("플라잉채팅소켓 닉네임♬♪:",socket.nickname);
-      console.log("플라잉채팅소켓 data♬♪:", data);
+      console.log("플라잉채팅 닉네임♬♪:",socket.nickname);
+      console.log("플라잉채팅 data♬♪:", data);
       gameRoom.to(thisgameNum).emit("flyingWord", data);  
     });
 
@@ -208,7 +208,7 @@ gameRoom.on("connect", async (socket) =>{
       const observerCnt = gameRoomCount(thisgameNum) -3    //(-2 플레이어)+(-1 나가는 옵저버)            
       console.log("게임방 소켓 퇴장observerCnt:", observerCnt);
       await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }});
-      console.log("게임방 퇴장 소켓 disconnecting");
+      console.log("게임방 퇴장 소켓 disconnecting🖐️🖐️");
       console.log("게임방 퇴장 소켓 room ", socket.rooms)
       console.log("게임방 퇴장 네임스페이스 전체 소켓", gameRoom.adapter.rooms)
       console.log('게임방 퇴장 소켓 id', socket.id)
@@ -219,8 +219,8 @@ gameRoom.on("connect", async (socket) =>{
     
     //게임결과
     socket.on("result", (winner, loser) => {
-      console.log("게임결과winner:", winner);
-      console.log("게임결과loser:", loser);
+      console.log("게임결과_소켓 winner:", winner);
+      console.log("게임결과_소켓 loser:", loser);
       gameRoom.to(thisgameNum).emit("result", {winner, loser});
     });
     
