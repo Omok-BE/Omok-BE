@@ -12,6 +12,7 @@ const userInfo = async (req,res) => {
             const user = await Users.findOne({ id: element }, { _id: false, id: true, score: true, point: true, state: true })
             userInfos.push(user)
         });
+        console.log(userInfos)
         res.status(200).json({
             userInfos
         })
