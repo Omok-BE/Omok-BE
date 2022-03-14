@@ -5,7 +5,8 @@ const roomsSchema = new mongoose.Schema({
     roomName: String,
     playerCnt: Number,
     observerCnt: Number,
-    state: String
+    state: String,
+    participants: Array
 });
 
 roomsSchema.plugin(AutoIncrement, { inc_field: 'roomNum'});
