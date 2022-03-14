@@ -1,8 +1,5 @@
-const express = require('express');
 const Room = require('../models/rooms');
 const User = require('../models/users');
-
-const router = express.Router();
 
 const lobby = async (req, res) => {
     try{

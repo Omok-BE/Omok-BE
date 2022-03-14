@@ -1,7 +1,4 @@
 const express = require('express');
-const Room = require('../models/rooms');
-const User = require('../models/users');
-
 const router = express.Router();
 
 const { lobby, userList, leaderList, leaderBoard, createRoom, getJoinRoom, postJoinRoom } = require('../controller/lobby');
