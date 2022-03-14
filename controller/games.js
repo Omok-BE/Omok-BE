@@ -124,7 +124,7 @@ const gameFinish = async (req, res) => {
             message: "결과창gameFinish 성공!"
         });
     } catch(err){
-        console.log(`API_결과창gameFinish 에러: ${err}`);
+        console.log(`API_결과창gameFinish,127번 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"결과창gameFinish 실패"
@@ -164,7 +164,7 @@ const gameFinishShow = async (req, res) => {
             message: "gameFinishShow 성공!"
         }); 
     } catch(err){
-        console.log(`API_gameFinishShow 에러: ${err}`);
+        console.log(`API_gameFinishShow,167번 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"gameFinishShow 실패"
@@ -174,23 +174,23 @@ const gameFinishShow = async (req, res) => {
 
 //게임방에서 play가 나갈때
 const gameDelete = async (req, res) => {
-    //먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방폭
+    //순서:먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방삭제
     try{
         const { gameNum } = req.params;
         const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
                                                         { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
         if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
-        await Games.deleteOne({gameNum});
         await Rooms.deleteOne({roomNum:gameNum});
+        await Games.deleteOne({gameNum});
             res.status(200).json({
                 ok:true,
-                message: "방에서 나가기 성공!"
+                message: "게임방에서 나가기 성공!"
             });
     } catch(err){
-        console.log(`API_방에서 나가기 에러: ${err}`);
+        console.log(`API_방에서 나가기 에러,190번: ${err}`);
         res.status(400).json({
         ok:false,
-        errorMessage:"방에서 나가기 실패"
+        errorMessage:"게임방에서 나가기 실패"
     });
     }
 };
