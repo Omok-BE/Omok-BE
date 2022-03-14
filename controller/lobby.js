@@ -99,8 +99,7 @@ const postJoinRoom = async (req, res) => {
 
     try{
         const user = await User.updateOne({ id: id }, {$set: { state: state }})
-        const postuser = await User.findOne({id: id})
-        const userInfo = {"id": postuser.id, "state": postuser.state}
+        const userInfo = await User.findOne({id: id})
         
         res.status(201).send(userInfo);
     }catch(err){
