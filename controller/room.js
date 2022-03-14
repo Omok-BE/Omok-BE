@@ -8,8 +8,9 @@ const userInfo = async (req,res) => {
         await Rooms.updateOne({ roomNum }, { $addToSet: { participants: id }})
         const userList = await Rooms.findOne({ roomNum }, { _id: false, participants: true })
         const userInfos = []
-        console.log(userList)
+        console.log(userList.participants)
         userList.participants.forEach( async (element) => {
+            console.log(element)
             const user = await Users.findOne({ id: element }, { _id: false, id: true, score: true, point: true, state: true })
             userInfos.push(user)
         });
