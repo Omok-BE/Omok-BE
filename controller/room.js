@@ -12,7 +12,7 @@ const userInfo = async (req,res) => {
         // for (let element of userList.participants) {
         //     const userInfo = await await Users.findOne({ id: element }, { _id: false, id: true, score: true, point: true, state: true })
         // }
-        userList.participants.forEach( (element) => {
+        userList.participants.forEach( async (element) => {
             const userInfo = await await Users.findOne({ id: element }, { _id: false, id: true, score: true, point: true, state: true })
             console.log(userInfo)
             userInfos.push(userInfo)
