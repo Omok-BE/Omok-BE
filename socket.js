@@ -18,7 +18,7 @@ instrument(io, {
 
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting')
-let theRoomNumber;
+let roomNum;
 //방 인원 카운트_210304
 function waitingRoomCount(roomName){
   return waitingRoom.adapter.rooms.get(roomName)?.size
@@ -33,82 +33,233 @@ waitingRoom.on("connection", (socket) => {
     //socket nickname 설정_210303
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
 
-    //대기실 플레이어로 입장시 정보 업데이트_210303
-    socket.on("enterRoomPlayer", async (roomNum) => {
-        theRoomNumber = roomNum;
-        const state = "player"
+    //블랙팀 플레이어로 입장시 정보 업데이트_210315
+    socket.on("enterRoomBlackPlayer", async (roomNumber) => {
+        roomNum = roomNumber;
+        const role = "player"
+        const team = "blackPlayer"
         socket.join(roomNum)
-        socket.join(state)
-        const playerCnt = waitingRoomCount(state)
-        await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
-        const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-        waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
+        socket.join(role)
+        socket.join(team)
+        const playerCnt = waitingRoomCount(team)
+        await Rooms.updateMany({ roomNum }, { $set: { playerCnt, blackTeamPlayer: socket.nickname }})
+        const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+        const userInfos = []
+        const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+        const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+        userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+        waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfos)
         console.log("대기실 입장시", socket.rooms)
     });
 
-    //대기실 옵져버로 입장시 정보 업데이트_210303
-    socket.on("enterRoomObserver", async (roomNum) => {
-        theRoomNumber = roomNum;
-        const state = "observer"
-        socket.join(roomNum)
-        socket.join(state)
-        const observerCnt = waitingRoomCount(state)
-        await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
-        const userInfo = await Users.findOne({ id: socket.nickname }, { _id: false, id: true, score: true, point: true, state: true })
-        waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfo)
-        console.log("대기실 입장시", socket.rooms)
+    //화이트팀 플레이어로 입장시 정보 업데이트_210315
+    socket.on("enterRoomWhitePlayer", async (roomNumber) => {
+      roomNum = roomNumber;
+      const role = "player"
+      const team = "whitePlayer"
+      socket.join(roomNum)
+      socket.join(role)
+      socket.join(team)
+      const playerCnt = waitingRoomCount(team)
+      await Rooms.updateMany({ roomNum }, { $set: { playerCnt, whiteTeamPlayer: socket.nickname }})
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfos)
+      console.log("대기실 입장시", socket.rooms)
+  });
+
+    //블랙팀 관전자로 입장시 정보 업데이트_210315
+    socket.on("enterRoomBlackObserver", async (roomNumber) => {
+      roomNum = roomNumber;
+      const role = "observer"
+      const team = "blackObserver"
+      socket.join(roomNum)
+      socket.join(role)
+      socket.join(team)
+      const observerCnt = waitingRoomCount(team)
+      await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
+      await Rooms.updateOne({ roomNum }, { $addToSet: { blackTeamObserver: socket.nickname }})
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfos)
+      console.log("대기실 입장시", socket.rooms)
+  });
+
+    //화이트팀 관전자로 입장시 정보 업데이트_210315
+    socket.on("enterRoomWhiteObserver", async (roomNumber) => {
+      roomNum = roomNumber;
+      const role = "observer"
+      const team = "whiteObserver"
+      socket.join(roomNum)
+      socket.join(role)
+      socket.join(team)
+      const observerCnt = waitingRoomCount(team)
+      await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
+      await Rooms.updateOne({ roomNum }, { $addToSet: { whiteTeamObserver: socket.nickname }})
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfos)
+      console.log("대기실 입장시", socket.rooms)
+  });
+
+    // 블랙팀 플레이어로 변경시 정보 업데이트_210315
+    socket.on("changeToBlackPlayer", async (previousTeam) => {
+      if (previousTeam.includes("Observer")) { 
+        socket.leave("observer") 
+        socket.join("player")
+        const playerCnt = waitingRoomCount("player")
+        const observerCnt = waitingRoomCount("observer")
+        await Rooms.updateMany({ roomNum }, { $set: { blackTeamPlayer: socket.nickname, playerCnt, observerCnt }})
+        if (previousTeam === "blackObserver") {
+          await Rooms.updateOne({ roomNum }, { $pull: { blackTeamObserver: socket.nickname }})
+        } else{
+          await Rooms.updateOne({ roomNum }, { $pull: { whiteTeamObserver: socket.nickname }})
+        }
+      } else{
+        await Rooms.updateMany({ roomNum }, { $set: { blackTeamPlayer: socket.nickname, whiteTeamPlayer: null }})
+      }
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
+      console.log("팀 변경", socket.rooms)
     });
-    //플레이어로 변경시 정보 업데이트_210304
-    socket.on("changeToPlayer", async (player) => {
-      const previousTeam = "observer"
-      socket.leave(previousTeam)
-      socket.join(player)
-      const playerCnt = waitingRoomCount(player)
-      const observerCnt = waitingRoomCount(previousTeam)
-      await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
-      waitingRoom.to(theRoomNumber).emit("moveToPlayer", socket.nickname)
-      console.log("대기실 입장시", socket.rooms)
-    })
-    //옵져버로 변경시 정보 업데이트_210304
-    socket.on("changeToObserver", async (observer) => {
-      const previousTeam = "player"
-      socket.leave(previousTeam)
-      socket.join(observer)
-      const playerCnt = waitingRoomCount(previousTeam)
-      const observerCnt = waitingRoomCount(observer)
-      await Rooms.updateMany({ roomNum: theRoomNumber }, { $set: { playerCnt, observerCnt }})
-      waitingRoom.to(theRoomNumber).emit("moveToObserver", socket.nickname)
-      console.log("대기실 입장시", socket.rooms)
-    })
+
+    // 화이트팀 플레이어로 변경시 정보 업데이트_210315
+    socket.on("changeToWhitePlayer", async (previousTeam) => {
+      if (previousTeam.includes("Observer")) { 
+        socket.leave("observer") 
+        socket.join("player")
+        const playerCnt = waitingRoomCount("player")
+        const observerCnt = waitingRoomCount("observer")
+        await Rooms.updateMany({ roomNum }, { $set: { whiteTeamPlayer: socket.nickname, playerCnt, observerCnt }})
+        if (previousTeam === "blackObserver") {
+          await Rooms.updateOne({ roomNum }, { $pull: { blackTeamObserver: socket.nickname }})
+        } else{
+          await Rooms.updateOne({ roomNum }, { $pull: { whiteTeamObserver: socket.nickname }})
+        }
+      } else{
+        await Rooms.updateMany({ roomNum }, { $set: { whiteTeamPlayer: socket.nickname, blackTeamPlayer: null }})
+      }
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
+      console.log("팀 변경", socket.rooms)
+    });
+
+    // 블랙팀 관전자로 변경시 정보 업데이트_210315
+    socket.on("changeToBlackObserver", async (previousTeam) => {
+      if (previousTeam.includes("whiteObserver")) { 
+          await Rooms.updateOne({ roomNum }, { $pull: { whiteTeamObserver: socket.nickname }})
+          await Rooms.updateOne({ roomNum }, { $addToSet: { blackTeamObserver: socket.nickname }})
+      } else {
+        socket.leave("player") 
+        socket.join("observer")
+        const playerCnt = waitingRoomCount("player")
+        const observerCnt = waitingRoomCount("observer")
+        await Rooms.updateOne({ roomNum }, { $addToSet: { blackTeamObserver: socket.nickname }})
+          if (previousTeam.includes("blackPlayer")) {
+          await Rooms.updateMany({ roomNum }, { $set: { blackTeamPlayer: null, playerCnt, observerCnt }})
+        } else {
+          await Rooms.updateMany({ roomNum }, { $set: { whiteTeamPlayer: null, playerCnt, observerCnt }})
+        }}
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
+      console.log("팀 변경", socket.rooms)
+    });
+
+    // 화이트팀 관전자로 변경시 정보 업데이트_210315
+    socket.on("changeToBlackObserver", async (previousTeam) => {
+      if (previousTeam.includes("blackObserver")) { 
+          await Rooms.updateOne({ roomNum }, { $pull: { blackTeamObserver: socket.nickname }})
+          await Rooms.updateOne({ roomNum }, { $addToSet: { whiteTeamObserver: socket.nickname }})
+      } else {
+        socket.leave("player") 
+        socket.join("observer")
+        const playerCnt = waitingRoomCount("player")
+        const observerCnt = waitingRoomCount("observer")
+        await Rooms.updateOne({ roomNum }, { $addToSet: { blackTeamObserver: socket.nickname }})
+          if (previousTeam.includes("blackPlayer")) {
+          await Rooms.updateMany({ roomNum }, { $set: { blackTeamPlayer: null, playerCnt, observerCnt }})
+        } else {
+          await Rooms.updateMany({ roomNum }, { $set: { whiteTeamPlayer: null, playerCnt, observerCnt }})
+        }}
+      const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+      const userInfos = []
+      const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+      userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+      waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
+      console.log("팀 변경", socket.rooms)
+    });
+    
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
         const data = { nickname: socket.nickname, chat } 
-        waitingRoom.to(theRoomNumber).emit("chat", data);
+        waitingRoom.to(roomNum).emit("chat", data);
         console.log("대기실 채팅 내용", data)
       });
-    //퇴장시 방 최신화_210304    
+
+    //퇴장시 방 최신화_210315   
     socket.on("disconnecting", async () => {
       try {
-      waitingRoom.to(theRoomNumber).emit("bye", socket.nickname)
-      // await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
-      console.log("퇴장시 존재하는 소켓방", socket.rooms)
-      console.log("퇴장시 네임스페이스 전체 소켓", waitingRoom.adapter.rooms)
-      console.log('퇴장하는 소켓 id', socket.id)
-      // if(socket.rooms.has("player")){
-        // const playerCnt = waitingRoomCount("player") -1
-        // console.log("퇴장시 플레이", playerCnt)
-        // await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { playerCnt }})
-      // } else {
-        // const observerCnt = waitingRoomCount("observer") -1
-        // console.log("퇴장시 관전자", observerCnt)
-        // await Rooms.updateOne({ roomNum: theRoomNumber }, { $set: { observerCnt }})}
+        await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
+        console.log("퇴장시 존재하는 소켓방", socket.rooms)
+        console.log("퇴장시 네임스페이스 전체 소켓", waitingRoom.adapter.rooms)
+        console.log('퇴장하는 소켓 id', socket.id)
+
+        if(socket.rooms.has("player")){
+          const playerCnt = waitingRoomCount("player") -1
+          console.log("플레이어 퇴장", playerCnt)
+          await Rooms.updateOne({ roomNum }, { $set: { playerCnt }})
+        }
+        if(socket.rooms.has("observer")){
+          const observerCnt = waitingRoomCount("observer") -1
+          console.log("관전자 퇴장", observerCnt)
+          await Rooms.updateOne({ roomNum }, { $set: { observerCnt }})
+        }
+        if(socket.rooms.has("blackPlayer")){
+          await Rooms.updateOne({ roomNum }, { $set: { blackTeamPlayer: null}})
+        }
+        if(socket.rooms.has("whitePlayer")){
+          await Rooms.updateOne({ roomNum }, { $set: { whiteTeamPlayer: null}})
+        }
+        if(socket.rooms.has("blackObserver")){
+          await Rooms.updateOne({ roomNum }, { $pull: { blackTeamObserver: socket.nickname }})
+        }
+        if(socket.rooms.has("whiteObserver")){
+          await Rooms.updateOne({ roomNum }, { $pull: { whiteTeamObserver: socket.nickname }})
+        }
+        const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true })
+        const userInfos = []
+        const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+        const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
+        userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
+        waitingRoom.to(roomNum).emit("bye", socket.nickname, userInfos)
       } catch(error) {
-        console.log("errorMessage",error)
+        console.log("퇴장 errorMessage", error)
       }
     })
   });
 });
-
 
 
 //게임방 socket
