@@ -27,8 +27,9 @@ function waitingRoomCount(roomName){
 waitingRoom.on("connection", (socket) => {
     console.log("connect client on waitingRoom ✅");
     console.log("대기실 socket.id", socket.id)
-    // socket.onAny((event) => {
-    //   console.log(`Socket Event: ${event}`);
+    socket.onAny((event) => {
+      console.log(`Socket Event: ${event}`);
+    });
 
     //socket nickname 설정_210303
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
@@ -201,7 +202,6 @@ waitingRoom.on("connection", (socket) => {
         console.log("퇴장 errorMessage", error)
       }
     })
-  // });
 });
 
 
@@ -231,9 +231,10 @@ gameRoom.on("connect", async (socket) =>{
   // console.log("겜방연결후count",count);
   console.log("겜방연결후socket.id",socket.id);
 
-  // socket.onAny((event) => {
-  //   console.log(`게임방 이벤트: ${event}`);
-
+  socket.onAny((event) => {
+    console.log(`게임방 이벤트: ${event}`);
+  });
+  
     // 유저 id를 닉네임 설정
     socket.on("nickname", (nickname) => {
       socket["nickname"] = nickname
@@ -317,8 +318,6 @@ gameRoom.on("connect", async (socket) =>{
       console.log("게임결과_소켓 loser:", loser);
       gameRoom.to(thisgameNum).emit("result", {winner, loser});
     });
-    
-  // });
 });
 
 module.exports = { httpServer };
