@@ -1,5 +1,3 @@
-const express = require('express');
-const nodemon = require('nodemon');
 const User = require("../models/users");
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
