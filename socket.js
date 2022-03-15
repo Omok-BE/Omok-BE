@@ -158,10 +158,15 @@ waitingRoom.on("connection", (socket) => {
     
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
-        const data = { nickname: socket.nickname, chat } 
-        waitingRoom.to(roomNum).emit("chat", data);
-        console.log("대기실 채팅 내용", data)
+      const data = { nickname: socket.nickname, chat } 
+      waitingRoom.to(roomNum).emit("chat", data);
+      console.log("대기실 채팅 내용", data)
       });
+
+    //게임 시작_210315
+    socket.on("gameStart", (roomNumber) => {
+    waitingRoom.to(roomNumber).emit("game", roomNumber)    
+    })
 
     //퇴장시 방 최신화_210315   
     socket.on("disconnecting", async () => {
