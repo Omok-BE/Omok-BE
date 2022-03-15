@@ -165,7 +165,6 @@ waitingRoom.on("connection", (socket) => {
     //퇴장시 방 최신화_210315   
     socket.on("disconnecting", async () => {
       try {
-        await Users.updateOne({ id: socket.nickname }, { $set: { state: "online" }})
         console.log("퇴장시 존재하는 소켓방", socket.rooms)
         console.log("퇴장시 네임스페이스 전체 소켓", waitingRoom.adapter.rooms)
         console.log('퇴장하는 소켓 id', socket.id)
