@@ -33,8 +33,8 @@ const gameStart = async (req, res)=>{
         const gameInfo = await Games.findOne({ gameNum:gameNum }, 
                             { _id:false, blackTeamPlayer:true, blackTeamObserver:true, 
                             whiteTeamPlayer:true, whiteTeamObserver:true });
-        console.log(`API_gameNum?${gameNum}`);
-        console.log(`API_게임인포 정보:${gameInfo}`);
+        console.log("API_gameNum?,36", gameNum);
+        console.log("API_게임인포 정보:,37", gameInfo);
 
         res.status(200).json({
             gameInfo,
