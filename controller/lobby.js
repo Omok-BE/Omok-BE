@@ -16,7 +16,7 @@ const lobby = async (req, res) => {
 
 const userList =  async (req, res) => {
     try{
-        const allUser = await User.find({ state: "online"});
+        const allUser = await User.find({ state: { $ne: "offline" } });
 
         res.send(allUser);
     }catch(err){
@@ -56,8 +56,7 @@ const leaderBoard = async (req, res) => {
 const createRoom = async (req, res) => {
     try{
         const { roomName, id } = req.body;
-
-        // !!!소켓 연결시(실제로 소켓에서 방생성)cnt가 올라가는지 확인해 보고 수정해야할 수 있음 
+ 
         const newRoom = new Room({
             roomName: roomName,
             playerCnt: 1,
@@ -67,9 +66,11 @@ const createRoom = async (req, res) => {
         await newRoom.save();
         // 방생성자의 state값 Aplayer로 바꿔주는거 (post메서드 put으로 바꿔줘야 하나?)
         await User.updateOne({ id: id}, {$set: {state: "blackPlayer"}});
-        // roomNum 받아오는지 확인하기
+        const myInfo = await User.findOne({ id: id });
+        const userInfo = { id: myInfo.id, state: myInfo.state, score:myInfo.score, point:myInfo.point }
+
         const roomNum = await newRoom.roomNum;
-        res.send({roomNum});
+        res.send({roomNum, userInfo});
     }catch(err){
         console.log(err);
         res.status(401).send({
@@ -107,7 +108,22 @@ const postJoinRoom = async (req, res) => {
         });
     }
 }
+// 작업중임
+const fastPlayer = async (req, res) => {
+    try{
+        const existRooms = await Room.findOne({ playerCnt: { $ne: 2 } })
+    }catch(err){
+        console.log(err)
+    }
+}
 
 module.exports = {
-    lobby, userList, leaderList, leaderBoard, createRoom, getJoinRoom, postJoinRoom
+    lobby, 
+    userList, 
+    leaderList, 
+    leaderBoard, 
+    createRoom, 
+    getJoinRoom, 
+    postJoinRoom,
+    fastPlayer
 };

@@ -1,7 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const { lobby, userList, leaderList, leaderBoard, createRoom, getJoinRoom, postJoinRoom } = require('../controller/lobby');
+const { 
+    lobby, 
+    userList, 
+    leaderList, 
+    leaderBoard, 
+    createRoom, 
+    getJoinRoom, 
+    postJoinRoom,
+    fastPlayer 
+} = require('../controller/lobby');
 
 // 로비첫 화면
 router.get('/lobby', lobby);
@@ -23,5 +32,8 @@ router.get('/lobby/joinroom/:roomNum', getJoinRoom);
 
 // [방 입장 모달창]: 버튼 입력
 router.post('/lobby/joinroom', postJoinRoom);
+
+//빠른 참가(플레이어)
+router.get('/lobby/fastPlayer', fastPlayer);
 
 module.exports = router;
