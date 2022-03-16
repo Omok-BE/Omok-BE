@@ -54,7 +54,6 @@ waitingRoom.on("connection", (socket) => {
         const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
         userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
         waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfos)
-        console.log("대기실 입장시", socket.rooms)
     });
 
     //관전자로 입장시 정보 업데이트_210315
@@ -79,7 +78,6 @@ waitingRoom.on("connection", (socket) => {
       const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
       userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
       waitingRoom.to(roomNum).emit("welcome", socket.nickname, userInfos)
-      console.log("대기실 입장시", socket.rooms)
   });
 
     // 플레이어로 변경시 정보 업데이트_210315
@@ -115,7 +113,6 @@ waitingRoom.on("connection", (socket) => {
       const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
       userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
       waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
-      console.log("팀 변경", socket.rooms)
     });
 
      // 관전자로 변경시 정보 업데이트_210315
@@ -153,21 +150,17 @@ waitingRoom.on("connection", (socket) => {
       const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true })
       userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver)
       waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
-      console.log("팀 변경", socket.rooms)
     });
     
     //대기실 내 채팅_210303
     socket.on("chat", (chat) => {
       const data = { nickname: socket.nickname, chat } 
       waitingRoom.to(roomNum).emit("chat", data);
-      console.log("대기실 채팅 내용", data)
       });
 
     //게임 시작_210315
     socket.on("gameStart", (roomNumber) => {
-      console.log(roomNumber)
       waitingRoom.to(roomNumber).emit("game", roomNumber)
-      console.log(socket.rooms)
     });
 
     //퇴장시 방 최신화_210315   
