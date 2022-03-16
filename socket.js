@@ -165,7 +165,9 @@ waitingRoom.on("connection", (socket) => {
 
     //게임 시작_210315
     socket.on("gameStart", (roomNumber) => {
-      waitingRoom.to(roomNumber).emit("game", roomNumber)    
+      console.log(roomNumber)
+      waitingRoom.to(roomNumber).emit("game", roomNumber)
+      console.log(socket.rooms)
     });
 
     //퇴장시 방 최신화_210315   
