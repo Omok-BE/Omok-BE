@@ -146,7 +146,7 @@ const fastPlayer = async (req, res) => {
             await Room.updateOne({ roomNum: existRooms.roomNum }, {$set: {playerCnt: 2, whiteTeamPlayer: id }})
         }
         
-        const userInfo = await User.findOne({id: id}, {_id: false, id:true, pass:false, score:true, point:true, state:true});
+        const userInfo = await User.findOne({id: id}, {_id: false, id:true, score:true, point:true, state:true});
         const roomNum = existRooms.roomNum;
         res.status(201).send({
             userInfo,
@@ -154,6 +154,20 @@ const fastPlayer = async (req, res) => {
         })
     }catch(err){
         console.log(err)
+        res.status(400).send({
+            errorMessage: '/lobby/fastPlayer/:id 에러'
+        })
+    }
+}
+
+const fastObserver = async (req, res)=> {
+    try{
+
+    }catch(err){
+        console.log(err)
+        res.status(400).send({
+            errorMessage: '/lobby/fastObserver/:id 에러'
+        })
     }
 }
 
@@ -165,5 +179,6 @@ module.exports = {
     createRoom, 
     getJoinRoom, 
     postJoinRoom,
-    fastPlayer
+    fastPlayer,
+    fastObserver
 };
