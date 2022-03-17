@@ -279,16 +279,28 @@ gameRoom.on("connect", async (socket) =>{
       console.log("게임방 채팅data:", data);
       gameRoom.to(thisgameNum).emit("chat", data);
     });
-    //game방 훈수채팅 
-    socket.on("teaching", async (teachingCnt, chat) => {
+
+    //game방 훈수채팅W 
+    socket.on("teachingW", async (teachingCnt, chat) => {
       const data = {name:socket.nickname, chat};
-      console.log("훈수쳇소켓닉네임:",socket.nickname);
-      console.log("훈수쳇 data:", data);
+      console.log("훈수쳇W소켓닉네임:",socket.nickname);
+      console.log("훈수쳇W data:", data);
 
       //teachingCnt 업데이트  
       await Users.updateOne( {id: socket.nickname}, { $set: {teachingCnt}});
-      gameRoom.to(thisgameNum).emit("teaching", data);  
+      gameRoom.to(thisgameNum).emit("teachingW", data);  
     });
+    //game방 훈수채팅B 
+    socket.on("teachingB", async (teachingCnt, chat) => {
+      const data = {name:socket.nickname, chat};
+      console.log("훈수쳇B소켓닉네임:",socket.nickname);
+      console.log("훈수쳇B data:", data);
+
+      //teachingCnt 업데이트  
+      await Users.updateOne( {id: socket.nickname}, { $set: {teachingCnt}});
+      gameRoom.to(thisgameNum).emit("teachingB", data);  
+    });
+
     //game방 플라잉채팅
     socket.on("flyingWord", (chat) => {
       const data = {name:socket.nickname, chat};
