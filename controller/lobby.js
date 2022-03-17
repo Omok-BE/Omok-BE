@@ -147,9 +147,10 @@ const fastPlayer = async (req, res) => {
         }
         
         const userInfo = await User.findOne({id: id}, {_id: false, id:true, pass:false, score:true, point:true, state:true});
-
+        const roomNum = existRooms.roomNum;
         res.status(201).send({
             userInfo,
+            roomNum: roomNum,
         })
     }catch(err){
         console.log(err)
