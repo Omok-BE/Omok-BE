@@ -1,6 +1,6 @@
 const Room = require('../models/rooms');
 const User = require('../models/users');
-
+// 로비 들어가서 방리스트 가져오기
 const lobby = async (req, res) => {
     try{
         const allRoom = await Room.find()
@@ -13,7 +13,7 @@ const lobby = async (req, res) => {
         })
     }
 }
-
+// 로비에서 offline제외 유저리스트
 const userList =  async (req, res) => {
     try{
         const allUser = await User.find({ state: { $ne: "offline" } });
@@ -26,7 +26,7 @@ const userList =  async (req, res) => {
         })
     }
 }
-
+// 로비에서 포인트기준 리더리스트
 const leaderList = async (req, res) => {
     try{
         const leaderList = await User.find({}).sort({"point": -1}).limit(5);
@@ -39,7 +39,7 @@ const leaderList = async (req, res) => {
         })
     }
 }
-
+// 리더보드
 const leaderBoard = async (req, res) => {
     try{
         const leaderList = await User.find({}).sort({"point": -1}).limit(50);
@@ -52,7 +52,7 @@ const leaderBoard = async (req, res) => {
         })
     }
 }
-
+// 방만들기
 const createRoom = async (req, res) => {
     try{
         const { roomName, id } = req.body;
@@ -62,9 +62,10 @@ const createRoom = async (req, res) => {
             playerCnt: 1,
             observerCnt: 0,
             state: 'wait',
+            blackPlayer: id,
         });
         await newRoom.save();
-        // 방생성자의 state값 Aplayer로 바꿔주는거 (post메서드 put으로 바꿔줘야 하나?)
+        
         await User.updateOne({ id: id}, {$set: {state: "blackPlayer"}});
         const myInfo = await User.findOne({ id: id });
         const userInfo = { id: myInfo.id, state: myInfo.state, score:myInfo.score, point:myInfo.point }
@@ -78,7 +79,7 @@ const createRoom = async (req, res) => {
         })
     }  
 }
-
+// 방 참가: 모달창뜰때
 const getJoinRoom = async (req, res) => {
     try{
         const { roomNum } = req.params;
@@ -91,7 +92,7 @@ const getJoinRoom = async (req, res) => {
         })
     }
 }
-
+// 방 참가: 모달창 입력
 const postJoinRoom = async (req, res) => {
     const { roomNum, id, state } = req.body;
 
@@ -100,6 +101,17 @@ const postJoinRoom = async (req, res) => {
         const postuser = await User.findOne({id: id})
         const userInfo = {"id": postuser.id, "state": postuser.state, "score": postuser.score, "point":postuser.point}
         
+        // Roomdb에도 state에 맞는 값으로 정보 변경하기
+        if(state === 'blackPlayer'){
+            await Room.updateOne({ roomNum }, {$set: { blackTeamPlayer: id }})
+        }else if(state === 'whitePlayer'){
+            await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: id }})
+        }else if(state === 'blackObserver'){
+            await Room.updateOne({ roomNum }, {$set: { blackTeamObserver: id }})
+        }else if(state === 'whiteObserver'){
+            await Room.updateOne({ roomNum }, {$set: { whiteTeamObserver: id }})
+        }
+
         res.status(201).send(userInfo);
     }catch(err){
         console.log(err);
@@ -112,6 +124,8 @@ const postJoinRoom = async (req, res) => {
 const fastPlayer = async (req, res) => {
     try{
         const existRooms = await Room.findOne({ playerCnt: { $ne: 2 } })
+
+        
     }catch(err){
         console.log(err)
     }
