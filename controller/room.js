@@ -6,7 +6,7 @@ const userInfo = async (req,res) => {
     try {
         const { roomNum } = req.params;
         console.log(roomNum)
-        const userInfos = await Rooms.aggregate([
+        const { userInfos } = await Rooms.aggregate([
             {
                 $match: { roomNum: Number(roomNum) }                
             },
