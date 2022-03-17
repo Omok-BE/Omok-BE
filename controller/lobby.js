@@ -3,6 +3,7 @@ const User = require('../models/users');
 // 로비 들어가서 방리스트 가져오기
 const lobby = async (req, res) => {
     try{
+        await Room.deleteMany({ playerCnt: 0})
         const allRoom = await Room.find()
 
         res.send(allRoom);
