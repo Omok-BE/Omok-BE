@@ -16,27 +16,27 @@ const userInfo = async (req,res) => {
                     from: "users",
                     localField: "blackTeamPlayer",
                     foreignField: "id",
-                    pipeline: [
-                        { $project: { _id: 0, __v: 0 } }
-                     ],
+                    // pipeline: [
+                    //     { $project: { _id: 0, __v: 0 } }
+                    //  ],
                       as: "blackPlayerInfo"
                 }
             },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "users",
-            //         localField: "whiteTeamPlayer",
-            //         foreignField: "id",
-            //         pipeline: [
-            //             { $project: { _id: 0, __v: 0, nickname: 0, pass: 0, teachingCnt: 0 } }
-            //          ],
-            //           as: "whitePlayerInfo"
-            //     }
-            // },
-            // {
-            //     $project: { _id: 0, __v: 0, blackTeamObserver: 1, whiteTeamObserver: 1 }
-            // }
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "whiteTeamPlayer",
+                    foreignField: "id",
+                    // pipeline: [
+                    //     { $project: { _id: 0, __v: 0, nickname: 0, pass: 0, teachingCnt: 0 } }
+                    //  ],
+                      as: "whitePlayerInfo"
+                }
+            },
+            {
+                $project: { _id: 0, __v: 0, blackTeamObserver: 1, whiteTeamObserver: 1 }
+            }
         ])
         res.status(200).json({
             userInfos
