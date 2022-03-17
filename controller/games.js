@@ -36,7 +36,7 @@ const gameStart = async (req, res)=>{
         console.log("API_gameStart의 36번gameNum:", gameNum);
         console.log("inGameUserIds", inGameUserIds);
         
-        let gameInfo
+        let gameInfo = {};
         console.log("API_gameStart의 40번gameInfo:", gameInfo);
 
         //gameInfo :{id, state, score, point}       
