@@ -11,9 +11,6 @@ const userInfo = async (req,res) => {
                 $match: { roomNum: Number(roomNum) }                
             },
             {
-                $project: { _id: 0, __v: 0 }
-            },
-            {
                 $lookup:
                 {
                     from: "users",
@@ -37,6 +34,9 @@ const userInfo = async (req,res) => {
             //           as: "whitePlayerInfo"
             //     }
             // },
+            {
+                $project: { _id: 0, __v: 0 }
+            },
         ])
         res.status(200).json({
             userInfos
