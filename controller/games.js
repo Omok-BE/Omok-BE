@@ -5,10 +5,10 @@ const Users = require('../models/users');
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
     try {
-        const { roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver} = req.body;
+        const { roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver } = req.body;
         const state = "ingame";
         await Rooms.updateOne({ roomNum }, { $set: { state }});
-
+        console.log(roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver)
         const room = await Rooms.findOne({ roomNum });
         await Games.create({
             gameNum: roomNum,
