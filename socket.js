@@ -268,9 +268,9 @@ gameRoom.on("connect", async (socket) =>{
       thisgameNum = gameNum;
       console.log(`조인게임방번호:${gameNum}`);
       socket.join(gameNum);
-      const observerCnt = gameRoomCount(thisgameNum) -2                
+      const observerCnt = gameRoomCount(gameNum) -2                
       console.log("269번 game방Join_observerCnt:", observerCnt);
-      await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt, playerCnt:2 }});
+      await Rooms.updateOne({ gameNum }, { $set: { observerCnt, playerCnt:2 }});
     }); 
 
     //game방 채팅
@@ -281,7 +281,7 @@ gameRoom.on("connect", async (socket) =>{
     });
 
     //game방 훈수채팅W 
-    socket.on("teachingW", async (teachingCnt, chat) => {
+    socket.on("teachingW", async (chat) => {
       const data = {name:socket.nickname, chat};
       console.log("훈수쳇W소켓닉네임:",socket.nickname);
       console.log("훈수쳇W data:", data);
@@ -291,7 +291,7 @@ gameRoom.on("connect", async (socket) =>{
       gameRoom.to(thisgameNum).emit("teachingW", data);  
     });
     //game방 훈수채팅B 
-    socket.on("teachingB", async (teachingCnt, chat) => { 
+    socket.on("teachingB", async (chat) => { 
       const data = {name:socket.nickname, chat};
       console.log("훈수쳇B소켓닉네임:",socket.nickname);  
       console.log("훈수쳇B data:", data);
