@@ -10,30 +10,30 @@ const userInfo = async (req,res) => {
             {
                 $match: { roomNum: Number(roomNum) }                
             },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "users",
-            //         localField: "blackTeamPlayer",
-            //         foreignField: "id",
-            //         // pipeline: [
-            //         //     { $project: { _id: 0, __v: 0 } }
-            //         //  ],
-            //           as: "blackPlayerInfo"
-            //     }
-            // },
             {
                 $lookup:
                 {
                     from: "users",
-                    localField: "whiteTeamPlayer",
+                    localField: "blackTeamPlayer",
                     foreignField: "id",
                     // pipeline: [
-                    //     { $project: { _id: 0, __v: 0, nickname: 0, pass: 0, teachingCnt: 0 } }
+                    //     { $project: { _id: 0, __v: 0 } }
                     //  ],
-                      as: "whitePlayerInfo"
+                      as: "blackPlayerInfo"
                 }
             },
+            // {
+            //     $lookup:
+            //     {
+            //         from: "users",
+            //         localField: "whiteTeamPlayer",
+            //         foreignField: "id",
+            //         // pipeline: [
+            //         //     { $project: { _id: 0, __v: 0, nickname: 0, pass: 0, teachingCnt: 0 } }
+            //         //  ],
+            //           as: "whitePlayerInfo"
+            //     }
+            // },
             // {
             //     $project: { _id: 0, __v: 0, blackTeamObserver: 1, whiteTeamObserver: 1 }
             // }
