@@ -16,9 +16,6 @@ const userInfo = async (req,res) => {
                     from: "users",
                     localField: "blackTeamPlayer",
                     foreignField: "nickname",
-                    pipeline: [
-                           { $project: { _id: 0, id: 1, score:1, point:1, state:1 } }
-                        ],
                     as: "blackPlayerInfo"
                 }
             },
@@ -33,8 +30,8 @@ const userInfo = async (req,res) => {
             },
             {
                 $project: { 
-                    blackPlayerInfo: 1, 
-                    whitePlayerInfo: 1, 
+                    blackPlayerInfo: { id: 1, score: 1, point: 1, state: 1}, 
+                    whitePlayerInfo: { id: 1, score: 1, point: 1, state: 1}, 
                     blackTeamObserver: 1, 
                     whiteTeamObserver: 1, 
                     _id: 0 }
