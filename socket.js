@@ -264,7 +264,7 @@ gameRoom.on("connect", async (socket) =>{
     });
 
     //개별 game방 Join 
-    socket.on("joinGame", (gameNum) => {
+    socket.on("joinGame", async (gameNum) => {
       thisgameNum = gameNum;
       console.log(`조인게임방번호:${gameNum}`);
       socket.join(gameNum);
