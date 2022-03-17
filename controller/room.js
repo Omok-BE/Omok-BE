@@ -19,7 +19,7 @@ const userInfo = async (req,res) => {
                     // pipeline: [
                     //     { $project: { _id: 0, __v: 0 } }
                     //  ],
-                      as: "blackPlayerInfo"
+                    as: "blackPlayerInfo"
                 }
             },
             // {
@@ -34,9 +34,9 @@ const userInfo = async (req,res) => {
             //           as: "whitePlayerInfo"
             //     }
             // },
-            // {
-            //     $project: { _id: 0, __v: 0, blackTeamObserver: 1, whiteTeamObserver: 1 }
-            // }
+            {
+                $project: { _id: 0, __v: 0, blackTeamObserver: 1, whiteTeamObserver: 1 }
+            }
         ])
         res.status(200).json({
             userInfos
