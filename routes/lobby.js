@@ -34,6 +34,6 @@ router.get('/lobby/joinroom/:roomNum', getJoinRoom);
 router.post('/lobby/joinroom', postJoinRoom);
 
 //빠른 참가(플레이어)
-router.get('/lobby/fastPlayer', fastPlayer);
+router.get('/lobby/fastPlayer/:id', fastPlayer);
 
 module.exports = router;
