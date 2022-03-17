@@ -1,6 +1,6 @@
 const app = require("./app");
-const Users = require('./models/users')
-const Rooms = require('./models/rooms')
+const Users = require('./models/users');
+const Rooms = require('./models/rooms');
 
 const httpServer = require("http").createServer(app);
 const { Server } = require("socket.io");
@@ -291,17 +291,17 @@ gameRoom.on("connect", async (socket) =>{
     socket.on("disconnecting", async () => {
       //game방 퇴장 메시지
       try {
-      gameRoom.to(thisgameNum).emit("bye", socket.id);
-      const observerCnt = gameRoomCount(thisgameNum) -3    //(-2 플레이어)+(-1 나가는 옵저버)            
-      console.log("게임방 소켓 퇴장observerCnt:", observerCnt);
-      await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }});
-      console.log("게임방 퇴장 소켓 disconnecting🖐️🖐️");
-      console.log("게임방 퇴장 소켓 room ", socket.rooms)
-      console.log("게임방 퇴장 네임스페이스 전체 소켓", gameRoom.adapter.rooms)
-      console.log('게임방 퇴장 소켓 id', socket.id)
-    } catch(error){
-      console.log(error)
-    }
+        gameRoom.to(thisgameNum).emit("bye", socket.id);
+        const observerCnt = gameRoomCount(thisgameNum) -3    //(-2 플레이어)+(-1 나가는 옵저버)            
+        console.log("게임방 소켓 퇴장observerCnt:", observerCnt);
+        await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt }});
+        console.log("게임방 퇴장 소켓 disconnecting🖐️🖐️");
+        console.log("게임방 퇴장 소켓 room ", socket.rooms)
+        console.log("게임방 퇴장 네임스페이스 전체 소켓", gameRoom.adapter.rooms)
+        console.log('게임방 퇴장 소켓 id', socket.id)
+      } catch(error){
+        console.log(error)
+      }
     });
     
     //게임결과
