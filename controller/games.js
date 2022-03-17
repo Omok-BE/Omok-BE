@@ -30,20 +30,54 @@ const gameCreate = async (req, res) => {
 const gameStart = async (req, res)=>{
     try {
         const { gameNum } = req.params;
-        const inGameUserIds = await Games.findOne({ gameNum}, 
-                            { _id:false, blackTeamPlayer:true, blackTeamObserver:true, 
-                            whiteTeamPlayer:true, whiteTeamObserver:true });
-        console.log("API_gameStart의 36번gameNum:", gameNum);
-        console.log("inGameUserIds", inGameUserIds);
-        
-        let gameInfo = {};
-        console.log("API_gameStart의 40번gameInfo:", gameInfo);
-
-        //gameInfo :{id, state, score, point}       
-        for (let userIds in inGameUserIds){
-            gameInfo = await Users.findOne({id:inGameUserIds[userIds]}, {_id:false, id:true, score:true, point:true, state:true })
-        } 
-        console.log("API_gameStart의 46번gameInfo:", gameInfo);
+        const gameInfo = await Games.aggregate([  
+            {
+                $match: { gameNum: Number(gameNum) }  
+            },
+            {   
+                $lookup: {
+                    from: "users",   
+                    localField: "blackTeamPlayer", 
+                    foreignField: "id",           
+                    as: "blackTeamPlayer"  
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "blackTeamObserver",
+                    foreignField: "id",
+                    as: "blackTeamObserver"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "whiteTeamPlayer",
+                    foreignField: "id",
+                    as: "whiteTeamPlayer"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "whiteTeamObserver",
+                    foreignField: "id",
+                    as: "whiteTeamObserver"
+                }
+            },
+            {
+                $project: {
+                        _id:0,
+                        blackTeamPlayer: { _id:0,  id:1, score:1, point:1, state:1 }, 
+                        blackTeamObserver: { _id:0, id:1, score:1, point:1, state:1 },  
+                        whiteTeamPlayer: { _id:0, id:1, score:1, point:1, state:1 },
+                        whiteTeamObserver: { _id:0, id:1, score:1, point:1, state:1 }
+                    } 
+                
+            }
+        ]);
+        console.log("API_gameStart의 84번gameInfo:", gameInfo);
 
         res.status(200).json({
             gameInfo,
@@ -195,7 +229,7 @@ const gameDelete = async (req, res) => {
                 message: "게임방에서 나가기 성공!"
             });
     } catch(err){
-        console.log(`API_방에서 나가기 에러,190번: ${err}`);
+        console.log(`API_방에서 나가기 에러,198번: ${err}`);
         res.status(400).json({
         ok:false,
         errorMessage:"게임방에서 나가기 실패"
