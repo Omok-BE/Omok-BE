@@ -9,7 +9,8 @@ const {
     createRoom, 
     getJoinRoom, 
     postJoinRoom,
-    fastPlayer 
+    fastPlayer,
+    fastObserver
 } = require('../controller/lobby');
 
 // 로비첫 화면
@@ -35,5 +36,8 @@ router.post('/lobby/joinroom', postJoinRoom);
 
 //빠른 참가(플레이어)
 router.get('/lobby/fastPlayer/:id', fastPlayer);
+
+// 빠른 참가(관전자)
+router.get('/lobby/fastObserver/:id', fastObserver);
 
 module.exports = router;
