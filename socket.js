@@ -197,7 +197,7 @@ async function findUserInfos(roomNum) {
         {
             from: "users",
             localField: "blackTeamPlayer",
-            foreignField: "id",
+            foreignField: "nickname",
             as: "blackPlayerInfo"
         }
     },
@@ -207,13 +207,18 @@ async function findUserInfos(roomNum) {
             from: "users",
             localField: "whiteTeamPlayer",
             foreignField: "id",
-              as: "whitePlayerInfo"
+            as: "whitePlayerInfo"
         }
     },
     {
-        $project: { blackPlayerInfo: 1, whitePlayerInfo: 1, blackTeamObserver: 1, whiteTeamObserver: 1, _id: 0 }
+        $project: { 
+            blackPlayerInfo: { id: 1, score: 1, point: 1, state: 1}, 
+            whitePlayerInfo: { id: 1, score: 1, point: 1, state: 1}, 
+            blackTeamObserver: 1, 
+            whiteTeamObserver: 1, 
+            _id: 0 }
     },
-  ])
+])
   return userInfos;
 }
 // const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true });
