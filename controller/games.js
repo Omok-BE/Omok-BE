@@ -42,8 +42,8 @@ const gameStart = async (req, res)=>{
         //gameInfo :{id, state, score, point}       
         for (let userIds in inGameUserIds){
             gameInfo = await Users.findOne({id:inGameUserIds[userIds]}, {_id:false, id:true, score:true, point:true, state:true })
-        }               
-        console.log("API_gameStart의 43번gameInfo:", gameInfo);
+        } 
+        console.log("API_gameStart의 46번gameInfo:", gameInfo);
 
         res.status(200).json({
             gameInfo,
