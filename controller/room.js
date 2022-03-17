@@ -10,18 +10,18 @@ const userInfo = async (req,res) => {
             {
                 $match: { roomNum: Number(roomNum) }                
             },
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "blackTeamPlayer",
-                    foreignField: "id",
-                    // pipeline: [
-                    //     { $project: { _id: 0, __v: 0 } }
-                    //  ],
-                      as: "blackPlayerInfo"
-                }
-            },
+            // {
+            //     $lookup:
+            //     {
+            //         from: "users",
+            //         localField: "blackTeamPlayer",
+            //         foreignField: "id",
+            //         // pipeline: [
+            //         //     { $project: { _id: 0, __v: 0 } }
+            //         //  ],
+            //           as: "blackPlayerInfo"
+            //     }
+            // },
             {
                 $lookup:
                 {
