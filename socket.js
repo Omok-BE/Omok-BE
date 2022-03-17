@@ -293,7 +293,7 @@ gameRoom.on("connect", async (socket) =>{
     //game방 훈수채팅B 
     socket.on("teachingB", async (teachingCnt, chat) => { 
       const data = {name:socket.nickname, chat};
-      console.log("훈수쳇B소켓닉네임:",socket.nickname);
+      console.log("훈수쳇B소켓닉네임:",socket.nickname);  
       console.log("훈수쳇B data:", data);
 
       //teachingCnt 업데이트  
