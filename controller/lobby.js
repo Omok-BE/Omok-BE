@@ -107,9 +107,9 @@ const postJoinRoom = async (req, res) => {
         }else if(state === 'whitePlayer'){
             await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: id }})
         }else if(state === 'blackObserver'){
-            await Room.updateOne({ roomNum }, {$set: { blackTeamObserver: id }})
+            await Room.updateOne({ roomNum }, {$addToSet: { blackTeamObserver: id }})
         }else if(state === 'whiteObserver'){
-            await Room.updateOne({ roomNum }, {$set: { whiteTeamObserver: id }})
+            await Room.updateOne({ roomNum }, {$addToSet: { whiteTeamObserver: id }})
         }
 
         res.status(201).send(userInfo);
@@ -125,7 +125,7 @@ const fastPlayer = async (req, res) => {
     try{
         const existRooms = await Room.findOne({ playerCnt: { $ne: 2 } })
 
-        
+
     }catch(err){
         console.log(err)
     }
