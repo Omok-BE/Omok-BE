@@ -35,7 +35,7 @@ const userInfo = async (req,res) => {
             //     }
             // },
             {
-                $project: { _id: 0, __v: 0 }
+                $project: { blackPlayerInfo: 1, blackTeamObserver: 1, whiteTeamObserver: 1 }
             },
         ])
         res.status(200).json({
