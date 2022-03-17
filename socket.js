@@ -191,7 +191,7 @@ async function findUserInfos(roomNum) {
   const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true });
   const userInfos = [];
   const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
-  // const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
+  const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
   userInfos.push(blackPlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver);
   return userInfos;
 }
