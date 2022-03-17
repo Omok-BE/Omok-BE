@@ -271,7 +271,7 @@ gameRoom.on("connect", async (socket) =>{
       const observerCnt = gameRoomCount(thisgameNum) -2                
       console.log("269번 game방Join_observerCnt:", observerCnt);
       await Rooms.updateOne({ gameNum:thisgameNum }, { $set: { observerCnt, playerCnt:2 }});
-    });
+    }); 
 
     //game방 채팅
     socket.on("chat", (chat) => {
