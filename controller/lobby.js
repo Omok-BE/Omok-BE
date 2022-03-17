@@ -162,6 +162,33 @@ const fastPlayer = async (req, res) => {
 
 const fastObserver = async (req, res)=> {
     try{
+        const { id } = req.params;
+        const existRooms = await Room.findOne({ state: { $ne: 'wait' }}) //observerCnt: { $ne: 0 }, 옵저버인원 고려
+        
+        if(!existRooms){
+            res.status(201).send({
+                ok: false,
+                message: '대기중인 방이 없습니다.'
+            })
+        }
+
+        // 블랙옵저버, 화이트옵저버 수가 블랙이 많은 경우만 화이트로 참가
+        if(existRooms.blackTeamObserver.length === existRooms.whiteTeamObserver.length || existRooms.blackTeamObserver.length < existRooms.whiteTeamObserver.length){
+            await User.updateOne({ id }, {$set: {state: blackObserver}});
+            await Room.updateOne({ roomNum: existRooms.roomNum }, {$addToSet: {blackTeamObserver: id}});
+            await Room.updateOne({ roomNum: existRooms.roomNum }, { $inc: {observerCnt: 1}})
+        }else if(existRooms.blackTeamObserver.length > existRooms.whiteTeamObserver.length){
+            await User.updateOne({ id }, {$set: {state: whiteObserver}});
+            await Room.updateOne({ roomNum: existRooms.roomNum }, {$addToSet: {whiteTeamObserver: id}});
+            await Room.updateOne({ roomNum: existRooms.roomNum }, { $inc: {observerCnt: 1}})
+        }
+
+        const userInfo = await User.findOne({id: id}, {_id: false, id:true, score:true, point:true, state:true});
+        const roomNum = existRooms.roomNum;
+        res.status(201).send({
+            userInfo,
+            roomNum: roomNum,
+        })
 
     }catch(err){
         console.log(err)
