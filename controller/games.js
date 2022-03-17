@@ -68,16 +68,16 @@ const gameStart = async (req, res)=>{
             },
             {
                 $project: {
-                        _id:0,
-                        blackTeamPlayer: { id:1, score:1, point:1, state:1 }, 
-                        blackTeamObserver: { id:1, score:1, point:1, state:1 },  
-                        whiteTeamPlayer: { id:1, score:1, point:1, state:1 },
-                        whiteTeamObserver: { id:1, score:1, point:1, state:1 }
-                    } 
+                    _id:0,
+                    blackTeamPlayer: { id:1, score:1, point:1, state:1 }, 
+                    blackTeamObserver: { id:1, score:1, point:1, state:1 },  
+                    whiteTeamPlayer: { id:1, score:1, point:1, state:1 },
+                    whiteTeamObserver: { id:1, score:1, point:1, state:1 }
+                } 
                 
             }
         ]);
-        console.log("API_gameStart의 84번gameInfo:", gameInfo);
+        console.log("API_gameStart의 80번gameInfo:", gameInfo);
 
         res.status(200).json({
             gameInfo,
@@ -166,7 +166,7 @@ const gameFinish = async (req, res) => {
             message: "결과창gameFinish 성공!"
         });
     } catch(err){
-        console.log(`API_결과창gameFinish,127번 에러: ${err}`);
+        console.log(`API_결과창gameFinish,169번 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"결과창gameFinish 실패"
@@ -206,7 +206,7 @@ const gameFinishShow = async (req, res) => {
             message: "gameFinishShow 성공!"
         }); 
     } catch(err){
-        console.log(`API_gameFinishShow,167번 에러: ${err}`);
+        console.log(`API_gameFinishShow,209번 에러: ${err}`);
         res.status(400).json({
             ok:false,
             errorMessage:"gameFinishShow 실패"
@@ -229,11 +229,11 @@ const gameDelete = async (req, res) => {
                 message: "게임방에서 나가기 성공!"
             });
     } catch(err){
-        console.log(`API_방에서 나가기 에러,198번: ${err}`);
+        console.log(`API_방에서 나가기 에러,232번: ${err}`);
         res.status(400).json({
-        ok:false,
-        errorMessage:"게임방에서 나가기 실패"
-    });
+            ok:false,
+            errorMessage:"게임방에서 나가기 실패"
+        });
     }
 };
 
