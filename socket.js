@@ -98,7 +98,8 @@ waitingRoom.on("connection", (socket) => {
       }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
-      console.log("플레이어로 변경", socket.rooms)
+      console.log("플레이어로 변경", "이전팀: ", previousTeam, "옮길 팀: ", wantTeam)
+      console.log(socket.rooms)
     });
 
      // 관전자로 변경시 정보 업데이트_210315
@@ -132,7 +133,8 @@ waitingRoom.on("connection", (socket) => {
       }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
-      console.log("관전자로 변경", socket.rooms)
+      console.log("관전자로 변경", "이전팀: ", previousTeam, "옮길 팀: ", wantTeam)
+      console.log(socket.rooms)
     });
     
     //대기실 내 채팅_210303
