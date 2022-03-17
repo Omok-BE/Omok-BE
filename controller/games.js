@@ -30,7 +30,7 @@ const gameCreate = async (req, res) => {
 const gameStart = async (req, res)=>{
     try {
         const { gameNum } = req.params;
-        const inGameUserIds = await Games.findOne({ gameNum:gameNum }, 
+        const inGameUserIds = await Games.findOne({ gameNum}, 
                             { _id:false, blackTeamPlayer:true, blackTeamObserver:true, 
                             whiteTeamPlayer:true, whiteTeamObserver:true });
         console.log("API_gameStart의 36번gameNum:", gameNum);
@@ -41,9 +41,9 @@ const gameStart = async (req, res)=>{
 
         //gameInfo :{id, state, score, point}       
         for (let userIds in inGameUserIds){
-            gameInfo = await Users.findOne({id:userIds}, {_id:false, id:true, score:true, point:true, state:true })
-        }               
-        console.log("API_gameStart의 43번gameInfo:", gameInfo);
+            gameInfo = await Users.findOne({id:inGameUserIds[userIds]}, {_id:false, id:true, score:true, point:true, state:true })
+        } 
+        console.log("API_gameStart의 46번gameInfo:", gameInfo);
 
         res.status(200).json({
             gameInfo,
