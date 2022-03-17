@@ -30,11 +30,20 @@ const gameCreate = async (req, res) => {
 const gameStart = async (req, res)=>{
     try {
         const { gameNum } = req.params;
-        const gameInfo = await Games.findOne({ gameNum:gameNum }, 
+        const inGameUserIds = await Games.findOne({ gameNum:gameNum }, 
                             { _id:false, blackTeamPlayer:true, blackTeamObserver:true, 
                             whiteTeamPlayer:true, whiteTeamObserver:true });
-        console.log("API_gameNum?,36", gameNum);
-        console.log("API_게임인포 정보:,37", gameInfo);
+        console.log("API_gameStart의 36번gameNum:", gameNum);
+        console.log("inGameUserIds", inGameUserIds);
+        
+        let gameInfo
+        console.log("API_gameStart의 40번gameInfo:", gameInfo);
+
+        //gameInfo :{id, state, score, point}       
+        for (let userIds in inGameUserIds){
+            gameInfo = await Users.findOne({id:userIds}, {_id:false, id, score, point, state})
+        }               
+        console.log("API_gameStart의 43번gameInfo:", gameInfo);
 
         res.status(200).json({
             gameInfo,
@@ -69,12 +78,12 @@ const gameFinish = async (req, res) => {
             if(resultId === id){    //승Player
 
                 await Users.updateOne({ id:resultId }, { $inc: { "score.0.win":  1} });  //승 +1
-                await Users.updateOne({ id:resultId }, { $set: { point:point + 700 } }) //포인트 +700
-                console.log(`API_우승자 score에 1승, point에 +700이 추가되었습니다.`);
+                await Users.updateOne({ id:resultId }, { $set: { point:point + 150 } }) //포인트 +150
+                console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
             } else {   //패Player
                 await Users.updateOne({ id:resultId }, { $inc: {"score.0.lose":1 }}); //패 +1
-                await Users.updateOne({ id:resultId }, { $set: { point:point - 500 } }); //포인트 -500
-                console.log(`API_패자 score에 1패, point에 -500이 추가되었습니다.`);
+                await Users.updateOne({ id:resultId }, { $set: { point:point - 50 } }); //포인트 -50
+                console.log(`API_패자 score에 1패, point에 -50이 추가되었습니다.`);
             };
         };
 
@@ -83,7 +92,7 @@ const gameFinish = async (req, res) => {
         const observerTeachingCnt = await Users.findOne({ id:id }, { _id:false, teachingCnt:true });
 
         //이긴팀 point
-        const winUseTeachingPoint = observerTeachingCnt * 100;            //쓴 포인트 
+        const winUseTeachingPoint = observerTeachingCnt * 10;            //쓴 포인트 
         const winGetTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
         const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint + score;  //총 포인트     
         
@@ -97,7 +106,7 @@ const gameFinish = async (req, res) => {
                 const findLoseTeamCnt = observerTeachingCnt.teachingCnt;  
                 
                 //point
-                const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
+                const loseUseTeachingPoint = findLoseTeamCnt * 10;   //쓴 포인트 
                 const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
                 await Users.updateOne( { id:id }, { $set: { point:loseTotalPoint } }); 
             }
@@ -113,7 +122,7 @@ const gameFinish = async (req, res) => {
                 const findLoseTeamCnt = observerTeachingCnt.teachingCnt;  
                 
                 //point
-                const loseUseTeachingPoint = findLoseTeamCnt * 100;   //쓴 포인트 
+                const loseUseTeachingPoint = findLoseTeamCnt * 10;   //쓴 포인트 
                 const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
                 await Users.updateOne( { id:id }, { $set: { point:loseTotalPoint } });  
             }
@@ -141,7 +150,7 @@ const gameFinishShow = async (req, res) => {
         const findTeachingCnt = existTeachingCnt.teachingCnt;
 
         //point
-        const usePoint = findTeachingCnt * 100;      //쓴 포인트 
+        const usePoint = findTeachingCnt * 10;      //쓴 포인트 
         const getPoint = usePoint * 0.5;     //얻은 포인트
         
         //score
