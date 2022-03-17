@@ -130,11 +130,27 @@ const fastPlayer = async (req, res) => {
     try{
         const { id } = req.params;
         const existRooms = await Room.findOne({ playerCnt: { $ne: 2 } });
+        // 플레이어가 1명인 방이 없을시
+        if(!existRooms){
+            res.status(201).send({
+                ok: false,
+                message: '빈 플레이어 방이 없습니다.'
+            })
+        }
 
         if(!existRooms.blackTeamPlayer){
-            await User.updateOne({id}, {$set: {state: blackPlayer}});
-            await Room.updateOne({ roomNum: existRooms.roomNum }, {$set: { blackTeamPlayer: id }})
+            await User.updateOne({ id }, {$set: {state: blackPlayer}});
+            await Room.updateOne({ roomNum: existRooms.roomNum }, {$set: {playerCnt: 2, blackTeamPlayer: id }})
+        }else if(!existRooms.whiteTeamPlayer){
+            await User.updateOne({ id }, {$set: {state: whitePlayer}});
+            await Room.updateOne({ roomNum: existRooms.roomNum }, {$set: {playerCnt: 2, whiteTeamPlayer: id }})
         }
+        
+        const userInfo = await User.findOne({id: id}, {_id: false, id:true, pass:false, score:true, point:true, state:true});
+
+        res.status(201).send({
+            userInfo,
+        })
     }catch(err){
         console.log(err)
     }
