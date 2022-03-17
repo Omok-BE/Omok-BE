@@ -7,7 +7,7 @@ const gameCreate = async (req, res) => {
     try {
         const { roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver} = req.body;
         const state = "ingame";
-        await Rooms.updateOne({ roomNum }, { set: { state }});
+        await Rooms.updateOne({ roomNum }, { $set: { state }});
 
         const room = await Rooms.findOne({ roomNum });
         await Games.create({
