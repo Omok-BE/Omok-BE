@@ -188,13 +188,40 @@ function waitingRoomCount(roomName){
 
 //방 내부 유저 최신정보 가져오기_210316
 async function findUserInfos(roomNum) {
-  const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true });
-  const userInfos = [];
-  const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
-  const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
-  userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver);
+  const userInfos = await Rooms.aggregate([
+    {
+        $match: { roomNum: Number(roomNum) }                
+    },
+    {
+        $lookup:
+        {
+            from: "users",
+            localField: "blackTeamPlayer",
+            foreignField: "id",
+            as: "blackPlayerInfo"
+        }
+    },
+    {
+        $lookup:
+        {
+            from: "users",
+            localField: "whiteTeamPlayer",
+            foreignField: "id",
+              as: "whitePlayerInfo"
+        }
+    },
+    {
+        $project: { blackPlayerInfo: 1, whitePlayerInfo: 1, blackTeamObserver: 1, whiteTeamObserver: 1, _id: 0 }
+    },
+  ])
   return userInfos;
 }
+// const roomInfo = await Rooms.findOne({ roomNum }, { _id: false, blackTeamPlayer: true, blackTeamObserver: true, whiteTeamPlayer: true, whiteTeamObserver: true });
+// const userInfos = [];
+// const blackPlayerInfo = await Users.findOne({ id: roomInfo.blackTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
+// const whitePlayerInfo = await Users.findOne({ id: roomInfo.whiteTeamPlayer }, { _id: false, id: true, score: true, point: true, state: true });
+// userInfos.push(blackPlayerInfo, whitePlayerInfo, roomInfo.blackTeamObserver, roomInfo.whiteTeamObserver);
+
 
 
 //게임방 socket
