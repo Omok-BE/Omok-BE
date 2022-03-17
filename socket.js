@@ -98,6 +98,7 @@ waitingRoom.on("connection", (socket) => {
       }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
+      console.log("플레이어로 변경", socket.rooms)
     });
 
      // 관전자로 변경시 정보 업데이트_210315
@@ -131,6 +132,7 @@ waitingRoom.on("connection", (socket) => {
       }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit("changeComplete", socket.nickname, userInfos)
+      console.log("플레이어로 변경", socket.rooms)
     });
     
     //대기실 내 채팅_210303
