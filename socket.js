@@ -420,7 +420,7 @@ gameRoom.on('connect', async (socket) => {
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true);
   });
   //game방 훈수채팅- 플라잉
-  socket.on('flyingWord', (chat) => {
+  socket.on('flyingWord', async (chat) => {
     const data = { name: socket.nickname, chat };
     console.log('플라잉채팅 닉네임♬♪:', socket.nickname);
     console.log('플라잉채팅 data♬♪:', data);
