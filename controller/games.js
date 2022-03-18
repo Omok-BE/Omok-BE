@@ -101,151 +101,55 @@ const gameStart = async (req, res) => {
   }
 };
 
-//결과창 post
-const gameFinish = async (req, res) => {
-  try {
-    const { userInfo, gameNum, result } = req.body;
-    const id = userInfo.id;
-    const state = userInfo.state;
-    const score = userInfo.score;
-    const point = userInfo.point;
-
-    //승자id
-    const resultId = result.win;
-    const winPlayer = await Users.findOne(
-      { id: resultId },
-      { score: score, point: point, state: state }
-    );
-
-    //Player
-    if (state === 'blackPlayer' || state === 'whitePlayer') {
-      if (resultId === id) {
-        //승Player
-
-        await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } }); //승 +1
-        await Users.updateOne(
-          { id: resultId },
-          { $set: { point: point + 150 } }
-        ); //포인트 +150
-        console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
-      } else {
-        //패Player
-        await Users.updateOne(
-          { id: resultId },
-          { $inc: { 'score.0.lose': 1 } }
-        ); //패 +1
-        await Users.updateOne(
-          { id: resultId },
-          { $set: { point: point - 50 } }
-        ); //포인트 -50
-        console.log(`API_패자 score에 1패, point에 -50이 추가되었습니다.`);
-      }
-    }
-
-    //Observer
-    //훈수채팅 수
-    const observerTeachingCnt = await Users.findOne(
-      { id: id },
-      { _id: false, teachingCnt: true }
-    );
-
-    //이긴팀 point
-    const winUseTeachingPoint = observerTeachingCnt * 10; //쓴 포인트
-    const winGetTeachingPoint = winUseTeachingPoint * 0.5; //얻은 포인트
-    const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint + score; //총 포인트
-
-    //이긴 Player가 white팀 일때
-    if (winPlayer.state === 'whitePlayer') {
-      if (state === 'whiteObserver' && observerTeachingCnt !== 0) {
-        //포인트 업데이트
-        await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-      } else if (state === 'blackObserver' && observerTeachingCnt !== 0) {
-        const findLoseTeamCnt = observerTeachingCnt.teachingCnt;
-
-        //point
-        const loseUseTeachingPoint = findLoseTeamCnt * 10; //쓴 포인트
-        const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
-        await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-      }
-    }
-
-    //이긴 Player가 black팀 일때
-    if (winPlayer.state === 'blackPlayer') {
-      if (state === 'blackObserver' && observerTeachingCnt !== 0) {
-        //point updateOne
-        await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-      } else if (state === 'whiteObserver' && observerTeachingCnt !== 0) {
-        const findLoseTeamCnt = observerTeachingCnt.teachingCnt;
-
-        //point
-        const loseUseTeachingPoint = findLoseTeamCnt * 10; //쓴 포인트
-        const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
-        await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-      }
-    }
-    res.status(200).json({
-      ok: true,
-      message: '결과창gameFinish 성공!',
-    });
-  } catch (err) {
-    console.log(`API_결과창gameFinish,173번 에러: ${err}`);
-    res.status(400).json({
-      ok: false,
-      errorMessage: '결과창gameFinish 실패',
-    });
-  }
-};
-
-//결과창 post
+//결과창 post 
 const gameFinishShow = async (req, res) => {
-  try {
-    const { id, gameNum, result } = req.body;
-    //훈수채팅 수
-    const existTeachingCnt = await Users.findOne(
-      { id },
-      { _id: false, teachingCnt: true }
-    );
-    const findTeachingCnt = existTeachingCnt.teachingCnt;
+    try{
+        const { id, gameNum, result } = req.body;
+        console.log("186,req.body:",req.body)
+        console.log("187,id:",id)
+        console.log("188,gameNum:",gameNum)
+        console.log("189,result:",result)
 
-    //point
-    const usePoint = findTeachingCnt * 10; //쓴 포인트
-    const getPoint = usePoint * 0.5; //얻은 포인트
+        //훈수채팅 수
+        const existTeachingCnt = await Users.findOne({ id }, { _id:false, teachingCnt:true });
+        const findTeachingCnt = existTeachingCnt.teachingCnt;
+        console.log("194,existTeachingCnt", existTeachingCnt)
+        console.log("195,findTeachingCnt", findTeachingCnt)
 
-    //score
-    let userInfo = await Users.findOne(
-      { id },
-      { _id: false, id: true, score: true }
-    );
-    const state = await Users.findOne({ id }, { _id: false, state: true });
-    userInfo.push(usePoint);
-    userInfo.push(getPoint);
-    userInfo.push(state);
-    console.log('API결과창200번 userInfo:', userInfo);
 
-    const gameInfo = await Games.findOne(
-      { gameNum },
-      {
-        _id: false,
-        blackTeamPlayer: true,
-        blackTeamObserver: true,
-        whiteTeamPlayer: true,
-        whiteTeamObserver: true,
-      }
-    );
-    res.status(200).json({
-      userInfo,
-      gameInfo,
-      result,
-      ok: true,
-      message: 'gameFinishShow 성공!',
-    });
-  } catch (err) {
-    console.log(`API_gameFinishShow,212번 에러: ${err}`);
-    res.status(400).json({
-      ok: false,
-      errorMessage: 'gameFinishShow 실패',
-    });
-  }
+        //point
+        const usePoint = findTeachingCnt * 10;      //쓴 포인트 
+        const getPoint = usePoint * 0.5;     //얻은 포인트
+        console.log("201,usePoint",usePoint)
+        console.log("202,getPoint",getPoint)
+
+
+        //score
+        let userInfo = [];
+        userInfo = await Users.findOne({id}, {_id:false, id:true, score:true});
+        const state = await Users.findOne({id}, {_id:false, state:true});
+        userInfo.push(usePoint);
+        userInfo.push(getPoint);
+        userInfo.push(state);
+        console.log("API결과창211번 userInfo:", userInfo)
+        console.log("212번 state:", state)
+
+        const gameInfo = await Games.findOne({gameNum}, {_id:false, blackTeamPlayer:true, 
+                                            blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
+        res.status(200).json({
+            userInfo,
+            gameInfo,
+            result,
+            ok:true,
+            message: "gameFinishShow 성공!"
+        }); 
+    } catch(err){
+        console.log(`API_gameFinishShow,212번 에러: ${err}`);
+        res.status(400).json({
+            ok:false,
+            errorMessage:"gameFinishShow 실패"
+        });
+    };
 };
 
 //게임방에서 play가 나갈때
