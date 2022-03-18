@@ -174,7 +174,7 @@ const gameFinish = async (req, res) => {
       message: '결과창gameFinish 성공!',
     });
   } catch (err) {
-    console.log(`API_결과창gameFinish,173번 에러: ${err}`);
+    console.log(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '결과창gameFinish 실패',
@@ -226,7 +226,7 @@ const gameFinishShow = async (req, res) => {
       message: 'gameFinishShow 성공!',
     });
   } catch (err) {
-    console.log(`API_gameFinishShow,212번 에러: ${err}`);
+    console.log(`API_gameFinishShow,229번 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: 'gameFinishShow 실패',
@@ -249,7 +249,7 @@ const gameDelete = async (req, res) => {
             message: '게임방에서 나가기 성공!',
         });
   } catch (err) {
-    console.log(`API_방에서 나가기 에러,235번: ${err}`);
+    console.log(`API_방에서 나가기 에러,252번: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '게임방에서 나가기 실패',
