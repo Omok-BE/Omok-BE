@@ -91,10 +91,18 @@ waitingRoom.on('connection', (socket) => {
           { roomNum },
           { $set: { blackTeamPlayer: socket.nickname, whiteTeamPlayer: null } }
         );
+        await Users.updateOne(
+          { id: socket.nickname},
+          { $set: { state: 'blackPlayer' } }
+        );
       } else {
         await Rooms.updateMany(
           { roomNum },
           { $set: { blackTeamPlayer: null, whiteTeamPlayer: socket.nickname } }
+        );
+        await Users.updateOne(
+          { id: socket.nickname},
+          { $set: { state: 'whitePlayer' } }
         );
       }
     } else {
@@ -120,6 +128,10 @@ waitingRoom.on('connection', (socket) => {
               },
             }
           );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'blackPlayer' } }
+          );
         } else {
           await Rooms.updateMany(
             { roomNum },
@@ -130,6 +142,10 @@ waitingRoom.on('connection', (socket) => {
                 observerCnt,
               },
             }
+          );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'whitePlayer' } }
           );
         }
       } else {
@@ -148,6 +164,10 @@ waitingRoom.on('connection', (socket) => {
               },
             }
           );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'blackPlayer' } }
+          );
         } else {
           await Rooms.updateMany(
             { roomNum },
@@ -158,6 +178,10 @@ waitingRoom.on('connection', (socket) => {
                 observerCnt,
               },
             }
+          );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'whitePlayer' } }
           );
         }
       }
