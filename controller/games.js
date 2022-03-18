@@ -4,180 +4,102 @@ const Users = require('../models/users');
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
-    try {
-        const { roomNum, blackTeamPlayer, blackTeamObserver, whiteTeamPlayer, whiteTeamObserver } = req.body;
-        const state = "ingame";
-        await Rooms.updateOne({ roomNum }, { $set: { state }});
-        console.log(roomNum)
-        console.log(blackTeamPlayer)
-        console.log(blackTeamObserver)
-        console.log(whiteTeamPlayer)
-        console.log(whiteTeamObserver)
-        const room = await Rooms.findOne({ roomNum });
-        await Games.create({
-            gameNum: roomNum,
-            gameName: room.roomName,
-            blackTeamPlayer,
-            blackTeamObserver,
-            whiteTeamPlayer,
-            whiteTeamObserver
-        });
-        res.status(201).json({ ok: true });
-    } catch(error) {
-        console.log(error)
-        res.status(400).json({ ok: false });
-    };
+  try {
+    const {
+      roomNum,
+      blackTeamPlayer,
+      blackTeamObserver,
+      whiteTeamPlayer,
+      whiteTeamObserver,
+    } = req.body;
+    const state = 'ingame';
+    await Rooms.updateOne({ roomNum }, { $set: { state } });
+    console.log(roomNum);
+    console.log(blackTeamPlayer);
+    console.log(blackTeamObserver);
+    console.log(whiteTeamPlayer);
+    console.log(whiteTeamObserver);
+    const room = await Rooms.findOne({ roomNum });
+    await Games.create({
+      gameNum: roomNum,
+      gameName: room.roomName,
+      blackTeamPlayer,
+      blackTeamObserver,
+      whiteTeamPlayer,
+      whiteTeamObserver,
+    });
+    res.status(201).json({ ok: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ ok: false });
+  }
 };
-
 
 //게임방 입장해서 정보가져오기
-const gameStart = async (req, res)=>{
-    try {
-        const { gameNum } = req.params;
-        const gameInfo = await Games.aggregate([  
-            {
-                $match: { gameNum: Number(gameNum) }  
-            },
-            {   
-                $lookup: {
-                    from: "users",   
-                    localField: "blackTeamPlayer", 
-                    foreignField: "id",           
-                    as: "blackTeamPlayer"  
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "blackTeamObserver",
-                    foreignField: "id",
-                    as: "blackTeamObserver"
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "whiteTeamPlayer",
-                    foreignField: "id",
-                    as: "whiteTeamPlayer"
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "whiteTeamObserver",
-                    foreignField: "id",
-                    as: "whiteTeamObserver"
-                }
-            },
-            {
-                $project: {
-                    _id:0,
-                    blackTeamPlayer: { id:1, score:1, point:1, state:1 }, 
-                    blackTeamObserver: { id:1, score:1, point:1, state:1 },  
-                    whiteTeamPlayer: { id:1, score:1, point:1, state:1 },
-                    whiteTeamObserver: { id:1, score:1, point:1, state:1 }
-                } 
-                
-            }
-        ]);
-        console.log("API_gameStart의 84번gameInfo:", gameInfo);
+const gameStart = async (req, res) => {
+  try {
+    const { gameNum } = req.params;
+    const gameInfo = await Games.aggregate([
+      {
+        $match: { gameNum: Number(gameNum) },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'blackTeamPlayer',
+          foreignField: 'id',
+          as: 'blackTeamPlayer',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'blackTeamObserver',
+          foreignField: 'id',
+          as: 'blackTeamObserver',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'whiteTeamPlayer',
+          foreignField: 'id',
+          as: 'whiteTeamPlayer',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'whiteTeamObserver',
+          foreignField: 'id',
+          as: 'whiteTeamObserver',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
+          blackTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+          whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
+          whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+        },
+      },
+    ]);
+    console.log('API_gameStart의 84번gameInfo:', gameInfo);
 
-        res.status(200).json({
-            gameInfo,
-            ok:true,
-            message: "게임방 입장해서 정보가져오기 성공!"
-        });
-    } catch(err) {
-        console.log(`API_게임방 에러: ${err}`);
-        res.status(400).json({ 
-            ok:false,
-            errorMessage:"게임방 입장해서 정보를 가져오지 못했어요"
-        });
-    };
+    res.status(200).json({
+      gameInfo,
+      ok: true,
+      message: '게임방 입장해서 정보가져오기 성공!',
+    });
+  } catch (err) {
+    console.log(`API_게임방 에러: ${err}`);
+    res.status(400).json({
+      ok: false,
+      errorMessage: '게임방 입장해서 정보를 가져오지 못했어요',
+    });
+  }
 };
-
-
-//결과창 post
-const gameFinish = async (req, res) => {
-    try {                     
-        const { userInfo, gameNum, result } = req.body;
-        const id = userInfo.id;
-        const state = userInfo.state;
-        const score = userInfo.score;
-        const point = userInfo.point;
-       
-         //승자id 
-        const resultId = result.win;    
-        const winPlayer = await Users.findOne({ id:resultId }, { score:score, point:point, state:state }); 
-
-        //Player 
-        if (state === "blackPlayer" || state === "whitePlayer"){
-            if(resultId === id){    //승Player
-
-                await Users.updateOne({ id:resultId }, { $inc: { "score.0.win":  1} });  //승 +1
-                await Users.updateOne({ id:resultId }, { $set: { point:point + 150 } }) //포인트 +150
-                console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
-            } else {   //패Player
-                await Users.updateOne({ id:resultId }, { $inc: {"score.0.lose":1 }}); //패 +1
-                await Users.updateOne({ id:resultId }, { $set: { point:point - 50 } }); //포인트 -50
-                console.log(`API_패자 score에 1패, point에 -50이 추가되었습니다.`);
-            };
-        };
-
-        //Observer
-        //훈수채팅 수 
-        const observerTeachingCnt = await Users.findOne({ id:id }, { _id:false, teachingCnt:true });
-
-        //이긴팀 point
-        const winUseTeachingPoint = observerTeachingCnt * 10;            //쓴 포인트 
-        const winGetTeachingPoint = winUseTeachingPoint * 0.5;            //얻은 포인트
-        const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint + score;  //총 포인트     
-        
-        //이긴 Player가 white팀 일때
-        if (winPlayer.state === "whitePlayer"){
-            if( state === "whiteObserver" && observerTeachingCnt !== 0 ){
-                
-                //포인트 업데이트
-                await Users.updateOne({ id:id }, { $set: { point:winTotalPoint} }); 
-            } else if ( state === "blackObserver" && observerTeachingCnt !== 0 ){
-                const findLoseTeamCnt = observerTeachingCnt.teachingCnt;  
-                
-                //point
-                const loseUseTeachingPoint = findLoseTeamCnt * 10;   //쓴 포인트 
-                const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
-                await Users.updateOne( { id:id }, { $set: { point:loseTotalPoint } }); 
-            }
-        };
-        
-        //이긴 Player가 black팀 일때
-        if (winPlayer.state === "blackPlayer"){
-            if( state === "blackObserver" && observerTeachingCnt !== 0 ){
-                
-              //point updateOne
-              await Users.updateOne({ id:id }, { $set: { point:winTotalPoint} }); 
-            } else if ( state === "whiteObserver" && observerTeachingCnt !== 0 ){
-                const findLoseTeamCnt = observerTeachingCnt.teachingCnt;  
-                
-                //point
-                const loseUseTeachingPoint = findLoseTeamCnt * 10;   //쓴 포인트 
-                const loseTotalPoint = point - loseUseTeachingPoint;      //게임후 총 포인트
-                await Users.updateOne( { id:id }, { $set: { point:loseTotalPoint } });  
-            }
-        };
-        res.status(200).json({
-            ok:true,
-            message: "결과창gameFinish 성공!"
-        });
-    } catch(err){
-        console.log(`API_결과창gameFinish,173번 에러: ${err}`);
-        res.status(400).json({
-            ok:false,
-            errorMessage:"결과창gameFinish 실패"
-        });
-    };
-};
-
 
 //결과창 post 
 const gameFinishShow = async (req, res) => {
@@ -232,31 +154,33 @@ const gameFinishShow = async (req, res) => {
 
 //게임방에서 play가 나갈때
 const gameDelete = async (req, res) => {
-    //순서:먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방삭제
-    try{
-        const { gameNum } = req.params;
-        const existGamePlayers = await Games.findOne({ gameNum:gameNum }, 
-                                                        { _id:false, blackTeamPlayer:true, whiteTeamPlayer:true });
-        if(!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer )   
-        await Rooms.deleteOne({roomNum:gameNum});
-        await Games.deleteOne({gameNum});
-            res.status(200).json({
-                ok:true,
-                message: "게임방에서 나가기 성공!"
-            });
-    } catch(err){
-        console.log(`API_방에서 나가기 에러,235번: ${err}`);
-        res.status(400).json({
-            ok:false,
-            errorMessage:"게임방에서 나가기 실패"
-        });
-    }
+  //순서:먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방삭제
+  try {
+    const { gameNum } = req.params;
+    const existGamePlayers = await Games.findOne(
+      { gameNum: gameNum },
+      { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true }
+    );
+    if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer)
+      await Rooms.deleteOne({ roomNum: gameNum });
+    await Games.deleteOne({ gameNum });
+    res.status(200).json({
+      ok: true,
+      message: '게임방에서 나가기 성공!',
+    });
+  } catch (err) {
+    console.log(`API_방에서 나가기 에러,235번: ${err}`);
+    res.status(400).json({
+      ok: false,
+      errorMessage: '게임방에서 나가기 실패',
+    });
+  }
 };
 
 module.exports = {
-    gameCreate,
-    gameStart,
-    gameFinish,
-    gameFinishShow,
-    gameDelete
+  gameCreate,
+  gameStart,
+  gameFinish,
+  gameFinishShow,
+  gameDelete,
 };
