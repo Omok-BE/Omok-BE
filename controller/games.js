@@ -194,38 +194,41 @@ const gameFinishShow = async (req, res) => {
     //훈수채팅 수
     const existTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const findTeachingCnt = existTeachingCnt.teachingCnt;
-    console.log('결과창show,existTeachingCnt', existTeachingCnt);
-    console.log('결과창show,findTeachingCnt', findTeachingCnt);
+    console.log('197결과창show,existTeachingCnt', existTeachingCnt);
+    console.log('198결과창show,findTeachingCnt', findTeachingCnt);
 
     //point
+    let user = await Users.findOne({ id: id });
     const usePoint = findTeachingCnt * 10; //쓴 포인트
     const getPoint = usePoint * 0.5; //얻은 포인트
-    console.log('결과창show,usePoint', usePoint);
-    console.log('결과창show,getPoint', getPoint);
+    const totalPoint = user.point + usePoint + getPoint;  //총 포인트
+    console.log('205결과창show,usePoint', usePoint);
+    console.log('206결과창show,getPoint', getPoint);
+    console.log('207결과창show,totalPoint', totalPoint);
+    
+    let win = [];
+    winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, totalPoint:totalPoint, state:user.state }
+    win.push(winInfo)
+    console.log('212결과창show win:', win);
+    console.log('213결과창show win.id:', win.id);
+    console.log('214결과창show win.state:', win.state);
 
-    //score
-    let user = await Users.findOne({ id: id });
-    let userInfo = [];
-    userplusInfo = { id:user.id, score:user.score, usePoint:usePoint, getPoint:getPoint, state:user.state }
-    userInfo.push(userplusInfo)
+    let lose = [];
+    loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, totalPoint:totalPoint, state:user.state }
+    lose.push(loseInfo)
+    console.log('219결과창show lose:', lose);
+    console.log('220결과창show lose.id:', lose.id);
+    console.log('221결과창show lose.state:', lose.state);
 
-    console.log('212결과창show userInfo:', userInfo);
-    console.log('213결과창show userInfo.score:', userInfo.score);
-    console.log('214결과창show userInfo.state:', userInfo.state);
-
-    const gameInfo = await Games.findOne({ gameNum: gameNum }, 
-                                            { _id: false,  blackTeamPlayer: true,
-                                            blackTeamObserver: true, whiteTeamPlayer: true,
-                                            whiteTeamObserver: true });
     res.status(200).json({
-      userInfo,
-      gameInfo,
+      win,
+      lose,
       result,
       ok: true,
       message: 'gameFinishShow 성공!',
     });
   } catch (err) {
-    console.log(`API_gameFinishShow,224번 에러: ${err}`);
+    console.log(`API_gameFinishShow 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: 'gameFinishShow 실패',
@@ -248,7 +251,7 @@ const gameDelete = async (req, res) => {
             message: '게임방에서 나가기 성공!',
         });
   } catch (err) {
-    console.log(`API_방에서 나가기 에러,252번: ${err}`);
+    console.log(`API_방에서 나가기 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '게임방에서 나가기 실패',
