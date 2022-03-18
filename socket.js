@@ -404,10 +404,10 @@ gameRoom.on('connect', async (socket) => {
     const data = { name: socket.nickname, chat };
     console.log('훈수쳇W소켓닉네임:', socket.nickname);
     console.log('훈수쳇W data:', data);
-
+    
     //teachingCnt 업데이트
-    await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt } });
     gameRoom.to(thisgameNum).emit('teachingW', data);
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true );
   });
   //game방 훈수채팅B
   socket.on('teachingB', async (chat) => {
@@ -416,16 +416,18 @@ gameRoom.on('connect', async (socket) => {
     console.log('훈수쳇B data:', data);
 
     //teachingCnt 업데이트
-    await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt } });
     gameRoom.to(thisgameNum).emit('teachingB', data);
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true);
   });
-
-  //game방 플라잉채팅
+  //game방 훈수채팅- 플라잉
   socket.on('flyingWord', (chat) => {
     const data = { name: socket.nickname, chat };
     console.log('플라잉채팅 닉네임♬♪:', socket.nickname);
     console.log('플라잉채팅 data♬♪:', data);
+    
+    //teachingCnt 업데이트
     gameRoom.to(thisgameNum).emit('flyingWord', data);
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true);
   });
 
   //오목 게임
