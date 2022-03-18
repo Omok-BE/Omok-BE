@@ -186,10 +186,10 @@ const gameFinish = async (req, res) => {
 const gameFinishShow = async (req, res) => {
   try {
     const { id, gameNum, result } = req.body;
-    console.log('결과창show,req.body:', req.body);
-    console.log('결과창show,id:', id);
-    console.log('결과창show,gameNum:', gameNum);
-    console.log('결과창show,result:', result);
+    console.log('189,결과창show,req.body:', req.body);
+    console.log('190,결과창show,id:', id);
+    console.log('191,결과창show,gameNum:', gameNum);
+    console.log('192,결과창show,result:', result);
 
     //훈수채팅 수
     const existTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
@@ -205,9 +205,13 @@ const gameFinishShow = async (req, res) => {
 
     //score
     let user = await Users.findOne({ id: id });
-    const userInfo = { id:user.id, score:user.score, usePoint:usePoint, getPoint:getPoint, state:user.state }
-    console.log('209결과창show userInfo:', userInfo);
-    console.log('210결과창show userInfo.state:', userInfo.state);
+    let userInfo = [];
+    userplusInfo = { id:user.id, score:user.score, usePoint:usePoint, getPoint:getPoint, state:user.state }
+    userInfo.push(userplusInfo)
+
+    console.log('212결과창show userInfo:', userInfo);
+    console.log('213결과창show userInfo.score:', userInfo.score);
+    console.log('214결과창show userInfo.state:', userInfo.state);
 
     const gameInfo = await Games.findOne({ gameNum: gameNum }, 
                                             { _id: false,  blackTeamPlayer: true,
