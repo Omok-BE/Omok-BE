@@ -401,6 +401,7 @@ gameRoom.on('connect', async (socket) => {
     
     //teachingCnt 업데이트
     gameRoom.to(thisgameNum).emit('teachingW', data);
+    
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
   //game방 훈수채팅B
@@ -452,6 +453,7 @@ gameRoom.on('connect', async (socket) => {
     try {
       gameRoom.to(thisgameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
+      await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt: 0 }}); 
       console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne(
         { gameNum: thisgameNum },

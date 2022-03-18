@@ -7,10 +7,7 @@ const usersSchema = new mongoose.Schema({
   score: Array,
   point: Number,
   state: String,
-  teachingCnt: {
-    type: Number,
-    default: 0,
-  },
+  teachingCnt: Number
 });
 
 module.exports = mongoose.model('Users', usersSchema);
