@@ -188,13 +188,7 @@ waitingRoom.on('connection', (socket) => {
     }
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
-    console.log(
-      '플레이어로 변경',
-      '이전팀: ',
-      previousTeam,
-      '옮길 팀: ',
-      wantTeam
-    );
+    console.log('플레이어로 변경', '이전팀: ', previousTeam, '옮길 팀: ', wantTeam);
     console.log(socket.rooms);
   });
 
@@ -212,6 +206,10 @@ waitingRoom.on('connection', (socket) => {
           { roomNum },
           { $addToSet: { blackTeamObserver: socket.nickname } }
         );
+        await Users.updateOne(
+          { id: socket.nickname},
+          { $set: { state: 'blackObserver' } }
+        );
       } else {
         await Rooms.updateOne(
           { roomNum },
@@ -220,6 +218,10 @@ waitingRoom.on('connection', (socket) => {
         await Rooms.updateOne(
           { roomNum },
           { $addToSet: { whiteTeamObserver: socket.nickname } }
+        );
+        await Users.updateOne(
+          { id: socket.nickname},
+          { $set: { state: 'whiteObserver' } }
         );
       }
     } else {
@@ -239,10 +241,18 @@ waitingRoom.on('connection', (socket) => {
             { roomNum },
             { $addToSet: { blackTeamObserver: socket.nickname } }
           );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'blackObserver' } }
+          );
         } else {
           await Rooms.updateOne(
             { roomNum },
             { $addToSet: { whiteTeamObserver: socket.nickname } }
+          );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'whiteObserver' } }
           );
         }
       } else {
@@ -255,10 +265,18 @@ waitingRoom.on('connection', (socket) => {
             { roomNum },
             { $addToSet: { blackTeamObserver: socket.nickname } }
           );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'blackObserver' } }
+          );
         } else {
           await Rooms.updateOne(
             { roomNum },
             { $addToSet: { whiteTeamObserver: socket.nickname } }
+          );
+          await Users.updateOne(
+            { id: socket.nickname},
+            { $set: { state: 'whiteObserver' } }
           );
         }
       }
