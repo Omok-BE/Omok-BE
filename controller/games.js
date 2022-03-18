@@ -203,7 +203,8 @@ const gameFinishShow = async (req, res) => {
 
 
         //score
-        let userInfo = await Users.find({id}, {_id:false, id:true, score:true});
+        let userInfo = [];
+        userInfo = await Users.findOne({id}, {_id:false, id:true, score:true});
         const state = await Users.findOne({id}, {_id:false, state:true});
         userInfo.push(usePoint);
         userInfo.push(getPoint);
