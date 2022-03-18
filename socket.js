@@ -401,7 +401,7 @@ gameRoom.on('connect', async (socket) => {
     
     //teachingCnt 업데이트
     gameRoom.to(thisgameNum).emit('teachingW', data);
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true );
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
   //game방 훈수채팅B
   socket.on('teachingB', async (chat) => {
@@ -411,7 +411,7 @@ gameRoom.on('connect', async (socket) => {
 
     //teachingCnt 업데이트
     gameRoom.to(thisgameNum).emit('teachingB', data);
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true);
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
   //game방 훈수채팅- 플라잉
   socket.on('flyingWord', async (chat) => {
@@ -421,7 +421,7 @@ gameRoom.on('connect', async (socket) => {
     
     //teachingCnt 업데이트
     gameRoom.to(thisgameNum).emit('flyingWord', data);
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }});
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
 
   //오목 게임
