@@ -52,8 +52,8 @@ router.get('/test/:roomNum', async (req, res) => {
             },
             {
                 $project: { 
-                    blackPlayerInfo: 1, 
-                    whitePlayerInfo: 1,
+                    blackPlayerInfo: { id: 1, score: 1, point: 1, state: 1}, 
+                    whitePlayerInfo: { id: 1, score: 1, point: 1, state: 1}, 
                     blackTeamObserver: 1, 
                     whiteTeamObserver: 1, 
                     _id: 0 }
