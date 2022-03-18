@@ -38,7 +38,7 @@ router.get('/test/:roomNum', async (req,res) => {
           localField: 'blackTeamPlayer',
           foreignField: 'nickname',
           pipeline: [
-            { $project: { _id: 0 } }
+            { $project: { _id: 0, __v: 0, pass: 0 } }
           ],
           as: 'blackPlayerInfo',
         },
