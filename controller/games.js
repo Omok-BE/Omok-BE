@@ -206,27 +206,28 @@ const gameFinishShow = async (req, res) => {
     console.log('206결과창show,getPoint', getPoint);
     console.log('207결과창show,totalPoint', totalPoint);
 
-    //이긴 팀
+    // 이긴팀, 진팀 
     let win = [];
     let lose = [];
-    if(result.win === user.id ) {
-        winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
-                                totalPoint:totalPoint, state:user.state }
-        win.push(winInfo)
-        console.log('215결과창show win:', win);
-        console.log('216결과창show win.id:', win.id);
-        console.log('217결과창show win.state:', win.state);
-
-    //진 팀
-    } else {
-        loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
-                                totalPoint:totalPoint, state:user.state }
-        lose.push(loseInfo)
-        console.log('2225결과창show lose:', lose);
-        console.log('226결과창show lose.id:', lose.id);
-        console.log('227결과창show lose.state:', lose.state);
+    if (user.state === 'blackPlayer' || user.state === 'whitePlayer') {
+        if(result.win === user.id  ) { //이긴팀
+            winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                                    totalPoint:totalPoint, state:user.state };
+            win.push(winInfo)
+            console.log('215결과창show win:', win);
+            console.log('216결과창show win.id:', win.id);
+            console.log('217결과창show win.state:', win.state);
+            console.log("gameFinishShow --> 이겼다~~!!");
+        } else {  //진 팀
+            loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                                     totalPoint:totalPoint, state:user.state };
+            lose.push(loseInfo)
+            console.log('2225결과창show lose:', lose);
+            console.log('226결과창show lose.id:', lose.id);
+            console.log('227결과창show lose.state:', lose.state);
+            console.log("gameFinishShow --> 졌어.....");
+        }
     }
-
     res.status(200).json({
       win,
       lose,
