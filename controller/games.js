@@ -197,28 +197,35 @@ const gameFinishShow = async (req, res) => {
     console.log('197결과창show,existTeachingCnt', existTeachingCnt);
     console.log('198결과창show,findTeachingCnt', findTeachingCnt);
 
-    //point
     let user = await Users.findOne({ id: id });
+    //point
     const usePoint = findTeachingCnt * 10; //쓴 포인트
     const getPoint = usePoint * 0.5; //얻은 포인트
     const totalPoint = user.point + usePoint + getPoint;  //총 포인트
     console.log('205결과창show,usePoint', usePoint);
     console.log('206결과창show,getPoint', getPoint);
     console.log('207결과창show,totalPoint', totalPoint);
-    
-    let win = [];
-    winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, totalPoint:totalPoint, state:user.state }
-    win.push(winInfo)
-    console.log('212결과창show win:', win);
-    console.log('213결과창show win.id:', win.id);
-    console.log('214결과창show win.state:', win.state);
 
-    let lose = [];
-    loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, totalPoint:totalPoint, state:user.state }
-    lose.push(loseInfo)
-    console.log('219결과창show lose:', lose);
-    console.log('220결과창show lose.id:', lose.id);
-    console.log('221결과창show lose.state:', lose.state);
+    //이긴 팀
+    if(result.win === user.id ) {
+        let win = [];
+        winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                                totalPoint:totalPoint, state:user.state }
+        win.push(winInfo)
+        console.log('215결과창show win:', win);
+        console.log('216결과창show win.id:', win.id);
+        console.log('217결과창show win.state:', win.state);
+
+    //진 팀
+    } else {
+        let lose = [];
+        loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                                totalPoint:totalPoint, state:user.state }
+        lose.push(loseInfo)
+        console.log('2225결과창show lose:', lose);
+        console.log('226결과창show lose.id:', lose.id);
+        console.log('227결과창show lose.state:', lose.state);
+    }
 
     res.status(200).json({
       win,
