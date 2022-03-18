@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Rooms = require('../models/rooms')
 
 const { 
     gameCreate,
@@ -23,5 +24,49 @@ router.post("/gameFinish/show", gameFinishShow);
 
 //방에서 나가기
 router.delete("/game/delete/:gameNum", gameDelete);
+
+router.get('/test/:roomNum', async (req, res) => {
+    try {
+        const { roomNum } = req.params;
+        const userInfos = await Rooms.aggregate([
+            {
+                $match: { roomNum: Number(roomNum) }                
+            },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "blackTeamPlayer",
+                    foreignField: "nickname",
+                    pipeline: [
+                        { $project: { _id: 0, __v: 0, password: 0  } }
+                     ],
+                    as: "blackPlayerInfo"
+                }
+            },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "whiteTeamPlayer",
+                    foreignField: "id",
+                    as: "whitePlayerInfo"
+                }
+            },
+            // {
+            //     $project: { 
+            //         blackPlayerInfo: 1, 
+            //         whitePlayerInfo: 1,
+            //         blackTeamObserver: 1, 
+            //         whiteTeamObserver: 1, 
+            //         _id: 0 }
+            // },
+        ])
+        res.json({ userInfos });
+    } catch (err) {
+        console.log(err);
+        res.status(400);
+    }
+})
 
 module.exports = router;
