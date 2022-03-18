@@ -204,15 +204,10 @@ const gameFinishShow = async (req, res) => {
     console.log('결과창show,getPoint', getPoint);
 
     //score
-    let user = await Users.findOne({ id: id }, { _id: false, id: true, score: true });
-    user.usePoint = usePoint;
-    user.getPoint = getPoint;
-    const state = await Users.findOne({ id: id }, { _id: false, state: true });
-    userInfo = [];
-    userInfo.push(user);
-    userInfo.push(state);
-    console.log('결과창show userInfo:', userInfo);
-    console.log('결과창show state:', state);
+    let user = await Users.findOne({ id: id });
+    const userInfo = { id:user.id, score:user.score, usePoint:usePoint, getPoint:getPoint, state:user.state }
+    console.log('209결과창show userInfo:', userInfo);
+    console.log('210결과창show state:', state);
 
     const gameInfo = await Games.findOne({ gameNum: gameNum }, 
                                             { _id: false,  blackTeamPlayer: true,
