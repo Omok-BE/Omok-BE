@@ -183,21 +183,33 @@ const gameFinish = async (req, res) => {
 const gameFinishShow = async (req, res) => {
     try{
         const { id, gameNum, result } = req.body;
+        console.log("186,req.body:",req.body)
+        console.log("187,id:",id)
+        console.log("188,gameNum:",gameNum)
+        console.log("189,result:",result)
+
         //훈수채팅 수
         const existTeachingCnt = await Users.findOne({ id }, { _id:false, teachingCnt:true });
         const findTeachingCnt = existTeachingCnt.teachingCnt;
+        console.log("194,existTeachingCnt", existTeachingCnt)
+        console.log("195,findTeachingCnt", findTeachingCnt)
+
 
         //point
         const usePoint = findTeachingCnt * 10;      //쓴 포인트 
         const getPoint = usePoint * 0.5;     //얻은 포인트
-        
+        console.log("201,usePoint",usePoint)
+        console.log("202,getPoint",getPoint)
+
+
         //score
         let userInfo = await Users.findOne({id}, {_id:false, id:true, score:true});
         const state = await Users.findOne({id}, {_id:false, state:true});
         userInfo.push(usePoint);
         userInfo.push(getPoint);
         userInfo.push(state);
-        console.log("API결과창200번 userInfo:", userInfo)
+        console.log("API결과창211번 userInfo:", userInfo)
+        console.log("212번 state:", state)
 
         const gameInfo = await Games.findOne({gameNum}, {_id:false, blackTeamPlayer:true, 
                                             blackTeamObserver:true, whiteTeamPlayer:true, whiteTeamObserver:true});
