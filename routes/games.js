@@ -38,9 +38,6 @@ router.get('/test/:roomNum', async (req, res) => {
                     from: "users",
                     localField: "blackTeamPlayer",
                     foreignField: "nickname",
-                    pipeline: [
-                        { $project: { _id: 0 } }
-                     ],
                     as: "blackPlayerInfo"
                 }
             },
@@ -53,14 +50,14 @@ router.get('/test/:roomNum', async (req, res) => {
                     as: "whitePlayerInfo"
                 }
             },
-            // {
-            //     $project: { 
-            //         blackPlayerInfo: 1, 
-            //         whitePlayerInfo: 1,
-            //         blackTeamObserver: 1, 
-            //         whiteTeamObserver: 1, 
-            //         _id: 0 }
-            // },
+            {
+                $project: { 
+                    blackPlayerInfo: 1, 
+                    whitePlayerInfo: 1,
+                    blackTeamObserver: 1, 
+                    whiteTeamObserver: 1, 
+                    _id: 0 }
+            },
         ])
         res.json({ userInfos });
     } catch (err) {
