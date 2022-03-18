@@ -206,14 +206,14 @@ const gameFinishShow = async (req, res) => {
     console.log('206결과창show,getPoint', getPoint);
     console.log('207결과창show,totalPoint', totalPoint);
 
-    // 이긴팀, 진팀 
+    // 이긴팀, 진팀 player
     let win = [];
     let lose = [];
     if (user.state === 'blackPlayer' || user.state === 'whitePlayer') {
         if(result.win === user.id  ) { //이긴팀
             winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                     totalPoint:totalPoint, state:user.state };
-            win.push(winInfo)
+            win.push(winInfo);
             console.log('215결과창show win:', win);
             console.log('216결과창show win.id:', win.id);
             console.log('217결과창show win.state:', win.state);
@@ -221,11 +221,25 @@ const gameFinishShow = async (req, res) => {
         } else {  //진 팀
             loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                      totalPoint:totalPoint, state:user.state };
-            lose.push(loseInfo)
+            lose.push(loseInfo);
             console.log('2225결과창show lose:', lose);
             console.log('226결과창show lose.id:', lose.id);
             console.log('227결과창show lose.state:', lose.state);
             console.log("gameFinishShow --> 졌어.....");
+        }
+    }
+
+    //이긴 Player가 white팀 일때 whiteObserver
+    if (result.win === 'whitePlayer') {
+        if (user.state === 'whiteObserver' && findTeachingCnt !== 0) {
+            //포인트 업데이트
+            winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                                    totalPoint:totalPoint, state:user.state };
+            win.push(winInfo);
+        } else if (user.state === 'blackObserver' && findTeachingCnt !== 0) {
+            loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                                     totalPoint:totalPoint, state:user.state };
+            lose.push(loseInfo);
         }
     }
     res.status(200).json({
