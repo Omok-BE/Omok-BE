@@ -421,7 +421,7 @@ gameRoom.on('connect', async (socket) => {
     
     //teachingCnt 업데이트
     gameRoom.to(thisgameNum).emit('flyingWord', data);
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, upsert=true);
+    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }});
   });
 
   //오목 게임
