@@ -207,8 +207,9 @@ const gameFinishShow = async (req, res) => {
     console.log('207결과창show,totalPoint', totalPoint);
 
     //이긴 팀
+    let win = [];
+    let lose = [];
     if(result.win === user.id ) {
-        let win = [];
         winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                 totalPoint:totalPoint, state:user.state }
         win.push(winInfo)
@@ -218,7 +219,6 @@ const gameFinishShow = async (req, res) => {
 
     //진 팀
     } else {
-        let lose = [];
         loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                 totalPoint:totalPoint, state:user.state }
         lose.push(loseInfo)
