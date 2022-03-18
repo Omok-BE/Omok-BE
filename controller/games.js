@@ -207,8 +207,8 @@ const gameFinishShow = async (req, res) => {
     let user = await Users.findOne({ id: id }, { _id: false, id: true, score: true });
     user.usePoint = usePoint;
     user.getPoint = getPoint;
-    const state = await Users.findOne({ id: id }, { _id: false, state: true });
-    user.state = state;
+    const existState = await Users.findOne({ id: id }, { _id: false, state: true });
+    user.state = existState.state;
     userInfo = [];
     userInfo.push(user);
     console.log('결과창show userInfo:', userInfo);
