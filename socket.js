@@ -322,10 +322,12 @@ waitingRoom.on('connection', (socket) => {
         await Rooms.updateOne({ roomNum }, { $set: { whiteTeamPlayer: null } });
       }
       if (socket.rooms.has(`${roomNum}blackObserver`)) {
+        console.log('블랙 관전자 퇴장1')
         await Rooms.updateOne(
           { roomNum },
           { $pull: { blackTeamObserver: socket.nickname } }
         );
+        console.log('블랙 관전자 퇴장2')
       }
       if (socket.rooms.has(`${roomNum}whiteObserver`)) {
         await Rooms.updateOne(
