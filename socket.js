@@ -228,7 +228,8 @@ waitingRoom.on('connection', (socket) => {
       socket.leave(`${roomNum}player`);
       socket.join(`${roomNum}observer`);
       socket.join(`${roomNum}${wantTeam}`);
-      const playerCnt = waitingRoomCount(`${roomNum}player`);
+      let playerCnt = waitingRoomCount(`${roomNum}player`);
+      if(!playerCnt) { playerCnt = null}
       const observerCnt = waitingRoomCount(`${roomNum}observer`);
       console.log(playerCnt, observerCnt)
       if (previousTeam === 'blackPlayer') {
