@@ -325,23 +325,23 @@ waitingRoom.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log(id)
-    const room = await Rooms.findOne({ roomNum: roomNumber}, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
+    const room = await Rooms.findOne({ roomNum: roomNumber }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
     console.log(room)
     if(room.blackTeamPlayer === id){
-      await Rooms.updateOne({ roomNum: roomNumber}, { $set: {blackTeamPlayer: null}})
+      await Rooms.updateOne({ roomNum: roomNumber }, { $set: {blackTeamPlayer: null }})
     }
     if(room.whiteTeamPlayer === id){
-      await Rooms.updateOne({ roomNum: roomNumber}, { $set: {whiteTeamPlayer: null}})
+      await Rooms.updateOne({ roomNum: roomNumber }, { $set: {whiteTeamPlayer: null }})
     }
     if (room.blackTeamObserver.includes(id)) {
       await Rooms.updateOne(
-        { roomNum },
+        { roomNum: roomNumber },
         { $pull: { blackTeamObserver: id } }
       );
     }
     if (room.whiteTeamObserver.includes(id)) {
       await Rooms.updateOne(
-        { roomNum },
+        { roomNum: roomNumber },
         { $pull: { whiteTeamObserver: id } }
       );
     }
