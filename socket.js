@@ -304,9 +304,6 @@ waitingRoom.on('connection', (socket) => {
     try {
       console.log('퇴장시 존재하는 소켓방', socket.rooms);
       console.log('퇴장하는 소켓 id', socket.id);
-      console.log(roomNum)
-      console.log(socket.rooms.has(`${roomNum}blackObserver`))
-      console.log(socket.rooms.has(`${roomNum}blackPlayer`))
       if (socket.rooms.has(`${roomNum}player`)) {
         const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
         console.log('플레이어 퇴장', playerCnt);
@@ -343,7 +340,7 @@ waitingRoom.on('connection', (socket) => {
   });
 
   socket.on('disconnect', async () => {
-
+    console.log('소켓 끊김')
   });
 
 });
