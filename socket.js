@@ -316,7 +316,6 @@ waitingRoom.on('connection', (socket) => {
         console.log('관전자 퇴장', observerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
-      // waitingRoom.to(roomNum).emit('bye', socket.nickname, userInfos);
     } catch (error) {
       console.log('퇴장 errorMessage', error);
     }
