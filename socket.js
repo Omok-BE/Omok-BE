@@ -305,6 +305,7 @@ waitingRoom.on('connection', (socket) => {
       console.log('퇴장시 네임스페이스 전체 소켓', waitingRoom.adapter.rooms);
       console.log('퇴장하는 소켓 id', socket.id);
       console.log(roomNum)
+      console.log(socket.rooms.has(`${roomNum}blackObserver`))
       if (socket.rooms.has(`${roomNum}player`)) {
         const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
         console.log('플레이어 퇴장', playerCnt);
