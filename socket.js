@@ -51,7 +51,6 @@ waitingRoom.on('connection', (socket) => {
       );
     }
     const userInfos = await findUserInfos(roomNum);
-    console.log(userInfos);
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
   });
 
@@ -189,7 +188,7 @@ waitingRoom.on('connection', (socket) => {
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
     console.log('플레이어로 변경', '이전팀: ', previousTeam, '옮길 팀: ', wantTeam);
-    console.log(socket.rooms);
+    console.log(socket.rooms)
   });
 
   // 관전자로 변경시 정보 업데이트_210315
@@ -232,7 +231,6 @@ waitingRoom.on('connection', (socket) => {
       let playerCnt = waitingRoomCount(`${roomNum}player`);
       if(!playerCnt) { playerCnt = 0}
       const observerCnt = waitingRoomCount(`${roomNum}observer`);
-      console.log(playerCnt, observerCnt)
       if (previousTeam === 'blackPlayer') {
         await Rooms.updateMany(
           { roomNum },
@@ -305,36 +303,35 @@ waitingRoom.on('connection', (socket) => {
     let roomNum = roomNumber
     try {
       console.log('퇴장시 존재하는 소켓방', socket.rooms);
-      // console.log('퇴장시 네임스페이스 전체 소켓', waitingRoom.adapter.rooms);
       console.log('퇴장하는 소켓 id', socket.id);
       console.log(roomNum)
-      console.log(socket.rooms.has(`${roomNum}observer`))
+      console.log(socket.rooms.has(`${roomNum}blackObserver`))
       if (socket.rooms.has(`${roomNum}player`)) {
         const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
         console.log('플레이어 퇴장', playerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
       }
-      if (socket.rooms.has(`${roomNum}observer`)) {
+      else if (socket.rooms.has(`${roomNum}observer`)) {
         const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
         console.log('관전자 퇴장', observerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
-      if (socket.rooms.has(`${roomNum}blackObserver`)) {
+      else if (socket.rooms.has(`${roomNum}blackObserver`)) {
         await Rooms.updateOne(
           { roomNum },
           { $pull: { blackTeamObserver: socket.nickname } }
         );
       }
-      if (socket.rooms.has(`${roomNum}whiteObserver`)) {
+      else if (socket.rooms.has(`${roomNum}whiteObserver`)) {
         await Rooms.updateOne(
           { roomNum },
           { $pull: { whiteTeamObserver: socket.nickname } }
         );
       }
-      if (socket.rooms.has(`${roomNum}blackPlayer`)) {
+      else if (socket.rooms.has(`${roomNum}blackPlayer`)) {
         await Rooms.updateOne({ roomNum }, { $set: { blackTeamPlayer: null } });
       }
-      if (socket.rooms.has(`${roomNum}whitePlayer`)) {
+      else if (socket.rooms.has(`${roomNum}whitePlayer`)) {
         await Rooms.updateOne({ roomNum }, { $set: { whiteTeamPlayer: null } });
       }
       const userInfos = await findUserInfos(roomNum);
