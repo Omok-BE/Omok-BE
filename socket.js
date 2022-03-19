@@ -316,18 +316,6 @@ waitingRoom.on('connection', (socket) => {
         console.log('관전자 퇴장', observerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
-      if (socket.rooms.has(`${roomNum}blackObserver`)) {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { blackTeamObserver: socket.nickname } }
-        );
-      }
-      if (socket.rooms.has(`${roomNum}whiteObserver`)) {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { whiteTeamObserver: socket.nickname } }
-        );
-      }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit('bye', socket.nickname, userInfos);
     } catch (error) {
@@ -344,6 +332,18 @@ waitingRoom.on('connection', (socket) => {
     }
     if(room.whiteTeamPlayer === id){
       await Rooms.updateOne({ roomNum: roomNumber}, { $set: {whiteTeamPlayer: null}})
+    }
+    if (room.blackTeamObserver.includes(id)) {
+      await Rooms.updateOne(
+        { roomNum },
+        { $pull: { blackTeamObserver: id } }
+      );
+    }
+    if (room.whiteTeamObserver.includes(id)) {
+      await Rooms.updateOne(
+        { roomNum },
+        { $pull: { whiteTeamObserver: id } }
+      );
     }
 
   });
