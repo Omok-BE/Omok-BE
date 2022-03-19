@@ -328,12 +328,6 @@ waitingRoom.on('connection', (socket) => {
           { $pull: { whiteTeamObserver: socket.nickname } }
         );
       }
-      if (socket.rooms.has(`${roomNum}blackPlayer`)) {
-        await Rooms.updateOne({ roomNum }, { $set: { blackTeamPlayer: null } });
-      }
-      if (socket.rooms.has(`${roomNum}whitePlayer`)) {
-        await Rooms.updateOne({ roomNum }, { $set: { whiteTeamPlayer: null } });
-      }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit('bye', socket.nickname, userInfos);
     } catch (error) {
@@ -343,11 +337,15 @@ waitingRoom.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log(id)
-    const room = await Rooms.findOne({ roomNum: roomNumber}, { blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
+    const room = await Rooms.findOne({ roomNum: roomNumber}, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
     console.log(room)
     if(room.blackTeamPlayer === id){
       await Rooms.updateOne({ roomNum: roomNumber}, { $set: {blackTeamPlayer: null}})
     }
+    if(room.whiteTeamPlayer === id){
+      await Rooms.updateOne({ roomNum: roomNumber}, { $set: {whiteTeamPlayer: null}})
+    }
+
   });
 
 });
