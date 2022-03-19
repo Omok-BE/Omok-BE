@@ -312,27 +312,27 @@ waitingRoom.on('connection', (socket) => {
         console.log('플레이어 퇴장', playerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
       }
-      else if (socket.rooms.has(`${roomNum}observer`)) {
+      if (socket.rooms.has(`${roomNum}observer`)) {
         const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
         console.log('관전자 퇴장', observerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
-      else if (socket.rooms.has(`${roomNum}blackObserver`)) {
+      if (socket.rooms.has(`${roomNum}blackObserver`)) {
         await Rooms.updateOne(
           { roomNum },
           { $pull: { blackTeamObserver: socket.nickname } }
         );
       }
-      else if (socket.rooms.has(`${roomNum}whiteObserver`)) {
+      if (socket.rooms.has(`${roomNum}whiteObserver`)) {
         await Rooms.updateOne(
           { roomNum },
           { $pull: { whiteTeamObserver: socket.nickname } }
         );
       }
-      else if (socket.rooms.has(`${roomNum}blackPlayer`)) {
+      if (socket.rooms.has(`${roomNum}blackPlayer`)) {
         await Rooms.updateOne({ roomNum }, { $set: { blackTeamPlayer: null } });
       }
-      else if (socket.rooms.has(`${roomNum}whitePlayer`)) {
+      if (socket.rooms.has(`${roomNum}whitePlayer`)) {
         await Rooms.updateOne({ roomNum }, { $set: { whiteTeamPlayer: null } });
       }
       const userInfos = await findUserInfos(roomNum);
@@ -343,8 +343,7 @@ waitingRoom.on('connection', (socket) => {
   });
 
   socket.on('disconnect', async () => {
-    console.log("소켓 끊김", socket.nickname)
-    console.log(socket.rooms)
+
   });
 
 });
