@@ -316,8 +316,7 @@ waitingRoom.on('connection', (socket) => {
         console.log('관전자 퇴장', observerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
-      const userInfos = await findUserInfos(roomNum);
-      waitingRoom.to(roomNum).emit('bye', socket.nickname, userInfos);
+      // waitingRoom.to(roomNum).emit('bye', socket.nickname, userInfos);
     } catch (error) {
       console.log('퇴장 errorMessage', error);
     }
@@ -345,7 +344,8 @@ waitingRoom.on('connection', (socket) => {
         { $pull: { whiteTeamObserver: id } }
       );
     }
-
+    const userInfos = await findUserInfos(roomNumber);
+    waitingRoom.to(roomNumber).emit('bye', id, userInfos);
   });
 
 });
