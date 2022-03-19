@@ -341,6 +341,11 @@ waitingRoom.on('connection', (socket) => {
       console.log('퇴장 errorMessage', error);
     }
   });
+
+  socket.on('disconnect', async () => {
+    console.log("소켓 끊김", socket.nickname)
+  });
+
 });
 
 //방 인원 카운트_210304
