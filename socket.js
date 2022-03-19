@@ -305,7 +305,20 @@ waitingRoom.on('connection', (socket) => {
       console.log('퇴장시 네임스페이스 전체 소켓', waitingRoom.adapter.rooms);
       console.log('퇴장하는 소켓 id', socket.id);
       console.log(roomNum)
-      console.log(socket.rooms.has(`${roomNum}blackObserver`))
+      if (socket.rooms.has(`${roomNum}blackObserver`)) {
+        console.log('블랙 관전자 퇴장1')
+        await Rooms.updateOne(
+          { roomNum },
+          { $pull: { blackTeamObserver: socket.nickname } }
+        );
+        console.log('블랙 관전자 퇴장2')
+      }
+      if (socket.rooms.has(`${roomNum}whiteObserver`)) {
+        await Rooms.updateOne(
+          { roomNum },
+          { $pull: { whiteTeamObserver: socket.nickname } }
+        );
+      }
       if (socket.rooms.has(`${roomNum}player`)) {
         const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
         console.log('플레이어 퇴장', playerCnt);
@@ -321,20 +334,6 @@ waitingRoom.on('connection', (socket) => {
       }
       if (socket.rooms.has(`${roomNum}whitePlayer`)) {
         await Rooms.updateOne({ roomNum }, { $set: { whiteTeamPlayer: null } });
-      }
-      if (socket.rooms.has(`${roomNum}blackObserver`)) {
-        console.log('블랙 관전자 퇴장1')
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { blackTeamObserver: socket.nickname } }
-        );
-        console.log('블랙 관전자 퇴장2')
-      }
-      if (socket.rooms.has(`${roomNum}whiteObserver`)) {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { whiteTeamObserver: socket.nickname } }
-        );
       }
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit('bye', socket.nickname, userInfos);
