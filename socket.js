@@ -19,6 +19,7 @@ instrument(io, {
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting');
 let roomNumber;
+let id;
 
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅');
@@ -301,6 +302,7 @@ waitingRoom.on('connection', (socket) => {
   //퇴장시 방 최신화_210315
   socket.on('disconnecting', async () => {
     let roomNum = roomNumber
+    id = socket.id
     try {
       console.log('퇴장시 존재하는 소켓방', socket.rooms);
       console.log('퇴장하는 소켓 id', socket.id);
@@ -341,6 +343,8 @@ waitingRoom.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log('소켓 끊김')
+    const room = Rooms.findOne({roomNumber}, { blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
+    console.log(room)
   });
 
 });
