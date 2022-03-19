@@ -343,7 +343,7 @@ waitingRoom.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log('소켓 끊김')
-    const room = Rooms.findOne({roomNumber}, { blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
+    const room = Rooms.findOne({ roomNum: roomNumber}, { blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
     console.log(room)
   });
 
