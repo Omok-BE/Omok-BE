@@ -289,16 +289,12 @@ waitingRoom.on('connection', (socket) => {
     let roomNum = roomNumber
     id = socket.nickname
     try {
-      console.log('퇴장시 존재하는 소켓방', socket.rooms);
-      console.log('퇴장하는 소켓 id', socket.id);
       if (socket.rooms.has(`${roomNum}player`)) {
         const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
-        console.log('플레이어 퇴장', playerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
       }
       if (socket.rooms.has(`${roomNum}observer`)) {
         const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
-        console.log('관전자 퇴장', observerCnt);
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
     } catch (error) {
@@ -308,9 +304,7 @@ waitingRoom.on('connection', (socket) => {
 
   //퇴장시 대기실 DB 최신화_210319
   socket.on('disconnect', async () => {
-    console.log(id)
     const room = await Rooms.findOne({ roomNum: roomNumber }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
-    console.log(room)
     if(room.blackTeamPlayer === id){
       await Rooms.updateOne({ roomNum: roomNumber }, { $set: {blackTeamPlayer: null }})
     }
