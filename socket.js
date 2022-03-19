@@ -110,7 +110,8 @@ waitingRoom.on('connection', (socket) => {
       socket.join(`${roomNum}player`);
       socket.join(`${roomNum}${wantTeam}`);
       const playerCnt = waitingRoomCount(`${roomNum}player`);
-      const observerCnt = waitingRoomCount(`${roomNum}observer`);
+      let observerCnt = waitingRoomCount(`${roomNum}observer`);
+      if(!observerCnt) { observerCnt = 0}
       if (previousTeam === 'blackObserver') {
         await Rooms.updateOne(
           { roomNum },
@@ -229,7 +230,7 @@ waitingRoom.on('connection', (socket) => {
       socket.join(`${roomNum}observer`);
       socket.join(`${roomNum}${wantTeam}`);
       let playerCnt = waitingRoomCount(`${roomNum}player`);
-      if(!playerCnt) { playerCnt = null}
+      if(!playerCnt) { playerCnt = 0}
       const observerCnt = waitingRoomCount(`${roomNum}observer`);
       console.log(playerCnt, observerCnt)
       if (previousTeam === 'blackPlayer') {
