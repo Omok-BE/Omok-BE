@@ -230,6 +230,7 @@ waitingRoom.on('connection', (socket) => {
       socket.join(`${roomNum}${wantTeam}`);
       const playerCnt = waitingRoomCount('player');
       const observerCnt = waitingRoomCount('observer');
+      console.log(playerCnt, observerCnt)
       if (previousTeam === 'blackPlayer') {
         await Rooms.updateMany(
           { roomNum },
