@@ -299,7 +299,7 @@ waitingRoom.on('connection', (socket) => {
     waitingRoom.to(roomNum).emit('game', roomNum);
   });
 
-  //퇴장시 방 최신화_210315
+  //퇴장시 대기실 숫자 최신화_210315
   socket.on('disconnecting', async () => {
     let roomNum = roomNumber
     id = socket.nickname
@@ -321,6 +321,7 @@ waitingRoom.on('connection', (socket) => {
     }
   });
 
+  //퇴장시 대기실 DB 최신화_210319
   socket.on('disconnect', async () => {
     console.log(id)
     const room = await Rooms.findOne({ roomNum: roomNumber }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
