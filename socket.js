@@ -18,7 +18,7 @@ instrument(io, {
 
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting');
-// let roomNum;
+let roomNumber;
 
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅');
@@ -32,7 +32,7 @@ waitingRoom.on('connection', (socket) => {
 
   //플레이어로 입장시 정보 업데이트_210315
   socket.on('enterRoomPlayer', async (roomNum, state) => {
-    // roomNum = roomNumber;
+    roomNumber = roomNum;
     const role = `${roomNum}player`;
     socket.join(roomNum);
     socket.join(role);
@@ -291,11 +291,10 @@ waitingRoom.on('connection', (socket) => {
     const data = { nickname: socket.nickname, chat };
     waitingRoom.to(roomNum).emit('chat', data);
   });
-  let roomNumber;
+
   //게임 시작_210315
   socket.on('gameStart', (roomNum) => {
     waitingRoom.to(roomNum).emit('game', roomNum);
-    roomNumber = roomNum
   });
 
   //퇴장시 방 최신화_210315
