@@ -344,6 +344,7 @@ waitingRoom.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log("소켓 끊김", socket.nickname)
+    console.log(socket.rooms)
   });
 
 });
