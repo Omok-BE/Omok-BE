@@ -109,8 +109,8 @@ waitingRoom.on('connection', (socket) => {
       socket.leave(`${roomNum}observer`);
       socket.join(`${roomNum}player`);
       socket.join(`${roomNum}${wantTeam}`);
-      const playerCnt = waitingRoomCount('player');
-      const observerCnt = waitingRoomCount('observer');
+      const playerCnt = waitingRoomCount(`${roomNum}player`);
+      const observerCnt = waitingRoomCount(`${roomNum}observer`);
       if (previousTeam === 'blackObserver') {
         await Rooms.updateOne(
           { roomNum },
@@ -228,8 +228,8 @@ waitingRoom.on('connection', (socket) => {
       socket.leave(`${roomNum}player`);
       socket.join(`${roomNum}observer`);
       socket.join(`${roomNum}${wantTeam}`);
-      const playerCnt = waitingRoomCount('player');
-      const observerCnt = waitingRoomCount('observer');
+      const playerCnt = waitingRoomCount(`${roomNum}player`);
+      const observerCnt = waitingRoomCount(`${roomNum}observer`);
       console.log(playerCnt, observerCnt)
       if (previousTeam === 'blackPlayer') {
         await Rooms.updateMany(
