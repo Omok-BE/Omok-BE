@@ -110,12 +110,16 @@ const gameFinish = async (req, res) => {
     const score = userInfo.score;
     const point = userInfo.point;
     const state = userInfo.state;
-    console.log("113,id:",id)  //ab
+    // console.log("113,id:",id)  //ab
+    console.log("114,score:",score)  //
+    console.log("115,score[0]:",score[0])  //
+    console.log("115,score[0].win:",score[0].win)  //
+    console.log("116,score[1]:",score[1])  //
 
     //승자id
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id: resultId },
-                                            { score: score, point: point, state: state });
+                                            { score, point, state });
     console.log("199,resultId", resultId)
     console.log("120,winPlayer", winPlayer)
                                             
@@ -136,10 +140,10 @@ const gameFinish = async (req, res) => {
     }
 
     //Observer
-    //훈수채팅 수
+    //훈수채팅 수    { teachingCnt: 2 }
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
-    console.log("137훈수쳇cnt", thisTeachingCnt)
+    console.log("137훈수쳇cnt:", thisTeachingCnt)   //137훈수쳇cnt: 2
     //이긴팀 point
     const winUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
     const winGetTeachingPoint = winUseTeachingPoint * 0.5; //얻은 포인트
@@ -287,20 +291,21 @@ const gameFinishShow = async (req, res) => {
 };
 
 
-//게임방에서 play가 나갈때
+//게임방에서 play가 나갈때 게임방삭제
 const gameDelete = async (req, res) => {
   //순서:먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방삭제
   try {
     const { gameNum } = req.params;
     const existGamePlayers = await Games.findOne({ gameNum: gameNum },
-                                                    { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true });
-    if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer)
+                                       { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true });
+    if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer){
       await Rooms.deleteOne({ roomNum: gameNum });
-      await Games.deleteOne({ gameNum:gameNum });
-        res.status(200).json({
-            ok: true,
-            message: '게임방에서 나가기 성공!',
-        });
+      await Games.deleteOne({ gameNum: gameNum });
+    }
+    res.status(200).json({
+        ok: true,
+        message: '게임방에서 나가기 성공!',
+    });
   } catch (err) {
     console.log(`API_방에서 나가기 에러: ${err}`);
     res.status(400).json({
