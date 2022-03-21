@@ -155,13 +155,13 @@ const fastPlayer = async (req, res) => {
     }
 
     if (!existRooms.blackTeamPlayer) {
-      await User.updateOne({ id }, { $set: { state: blackPlayer } });
+      await User.updateOne({ id }, { $set: { state: 'blackPlayer' } });
       await Room.updateOne(
         { roomNum: existRooms.roomNum },
         { $set: { playerCnt: 2, blackTeamPlayer: id } }
       );
     } else if (!existRooms.whiteTeamPlayer) {
-      await User.updateOne({ id }, { $set: { state: whitePlayer } });
+      await User.updateOne({ id }, { $set: { state: 'whitePlayer' } });
       await Room.updateOne(
         { roomNum: existRooms.roomNum },
         { $set: { playerCnt: 2, whiteTeamPlayer: id } }
@@ -203,7 +203,7 @@ const fastObserver = async (req, res) => {
         existRooms.whiteTeamObserver.length ||
       existRooms.blackTeamObserver.length < existRooms.whiteTeamObserver.length
     ) {
-      await User.updateOne({ id }, { $set: { state: blackObserver } });
+      await User.updateOne({ id }, { $set: { state: 'blackObserver' } });
       await Room.updateOne(
         { roomNum: existRooms.roomNum },
         { $addToSet: { blackTeamObserver: id } }
@@ -215,7 +215,7 @@ const fastObserver = async (req, res) => {
     } else if (
       existRooms.blackTeamObserver.length > existRooms.whiteTeamObserver.length
     ) {
-      await User.updateOne({ id }, { $set: { state: whiteObserver } });
+      await User.updateOne({ id }, { $set: { state: 'whiteObserver' } });
       await Room.updateOne(
         { roomNum: existRooms.roomNum },
         { $addToSet: { whiteTeamObserver: id } }
