@@ -379,7 +379,7 @@ let xyToIndex = (x, y) => {
 };
 
 let bboard;
-let count = 0;
+let count;
 
 //접속자 수
 function gameRoomCount(gameNum) {
@@ -389,7 +389,7 @@ function gameRoomCount(gameNum) {
 //game방 연결
 gameRoom.on('connect', async (socket) => {
   bboard = new Array(Math.pow(19, 2)).fill(-1);
-
+  count = 0;
   console.log('★★game 소켓 연결됨★★');
   // console.log("겜방연결후 bboard",bboard);
   // console.log("겜방연결후count",count);
