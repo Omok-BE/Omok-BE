@@ -119,7 +119,7 @@ const gameFinish = async (req, res) => {
     //승자id
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id: resultId },
-                                            { id, score, point, state, teachingCnt });
+                                            { id, score, point, state });
     console.log("123,resultId", resultId) //ae
     console.log("124,winPlayer", winPlayer) 
     // winPlayer {
@@ -147,6 +147,8 @@ const gameFinish = async (req, res) => {
 
     //Observer
     //훈수채팅 수    { teachingCnt: 2 }
+    const [userall] = await Users.find({ });
+    console.log("151,userall",userall)
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)   //observerTeachingCnt: { teachingCnt: 0 }
