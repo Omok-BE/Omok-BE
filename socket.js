@@ -344,7 +344,7 @@ async function findUserInfos(roomNum) {
       $lookup: {
         from: 'users',
         localField: 'blackTeamPlayer',
-        foreignField: 'nickname',
+        foreignField: 'id',
         as: 'blackPlayerInfo',
       },
     },
