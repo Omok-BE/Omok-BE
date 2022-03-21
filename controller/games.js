@@ -86,10 +86,10 @@ const gameStart = async (req, res) => {
       },
     ]);
     console.log('88번gameInfo:', gameInfo);
-    console.log('89번gameInfo[0].blackTeamPlayer:', gameInfo[0].blackTeamPlayer);
-    console.log('90번gameInfo[0].blackTeamObserver:', gameInfo[0].blackTeamObserver);
-    console.log('91번gameInfo[0].whiteTeamPlayer:', gameInfo[0].whiteTeamPlayer);
-    console.log('92번gameInfo[0].whiteTeamObserver:', gameInfo[0].whiteTeamObserver);
+    console.log('89번gameInfo[0].blackPlayer.id:', gameInfo[0].blackTeamPlayer.id);
+    console.log('90번gameInfo[0].blackObserver.id:', gameInfo[0].blackTeamObserver.id);
+    console.log('91번gameInfo[0].whitePlayer.id:', gameInfo[0].whiteTeamPlayer.id);
+    console.log('92번gameInfo[0].whiteObserver.id:', gameInfo[0].whiteTeamObserver.id);
     res.status(200).json({
       gameInfo,
       ok: true,
@@ -120,6 +120,7 @@ const gameFinish = async (req, res) => {
                                             { score: score, point: point, state: state });
     //Player
     if (state === 'blackPlayer' || state === 'whitePlayer') {
+      // const losePlayerId = 
       if (resultId === id) {
         //승Player
         await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } }); //승 +1
@@ -196,6 +197,7 @@ const gameFinishShow = async (req, res) => {
     console.log('192,결과창show,result:', result);
     
     let user = await Users.find({ id: id });
+    console.log("199,user", user);
     //훈수채팅 수
     const findTeachingCnt = user.teachingCnt;
     console.log('198결과창show,findTeachingCnt', findTeachingCnt);
@@ -287,6 +289,7 @@ const gameFinishShow = async (req, res) => {
     });
   }
 };
+
 
 //게임방에서 play가 나갈때
 const gameDelete = async (req, res) => {
