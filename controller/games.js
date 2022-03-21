@@ -163,14 +163,16 @@ const gameFinish = async (req, res) => {
       if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         //포인트 업데이트
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt: 0 }}); 
+        const count1 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
+        console.log("167,count", count1)
       } else if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt: 0 }}); 
+        const count2 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
+        console.log("175,count", count2) 
       }
     }
     
@@ -178,13 +180,17 @@ const gameFinish = async (req, res) => {
     if (winPlayer.state === 'blackPlayer') {
       if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         //point updateOne
-        await Users.updateOne({ id: id }, { $set: { point: winTotalPoint, teachingCnt:0 } });
+        await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
+        const count3 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
+        console.log("185,count", count3) 
       } else if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
-        await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint, teachingCnt:0 } });
+        await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
+        const count4 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
+        console.log("193,count", count4)
       }
     }
     res.status(200).json({
