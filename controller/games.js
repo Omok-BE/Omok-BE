@@ -118,7 +118,6 @@ const gameFinish = async (req, res) => {
     if (state === 'blackPlayer' || state === 'whitePlayer') {
       if (resultId === id) {
         //승Player
-
         await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } }); //승 +1
         await Users.updateOne({ id: resultId }, { $set: { point: point + 150 } }); //포인트 +150
         console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
@@ -183,7 +182,7 @@ const gameFinish = async (req, res) => {
 };
 
 
-//결과창 post
+//결과창 post--작업중
 const gameFinishShow = async (req, res) => {
   try { //내id,  내게임방번호, 내게임승자id
     const { id, gameNum, result } = req.body;
@@ -191,14 +190,12 @@ const gameFinishShow = async (req, res) => {
     console.log('190,결과창show,id:', id);
     console.log('191,결과창show,gameNum:', gameNum);
     console.log('192,결과창show,result:', result);
-
+    
+    let user = await Users.findOne({ id: id });
     //훈수채팅 수
-    const existTeachingCnt = await Users.findOne({ id }, { _id: false, teachingCnt: true });
-    const findTeachingCnt = existTeachingCnt.teachingCnt;
-    console.log('197결과창show,existTeachingCnt', existTeachingCnt);
+    const findTeachingCnt = user.teachingCnt;
     console.log('198결과창show,findTeachingCnt', findTeachingCnt);
 
-    let user = await Users.findOne({ id: id });
     //point
     const usePoint = findTeachingCnt * 10; //쓴 포인트
     const getPoint = usePoint * 0.5; //얻은 포인트
@@ -218,59 +215,57 @@ const gameFinishShow = async (req, res) => {
             console.log('215결과창show win:', win);
             console.log('216결과창show win.id:', win.id);
             console.log('217결과창show win.state:', win.state);
+            console.log('218결과창show winInfo:', winInfo);
             console.log("gameFinishShow --> 이겼다~~!!");
-        } else {  //진 팀
+        } else if(result.win !== user.id) {  //진 팀
             const loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                      totalPoint:totalPoint, state:user.state };
             lose.push(loseInfo);
-            console.log('225결과창show lose:', lose);
-            console.log('226결과창show lose.id:', lose.id);
-            console.log('227결과창show lose.state:', lose.state);
+            console.log('224결과창show lose:', lose);
+            console.log('225결과창show lose.id:', lose.id);
+            console.log('226결과창show lose.state:', lose.state);
+            console.log('227결과창show loseInfo:', loseInfo);
             console.log("gameFinishShow --> 졌어.....");
         }
     }
 
     // gameNum으로 모든 observer 찾기
     const games = await Games.find({gameNum})
-    const allBlackObserver = games.blackTeamObserver
-    const allWhiteObserver = games.whiteTeamObserver
+    // const blackObservers = games.blackTeamObserver
+    // const whiteObservers = games.whiteTeamObserver
 
+    console.log(237,win)
+    console.log(238,lose)
     //observer- whitePlayer가 이겼을때 whiteObserver
     if (result.id === games.whiteTeamPlayer) {
-      for(let whiteObserver = 0; whiteObserver < allWhiteObserver.length; whiteObserver++){
-        if (user.state === 'whiteObserver' && findTeachingCnt !== 0) {
-          //이긴팀 포인트 업데이트
-          const winObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
-                    totalPoint:totalPoint, state:user.state };
-          win.push(winObserver);
-        }
-      }
-      for(let blackObserver = 0; blackObserver < allBlackObserver.length; blackObserver++){
-        if (user.state === 'blackObserver' && findTeachingCnt !== 0) {
-          //진팀 포인트 업데이트
-          const loseObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
-                    totalPoint:loseTotalPoint, state:user.state };
+      if (user.state === 'whiteObserver' && findTeachingCnt !== 0) {
+        //이긴팀 포인트 업데이트
+        const winObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+                  totalPoint:totalPoint, state:user.state };
+        win.push(winObserver);
+        console.log("246,API_show_이긴옵저버는?", winObserver);
+      } else if (user.state === 'blackObserver' && findTeachingCnt !== 0) {
+        //진팀 포인트 업데이트
+        const loseObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+          totalPoint:loseTotalPoint, state:user.state };
           lose.push(loseObserver);
+          console.log("252,API_show_진옵저버는?", loseObserver);
         }
       }
-    }
-    //blackPlayer 이겼을때
-    if (result.id === games.blackTeamPlayer) {
-      for(let blackObserver = 0; blackObserver < allBlackObserver.length; blackObserver++){
+      //blackPlayer 이겼을때
+      if (result.id === games.blackTeamPlayer) {
         if (user.state === 'blackObserver' && findTeachingCnt !== 0) {
           //이긴팀 포인트 업데이트
           const winObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
-                    totalPoint:totalPoint, state:user.state };
-          win.push(winObserver);
-        }
-      }
-      for(let whiteObserver = 0; whiteObserver < allWhiteObserver.length; whiteObserver++){
-        if (user.state === 'whiteObserver' && findTeachingCnt !== 0) {
-          //진팀 포인트 업데이트
-          const loseObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
-                    totalPoint:loseTotalPoint, state:user.state };
-          lose.push(loseObserver);
-        }
+            totalPoint:totalPoint, state:user.state };
+            win.push(winObserver);
+            console.log("262,API_show_이긴옵저버는?", winObserver);
+          } else if (user.state === 'whiteObserver' && findTeachingCnt !== 0) {
+            //진팀 포인트 업데이트
+            const loseObserver = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
+              totalPoint:loseTotalPoint, state:user.state };
+              lose.push(loseObserver);
+              console.log("270,API_show_진옵저버는?", loseObserver);
       }
     }
     res.status(200).json({
