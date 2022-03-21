@@ -85,8 +85,11 @@ const gameStart = async (req, res) => {
         },
       },
     ]);
-    console.log('API_gameStart의 84번gameInfo:', gameInfo);
-
+    console.log('88번gameInfo:', gameInfo);
+    console.log('89번gameInfo[0].blackTeamPlayer:', gameInfo[0].blackTeamPlayer);
+    console.log('90번gameInfo[0].blackTeamObserver:', gameInfo[0].blackTeamObserver);
+    console.log('91번gameInfo[0].whiteTeamPlayer:', gameInfo[0].whiteTeamPlayer);
+    console.log('92번gameInfo[0].whiteTeamObserver:', gameInfo[0].whiteTeamObserver);
     res.status(200).json({
       gameInfo,
       ok: true,
@@ -99,6 +102,7 @@ const gameStart = async (req, res) => {
       errorMessage: '게임방 입장해서 정보를 가져오지 못했어요',
     });
   }
+  return gameStart;
 };
 
 //결과창 post
@@ -191,7 +195,7 @@ const gameFinishShow = async (req, res) => {
     console.log('191,결과창show,gameNum:', gameNum);
     console.log('192,결과창show,result:', result);
     
-    let user = await Users.findOne({ id: id });
+    let user = await Users.find({ id: id });
     //훈수채팅 수
     const findTeachingCnt = user.teachingCnt;
     console.log('198결과창show,findTeachingCnt', findTeachingCnt);
