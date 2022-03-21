@@ -303,15 +303,15 @@ const gameDelete = async (req, res) => {
   //순서:먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방삭제
   try {
     const { gameNum } = req.params;
+    console.log("306,req.params:",req.params)
+    console.log("307,gameNum:",gameNum)
+    console.log("308,gameNum타입:",typeof(gameNum))
     const existGamePlayers = await Games.findOne({ gameNum: gameNum },
                                        { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true });
     if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer){
       await Rooms.deleteOne({ roomNum: gameNum });
       await Games.deleteOne({ gameNum: Number(gameNum) });
     }
-    console.log("306,req.params:",req.params)
-    console.log("307,gameNum:",gameNum)
-    console.log("308,gameNum타입:",typeof(gameNum))
 
     res.status(200).json({
         ok: true,
