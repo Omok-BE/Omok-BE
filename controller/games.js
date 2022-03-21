@@ -110,12 +110,15 @@ const gameFinish = async (req, res) => {
     const score = userInfo.score;
     const point = userInfo.point;
     const state = userInfo.state;
-    console.log("113,id:",id)
+    console.log("113,id:",id)  //ab
 
     //승자id
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id: resultId },
                                             { score: score, point: point, state: state });
+    console.log("199,resultId", resultId)
+    console.log("120,winPlayer", winPlayer)
+                                            
     //Player
     if (state === 'blackPlayer' || state === 'whitePlayer') {
       if (resultId === id) {
@@ -293,7 +296,7 @@ const gameDelete = async (req, res) => {
                                                     { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true });
     if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer)
       await Rooms.deleteOne({ roomNum: gameNum });
-      await Games.deleteOne({ gameNum });
+      await Games.deleteOne({ gameNum:gameNum });
         res.status(200).json({
             ok: true,
             message: '게임방에서 나가기 성공!',
