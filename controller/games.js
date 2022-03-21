@@ -223,7 +223,7 @@ const gameFinishShow = async (req, res) => {
             const loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                      totalPoint:totalPoint, state:user.state };
             lose.push(loseInfo);
-            console.log('2225결과창show lose:', lose);
+            console.log('225결과창show lose:', lose);
             console.log('226결과창show lose.id:', lose.id);
             console.log('227결과창show lose.state:', lose.state);
             console.log("gameFinishShow --> 졌어.....");
@@ -244,7 +244,6 @@ const gameFinishShow = async (req, res) => {
                     totalPoint:totalPoint, state:user.state };
           win.push(winObserver);
         }
-        console.log("249,이긴팀옵저버",win)
       }
       for(let blackObserver = 0; blackObserver < allBlackObserver.length; blackObserver++){
         if (user.state === 'blackObserver' && findTeachingCnt !== 0) {
