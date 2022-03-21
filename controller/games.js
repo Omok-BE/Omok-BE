@@ -86,10 +86,10 @@ const gameStart = async (req, res) => {
       },
     ]);
     console.log('88번gameInfo:', gameInfo);
-    console.log('89번gameInfo[0].blackPlayer.id:', gameInfo[0].blackTeamPlayer.id);
-    console.log('90번gameInfo[0].blackObserver.id:', gameInfo[0].blackTeamObserver.id);
-    console.log('91번gameInfo[0].whitePlayer.id:', gameInfo[0].whiteTeamPlayer.id);
-    console.log('92번gameInfo[0].whiteObserver.id:', gameInfo[0].whiteTeamObserver.id);
+    console.log('89번gameInfo[0].blackPlayer.id:', gameInfo[0].blackTeamPlayer[0].id);
+    console.log('90번gameInfo[0].blackObserver.id:', gameInfo[0].blackTeamObserver[0].id);
+    console.log('91번gameInfo[0].whitePlayer.id:', gameInfo[0].whiteTeamPlayer[0].id);
+    console.log('92번gameInfo[0].whiteObserver.id:', gameInfo[0].whiteTeamObserver[0].id);
     res.status(200).json({
       gameInfo,
       ok: true,
