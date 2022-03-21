@@ -189,7 +189,7 @@ const fastObserver = async (req, res) => {
   try {
     const { id } = req.params;
     const existRooms = await Room.findOne({ state: { $ne: 'wait' } }); //observerCnt: { $ne: 0 }, 옵저버인원 고려
-
+    console.log('existRooms', existRooms.roomNum, typeof(existRooms.roomNum))
     if (!existRooms) {
       res.status(201).send({
         ok: false,
