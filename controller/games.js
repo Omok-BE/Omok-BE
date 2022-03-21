@@ -111,17 +111,23 @@ const gameFinish = async (req, res) => {
     const point = userInfo.point;
     const state = userInfo.state;
     // console.log("113,id:",id)  //ab
-    console.log("114,score:",score)  //
-    console.log("115,score[0]:",score[0])  //
-    console.log("115,score[0].win:",score[0].win)  //
-    console.log("116,score[1]:",score[1])  //
+    console.log("114,score:",score)  //score:[ { win: 0 }, { lose: 0 } ]
+    console.log("115,score[0]:",score[0])  //score[0]: { win: 0 }
+    console.log("115,score[0].win:",score[0].win)  //score[0].win: 0 
+    console.log("116,score[1]:",score[1])  //score[1]: { lose: 0 }
 
     //승자id
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id: resultId },
                                             { score, point, state });
-    console.log("199,resultId", resultId)
-    console.log("120,winPlayer", winPlayer)
+    console.log("123,resultId", resultId) //ae
+    console.log("124,winPlayer", winPlayer) 
+    // winPlayer {
+    //      _id: new ObjectId("62389d760e7aca4289e6b384"),
+    //      point: 1000,
+    //      score: [ { win: 0 }, { lose: 0 } ],
+    //      state: 'whitePlayer'
+    // }
                                             
     //Player
     if (state === 'blackPlayer' || state === 'whitePlayer') {
@@ -143,8 +149,8 @@ const gameFinish = async (req, res) => {
     //훈수채팅 수    { teachingCnt: 2 }
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
-    console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)   //137훈수쳇cnt: 2
-    console.log("147훈수쳇cnt:", thisTeachingCnt)   //137훈수쳇cnt: 2
+    console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)  
+    console.log("147훈수쳇cnt:", thisTeachingCnt)   //147훈수쳇cnt: 2
     //이긴팀 point
     const winUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
     const winGetTeachingPoint = winUseTeachingPoint * 0.5; //얻은 포인트
