@@ -121,7 +121,7 @@ const gameFinish = async (req, res) => {
         await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } }); //승 +1
         await Users.updateOne({ id: resultId }, { $set: { point: point + 150 } }); //포인트 +150
         console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
-      } else {
+      } else if(resultId !== id) {
         //패Player
         await Users.updateOne({ id: resultId }, { $inc: { 'score.0.lose': 1 } }); //패 +1
         await Users.updateOne({ id: resultId }, { $set: { point: point - 50 } }); //포인트 -50
@@ -213,8 +213,8 @@ const gameFinishShow = async (req, res) => {
                                     totalPoint:totalPoint, state:user.state };
             win.push(winInfo);
             console.log('215결과창show win:', win);
-            console.log('216결과창show win.id:', win.id);
-            console.log('217결과창show win.state:', win.state);
+            console.log('216결과창show win[0].id:', win[0].id);
+            console.log('217결과창show win[0].state:', win[0].state);
             console.log('218결과창show winInfo:', winInfo);
             console.log("gameFinishShow --> 이겼다~~!!");
         } else if(result.win !== user.id) {  //진 팀
@@ -222,8 +222,8 @@ const gameFinishShow = async (req, res) => {
                                      totalPoint:totalPoint, state:user.state };
             lose.push(loseInfo);
             console.log('224결과창show lose:', lose);
-            console.log('225결과창show lose.id:', lose.id);
-            console.log('226결과창show lose.state:', lose.state);
+            console.log('225결과창show lose[0].id:', lose[0].id);
+            console.log('226결과창show lose[0].state:', lose[0].state);
             console.log('227결과창show loseInfo:', loseInfo);
             console.log("gameFinishShow --> 졌어.....");
         }
@@ -234,8 +234,8 @@ const gameFinishShow = async (req, res) => {
     // const blackObservers = games.blackTeamObserver
     // const whiteObservers = games.whiteTeamObserver
 
-    console.log(237,win)
-    console.log(238,lose)
+    console.log("237,win",win)
+    console.log("238,lose",lose)
     //observer- whitePlayer가 이겼을때 whiteObserver
     if (result.id === games.whiteTeamPlayer) {
       if (user.state === 'whiteObserver' && findTeachingCnt !== 0) {
