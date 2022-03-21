@@ -124,7 +124,7 @@ const gameFinish = async (req, res) => {
         
       } else if(resultId !== id) {
         //패Player
-        await Users.updateOne({ id: id }, { $inc: { 'score.0.lose': 1 } }); //패 +1
+        await Users.updateOne({ id: id }, { $inc: { 'score.1.lose': 1 } }); //패 +1
         await Users.updateOne({ id: id }, { $set: { point: point - 50 } }); //포인트 -50
         console.log(`API_패자 score에 1패, point에 -50이 추가되었습니다.`);
       }
