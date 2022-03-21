@@ -143,7 +143,8 @@ const gameFinish = async (req, res) => {
     //훈수채팅 수    { teachingCnt: 2 }
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
-    console.log("137훈수쳇cnt:", thisTeachingCnt)   //137훈수쳇cnt: 2
+    console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)   //137훈수쳇cnt: 2
+    console.log("147훈수쳇cnt:", thisTeachingCnt)   //137훈수쳇cnt: 2
     //이긴팀 point
     const winUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
     const winGetTeachingPoint = winUseTeachingPoint * 0.5; //얻은 포인트
@@ -300,8 +301,12 @@ const gameDelete = async (req, res) => {
                                        { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true });
     if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer){
       await Rooms.deleteOne({ roomNum: gameNum });
-      await Games.deleteOne({ gameNum: gameNum });
+      await Games.deleteOne({ gameNum: Number(gameNum) });
     }
+    console.log("306,req.params:",req.params)
+    console.log("307,gameNum:",gameNum)
+    console.log("308,gameNum타입:",typeof(gameNum))
+
     res.status(200).json({
         ok: true,
         message: '게임방에서 나가기 성공!',
