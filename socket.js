@@ -305,22 +305,22 @@ waitingRoom.on('connection', (socket) => {
   //퇴장시 대기실 DB 최신화_210319
   socket.on('disconnect', async () => {
     let roomNum = roomNumber
-    const room = await Rooms.findOne({ roomNum: roomNumber }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
+    const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
     if(room.blackTeamPlayer === id){
-      await Rooms.updateOne({ roomNum: roomNumber }, { $set: {blackTeamPlayer: null }})
+      await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
     }
     if(room.whiteTeamPlayer === id){
-      await Rooms.updateOne({ roomNum: roomNumber }, { $set: {whiteTeamPlayer: null }})
+      await Rooms.updateOne({ roomNum }, { $set: {whiteTeamPlayer: null }})
     }
     if (room.blackTeamObserver.includes(id)) {
       await Rooms.updateOne(
-        { roomNum: roomNumber },
+        { roomNum },
         { $pull: { blackTeamObserver: id } }
       );
     }
     if (room.whiteTeamObserver.includes(id)) {
       await Rooms.updateOne(
-        { roomNum: roomNumber },
+        { roomNum },
         { $pull: { whiteTeamObserver: id } }
       );
     }
