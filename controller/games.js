@@ -105,10 +105,12 @@ const gameStart = async (req, res) => {
 const gameFinish = async (req, res) => {
   try {
     const { userInfo, gameNum, result } = req.body;
+    console.log("108,게임피니쉬req.body:", req.body)
     const id = userInfo.id;
     const score = userInfo.score;
     const point = userInfo.point;
     const state = userInfo.state;
+    console.log("113,id:",id)
 
     //승자id
     const resultId = result.win;
@@ -212,10 +214,9 @@ const gameFinishShow = async (req, res) => {
             const winInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
                                     totalPoint:totalPoint, state:user.state };
             win.push(winInfo);
-            console.log('215결과창show win:', win);
+            // console.log('215결과창show win:', win);
             console.log('216결과창show win[0].id:', win[0].id);
             console.log('217결과창show win[0].state:', win[0].state);
-            console.log('218결과창show winInfo:', winInfo);
             console.log("gameFinishShow --> 이겼다~~!!");
         } else if(result.win !== user.id) {  //진 팀
             const loseInfo = { id:user.id, usePoint:usePoint, getPoint:getPoint, 
@@ -231,8 +232,6 @@ const gameFinishShow = async (req, res) => {
 
     // gameNum으로 모든 observer 찾기
     const games = await Games.find({gameNum})
-    // const blackObservers = games.blackTeamObserver
-    // const whiteObservers = games.whiteTeamObserver
 
     console.log("237,win",win)
     console.log("238,lose",lose)

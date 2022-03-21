@@ -413,7 +413,7 @@ gameRoom.on('connect', async (socket) => {
     console.log(`조인게임방번호:${gameNum}`);
     socket.join(gameNum);
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('272번 game방Join_observerCnt:', observerCnt);
+    console.log('416,game방소켓Join_observerCnt:', observerCnt);
     await Rooms.updateOne({ gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
@@ -485,7 +485,7 @@ gameRoom.on('connect', async (socket) => {
       gameRoom.to(thisgameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt: 0 }}); 
-      console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
+      // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne(
         { gameNum: thisgameNum },
         { $set: { observerCnt } }
