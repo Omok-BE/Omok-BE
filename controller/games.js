@@ -193,14 +193,6 @@ const gameFinishShow = async (req, res) => {
     const { id, gameNum, result } = req.body;
     console.log('212,결과창show,req.body:', req.body);
     
-    //내id로 내정보만 찾기
-    let user = await Users.findOne({id:id}, {_id:false, id:true, state:true, teachingCnt:true});
-    console.log("199,show,user:",user) // user: [{id:"user1", state:"player", teachingCnt:2}]
-    //모든 유저 정보 찾기
-    // let user2 = await Users.find({}, {_id:false, id:true, state:true, teachingCnt:true});
-    // console.log("200,show,user2:",user2) // user: [{id:"user1", state:"player"},{}...]
-
-
 
     // 내겜방 유저들의 정보 찾기 id, score, point, state 
     const gameInfo = await Games.aggregate([
@@ -249,7 +241,7 @@ const gameFinishShow = async (req, res) => {
         },
       },
     ]);
-    // console.log('252번gameInfo:', gameInfo); 
+    console.log('244번gameInfo:', gameInfo); 
     // 252번gameInfo: [
 //    {
 //      blackTeamPlayer: [ [Object] ],
@@ -258,14 +250,14 @@ const gameFinishShow = async (req, res) => {
 //      whiteTeamObserver: [Object]
 //    }
 //  ] 
-    // console.log('253번gameInfo[0]:', gameInfo[0]);  
+    console.log('253번gameInfo[0]:', gameInfo[0]);  
 //    253번gameInfo[0]: {
 //      blackTeamPlayer: [ [Object] ],
 //      blackTeamObserver: [ [Object] ],
 //      whiteTeamPlayer: [ [Object] ],
 //      whiteTeamObserver: [ [Object] ]
 //    }
-    // console.log('254번gameInfo[0].bp:', gameInfo[0].blackTeamPlayer);
+    console.log('260번gameInfo[0].bp:', gameInfo[0].blackTeamPlayer);
     // 254번gameInfo[0].bp: [
     //      {
     //        id: 'ad',
@@ -274,11 +266,24 @@ const gameFinishShow = async (req, res) => {
     //        state: 'blackPlayer'
     //      }
     //    ]
-    // 255번gameInfo[0].bp.state: undefined
-    console.log('278번gameInfo[0].bp[0].state:', gameInfo[0].blackTeamPlayer[0].state);
-    // console.log('256번gameInfo[0].bo:', gameInfo[0].blackTeamObserver);
-    console.log('280번gameInfo[0].bo[0].state:', gameInfo[0].blackTeamObserver[0].state);
 
+    // 255번gameInfo[0].bp.state: undefined
+
+    console.log('272번gameInfo[0].bp[0].state:', gameInfo[0].blackTeamPlayer[0].state);
+    // 278번gameInfo[0].bp[0].state: blackPlayer
+
+    console.log('275번gameInfo[0].bo:', gameInfo[0].blackTeamObserver);
+    // 2564번gameInfo[0].bo: [
+    //      {
+    //        id: 'ac',
+    //        score: [ [Object], [Object] ],
+    //        point: 1410,
+    //        state: 'blackObserver'
+    //      }
+    //    ]
+
+    console.log('285번gameInfo[0].bo[0].state:', gameInfo[0].blackTeamObserver[0].state);
+    //280번gameInfo[0].bo[0].state: blackObserver
 
 
 
