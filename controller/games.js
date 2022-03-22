@@ -213,84 +213,16 @@ const gameFinishShow = async (req, res) => {
     //내id로 내정보만 찾기
     let user = await Users.findOne({id:id}, {_id:false, id:true, point:true, state:true, teachingCnt:true});
     console.log("216,show,user:",user) // user: {id:"user1", state:"player", teachingCnt:2}
-    console.log("217,show,user.teachingCnt", user.teachingCnt)
-    console.log("218,show,user.teachingCnt", user.point)
+    console.log("217,show,user.teachingCnt", user.teachingCnt)   //2
+    console.log("218,show,user.teachingCnt", user.point)   // 1000
+    
     //모든 유저 정보 찾기
-    let user2 = await Users.find({}, {_id:false, id:true, state:true, teachingCnt:true});
-    console.log("221,show,user2:",user2) // user: [{id:"user1", state:"player"},{}...]
-    //find로 전체 유저id와 정보 찾고 gameNum으로 observerId찾은 후에 유저id와 observerId
-
-
-    // 내겜방 유저들의 정보 찾기 id, score, point, state 
-    const gameUsers = await Games.aggregate([
-      {
-        $match: { gameNum: Number(gameNum) },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'blackTeamPlayer',
-          foreignField: 'id',
-          as: 'blackTeamPlayer',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'blackTeamObserver',
-          foreignField: 'id',
-          as: 'blackTeamObserver',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'whiteTeamPlayer',
-          foreignField: 'id',
-          as: 'whiteTeamPlayer',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'whiteTeamObserver',
-          foreignField: 'id',
-          as: 'whiteTeamObserver',
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-          blackTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-          whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-          whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-        }
-      }
-    ]);
-    // console.log("271,show,gameUsers:",gameUsers); 
-    // console.log("272,show,gameUsers[0]:",gameUsers[0]); 
-    // console.log("273,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // []
-    // console.log("274,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);  //undefined
-    // console.log("275,show,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt);
-
-
-    //훈수채팅 수
-    // const findTeachingCnt = 0;
-    // user.forEach((user) => {
-    //   findTeachingCnt = user.teachingCnt
-    // });
-    // console.log("219,show,훈수채팅수",findTeachingCnt)
-
-
-    //point
+    let allUsers = await Users.find({}, {_id:false, id:true, state:true, teachingCnt:true});
+    console.log("221,show,allUsers:", allUsers) // allUsers: [{id:"user1", state:"player"},{}...]
+    const allUser = Object.assign(allUsers);
+    console.log("223,show,allUser:", allUser) // allUser: [{id:"user1", state:"player"},{}...]
     
-    
-    const findTeachingCnt = user.teachingCnt;
-    const usePoint = findTeachingCnt * 10; //쓴 포인트
-    const getPoint = usePoint * 0.5; //얻은 포인트
-    const totalPoint = user.point  //총 포인트 (gameFinish에서 총포인트 업뎃됨)
-
+    //find로 전체 유저id와 정보 찾고 gameNum으로 observerId찾은 후에 이긴팀 진팀 구별해서 포인트 계산후 보여준다. 
     //player- 이긴팀, 진팀 
     let win = [];
     let lose = [];
@@ -305,11 +237,34 @@ const gameFinishShow = async (req, res) => {
                                      totalPoint:totalPoint, state:user.state };
             lose.push(loseInfo);
             console.log("gameFinishShow --> 졌어요.....");
+          }
         }
+    console.log("242,show,win:",win)
+    console.log("243,show,lose:",lose)
+    
+    //observer- 이긴팀, 진팀
+    const findTeachingCnt = user.teachingCnt;  
+    const usePoint = findTeachingCnt * 10; //쓴 포인트
+    const getPoint = usePoint * 0.5; //얻은 포인트
+    const totalPoint = user.point  //총 포인트 (gameFinish에서 총포인트 업뎃됨)
+    const findObserverIdArray = await Games.find({gameNum:gameNum},
+                                    {_id:false, blackTeamObserver:true, whiteTeamObserver:true});
+    const findObserverId = Object.assign(findObserverIdArray)
+    console.log("253,findObserverId:",findObserverId)
+    //이긴 player가 white팀 일때 whiteTeamObserver
+    if (result.win === games.whiteTeamPlayer ) {
+      if (findObserverId.whiteTeamObserver){
+
+
+      }
     }
 
+
+
+
+
     // gameNum으로 모든 observer 찾기
-    const games = await Games.find({gameNum})
+    const games = await Games.find({gameNum});
     console.log("311,games:",games)
     console.log("show,win팀?",win)
     console.log("show,lose팀?",lose)
