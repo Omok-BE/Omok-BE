@@ -110,7 +110,7 @@ const gameFinish = async (req, res) => {
     const score = userInfo.score;
     const point = userInfo.point;
     const state = userInfo.state;
-    console.log("113,id:",id)  //ab
+    console.log("113,state:",state)  //
     // console.log("114,score:",score)  //score:[ { win: 0 }, { lose: 0 } ]
     // console.log("115,score[0]:",score[0])  //score[0]: { win: 0 }
     // console.log("116,score[0].win:",score[0].win)  //score[0].win: 0 
@@ -125,7 +125,7 @@ const gameFinish = async (req, res) => {
     //승자id
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id: resultId },
-                                            { id, score, point, state });
+                                            { _id:false, id:true, score:true, point:true, state:true });
     console.log("123,resultId", resultId) //ae
     console.log("124,winPlayer", winPlayer) 
     // winPlayer {
@@ -153,8 +153,8 @@ const gameFinish = async (req, res) => {
 
     //Observer
     //훈수채팅 수    { teachingCnt: 2 }
-    const userall = await Users.find({});
-    console.log("158,userall",userall)
+    const allusers = await Users.find({});
+    console.log("158,userall",allusers)
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)   //observerTeachingCnt: { teachingCnt: 0 }
@@ -234,8 +234,8 @@ const gameFinishShow = async (req, res) => {
     // console.log('191,결과창show,gameNum:', gameNum);
     // console.log('192,결과창show,result:', result);
     
-    let user = await Users.find({ id: id });
-    console.log("194,~~~~show,user~~~~~", user);
+    let allusers = await Users.find({ });
+    console.log("194,~~~~show,user~~~~~", allusers);
     //훈수채팅 수
     const findTeachingCnt = user.teachingCnt;
     console.log('197결과창show,findTeachingCnt', findTeachingCnt);
