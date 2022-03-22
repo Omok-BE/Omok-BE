@@ -381,6 +381,7 @@ let xyToIndex = (x, y) => {
 
 let bboard;
 let count;
+let pointer;
 
 //접속자 수
 function gameRoomCount(gameNum) {
@@ -391,6 +392,7 @@ function gameRoomCount(gameNum) {
 gameRoom.on('connect', async (socket) => {
   bboard = new Array(Math.pow(19, 2)).fill(-1);
   count = 0;
+  pointer = false;
   console.log('★★game 소켓 연결됨★★');
   // console.log("겜방연결후 bboard",bboard);
   // console.log("겜방연결후count",count);
@@ -456,6 +458,33 @@ gameRoom.on('connect', async (socket) => {
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
 
+  //Pointer 훈수 실질적으로 오목두는 부분
+  socket.on("pointerOmog", (data) => {
+    if (pointer){
+      if (bboard[xyToIndex(data.x, data.y)] != -1) {
+        console.log("Pointer들어가");
+        return;
+      }
+      (bboard[xyToIndex(data.x, data.y)] = 3)
+      data.board = bboard;
+      // data.order
+      pointer = flase;
+      console.log("Pointer 훈수", pointer);
+
+      gameRoom.to(thisgameNum).emit("pointerOmog", data, count, pointer);
+    }
+  });
+
+  //game방 채팅으로 받는부분
+  socket.on("Pointer", (id) =>{
+    pointer = true;
+
+    const data = {name:socket.nickname, pointer:pointer};
+    console.log("Pointer♬♪:",socket.nickname);
+    console.log("Pointer data♬♪:",data);
+    gameRoom.to(thisgameNum).emit("Pointer", data);
+  }); 
+  
   //오목 게임
   socket.on('omog', (data, state) => {
     if (bboard[xyToIndex(data.x, data.y)] != -1) {
