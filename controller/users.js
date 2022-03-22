@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 const signup = async (req, res) => {
   try {
-    const { id, nickname, pass, confirmPass } = req.body;
+    const { id, pass, confirmPass } = req.body;
     // 비밀번호, 비밀번호 확인 비교
     if (pass !== confirmPass) {
       res.status(400).send({
@@ -23,14 +23,14 @@ const signup = async (req, res) => {
       return;
     }
     // nickname 검사
-    const existNickname = await User.find({ nickname });
-    if (existNickname.length) {
-      res.status(400).send({
-        ok: false,
-        errorMessage: '이미 사용중인 닉네임 입니다.',
-      });
-      return;
-    }
+    // const existNickname = await User.find({ nickname });
+    // if (existNickname.length) {
+    //   res.status(400).send({
+    //     ok: false,
+    //     errorMessage: '이미 사용중인 닉네임 입니다.',
+    //   });
+    //   return;
+    // }
     const encodedPass = crypto
       .createHash(process.env.Algorithm)
       .update(pass + process.env.salt)
@@ -38,7 +38,7 @@ const signup = async (req, res) => {
 
     const user = new User({
       id: id,
-      nickname: nickname,
+    //   nickname: nickname,
       pass: encodedPass,
       score: [{ win: 0 }, { lose: 0 }],
       point: 1000,
