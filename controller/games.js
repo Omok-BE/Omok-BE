@@ -153,8 +153,10 @@ const gameFinish = async (req, res) => {
 
     //Observer
     //훈수채팅 수    { teachingCnt: 2 }
-    const [userall] = await Users.find({ });
-    console.log("151,userall",userall)
+    const userall = await Users.find({});
+    const userall2 = await Users.findOne({});
+    console.log("158,userall",userall)
+    console.log("159,userall2",userall2)
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)   //observerTeachingCnt: { teachingCnt: 0 }
