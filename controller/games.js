@@ -38,6 +38,7 @@ const gameCreate = async (req, res) => {
 //게임방 입장해서 정보가져오기
 const gameStart = async (req, res) => {
   try {
+    console.log("~~~~~~API- gameStart 진입~~~~")
     const { gameNum } = req.params;
     const gameInfo = await Games.aggregate([
       {
@@ -85,7 +86,7 @@ const gameStart = async (req, res) => {
         },
       },
     ]);
-    // console.log('88번gameInfo[0]:', gameInfo[0]);
+    console.log('88번gameInfo[0]:', gameInfo[0]);
     res.status(200).json({
       gameInfo,
       ok: true,
