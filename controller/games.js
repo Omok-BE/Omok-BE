@@ -115,9 +115,9 @@ const gameFinish = async (req, res) => {
     console.log("115,score[0]:",score[0])  //score[0]: { win: 0 }
     console.log("116,score[0].win:",score[0].win)  //score[0].win: 0 
     console.log("117,score[1]:",score[1])  //score[1]: { lose: 0 }
-    console.log("118,point>>",point)  
-    console.log("119,point+150>>",point+150)  
-    console.log("120,point타입>>",typeof(point))  
+    console.log("118,point>>",point)  //1000
+    console.log("119,point+150>>",point+150) //1150 
+    console.log("120,point타입>>",typeof(point))  //Number
 
     //승자id
     const resultId = result.win;
@@ -160,15 +160,20 @@ const gameFinish = async (req, res) => {
     const winUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
     const winGetTeachingPoint = winUseTeachingPoint * 0.5; //얻은 포인트
     const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint + point; //총 포인트
+    console.log(163,winTotalPoint);
 
     //이긴 Player가 white팀 일때
     if (winPlayer.state === 'whitePlayer') {
+      console.log("167,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
       if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         //포인트 업데이트
+        console.log("170,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
+        console.log("172,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         const count1 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("167,count", count1)
+        console.log("174,count", count1)
       } else if (state === 'blackObserver' && thisTeachingCnt !== 0) {
+        console.log("176,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
@@ -181,19 +186,25 @@ const gameFinish = async (req, res) => {
     
     //이긴 Player가 black팀 일때
     if (winPlayer.state === 'blackPlayer') {
+      console.log("189,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
       if (state === 'blackObserver' && thisTeachingCnt !== 0) {
+        console.log("191,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         //point updateOne
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
+        console.log("194,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         const count3 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("185,count", count3) 
+        console.log("196,count", count3) 
       } else if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
+        console.log("198,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
+        console.log("204,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         const count4 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("193,count", count4)
+        console.log("206,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
+        console.log("207,count", count4)
       }
     }
     res.status(200).json({
