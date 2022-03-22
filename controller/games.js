@@ -200,7 +200,7 @@ const gameFinishShow = async (req, res) => {
     console.log('212,결과창show,req.body:', req.body);
     
     let user = await Users.find({});
-    // console.log("215,show,user",user)
+    // console.log("215,show,user",user) 
 
     //훈수채팅 수
     const findTeachingCnt = user.teachingCnt;
