@@ -113,8 +113,11 @@ const gameFinish = async (req, res) => {
     // console.log("113,id:",id)  //ab
     console.log("114,score:",score)  //score:[ { win: 0 }, { lose: 0 } ]
     console.log("115,score[0]:",score[0])  //score[0]: { win: 0 }
-    console.log("115,score[0].win:",score[0].win)  //score[0].win: 0 
-    console.log("116,score[1]:",score[1])  //score[1]: { lose: 0 }
+    console.log("116,score[0].win:",score[0].win)  //score[0].win: 0 
+    console.log("117,score[1]:",score[1])  //score[1]: { lose: 0 }
+    console.log("118,point>>",point)  
+    console.log("119,point+150>>",point+150)  
+    console.log("120,point타입>>",typeof(point))  
 
     //승자id
     const resultId = result.win;
