@@ -154,9 +154,7 @@ const gameFinish = async (req, res) => {
     //Observer
     //훈수채팅 수    { teachingCnt: 2 }
     const userall = await Users.find({});
-    const userall2 = await Users.findOne({});
     console.log("158,userall",userall)
-    console.log("159,userall2",userall2)
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     console.log("146훈수쳇observerTeachingCnt:", observerTeachingCnt)   //observerTeachingCnt: { teachingCnt: 0 }
@@ -236,8 +234,8 @@ const gameFinishShow = async (req, res) => {
     // console.log('191,결과창show,gameNum:', gameNum);
     // console.log('192,결과창show,result:', result);
     
-    let [user] = await Users.find({ id: id });
-    console.log("194,user", user);
+    let user = await Users.find({ id: id });
+    console.log("194,~~~~show,user~~~~~", user);
     //훈수채팅 수
     const findTeachingCnt = user.teachingCnt;
     console.log('197결과창show,findTeachingCnt', findTeachingCnt);
