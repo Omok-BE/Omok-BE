@@ -98,7 +98,6 @@ const gameStart = async (req, res) => {
       errorMessage: '게임방 입장해서 정보를 가져오지 못했어요',
     });
   }
-  return gameStart;
 };
 
 //결과창 post
@@ -115,7 +114,7 @@ const gameFinish = async (req, res) => {
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id: resultId },
                                             { _id:false, id:true, score:true, point:true, state:true });
-    console.log("118,winPlayer", winPlayer) 
+    // console.log("118,winPlayer", winPlayer) 
                                             
     //Player
     if (state === 'blackPlayer' || state === 'whitePlayer') {
@@ -133,8 +132,7 @@ const gameFinish = async (req, res) => {
     }
 
     //Observer
-    //훈수채팅 수    { teachingCnt: 2 }
-    const allusers = await Users.find({});
+    //훈수채팅 수    
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     //이긴팀 point
@@ -148,15 +146,13 @@ const gameFinish = async (req, res) => {
       if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         //포인트 업데이트
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        const count1 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("156,count1", count1)
+        await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
       } else if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        const count2 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("165,count2", count2) 
+        await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
       }
     }
     
@@ -166,8 +162,7 @@ const gameFinish = async (req, res) => {
       if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         //point updateOne
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        const count3 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("179,count", count3) 
+        await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
       } else if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         
         //point
@@ -175,8 +170,7 @@ const gameFinish = async (req, res) => {
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
         console.log(206,loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        const count4 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("191,count", count4)
+        await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
       }
     }
     res.status(200).json({
@@ -199,11 +193,15 @@ const gameFinishShow = async (req, res) => {
     const { id, gameNum, result } = req.body;
     console.log('212,결과창show,req.body:', req.body);
     
-    let user = await Users.find({});
-    // console.log("215,show,user",user) 
+    //내가 필요한 값만 찾기
+    let user = await Users.find({id, state, teachingCnt});
+    console.log("215,show,user:",user) // user: [{},{}...]
 
-    //훈수채팅 수
-    const findTeachingCnt = user.teachingCnt;
+    //훈수채팅 수  /user 배열 돌아서 teachingCnt만 찾기
+    const findTeachingCnt = 0;
+    user.forEach((user) => {
+      findTeachingCnt = user.teachingCnt
+    });
     console.log("219,show,훈수채팅수",findTeachingCnt)
     //point
     const usePoint = findTeachingCnt * 10; //쓴 포인트
