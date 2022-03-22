@@ -249,10 +249,12 @@ const gameFinishShow = async (req, res) => {
         },
       },
     ]);
-    console.log('252번gameInfo:', gameInfo);
-    console.log('252번gameInfo:', gameInfo[0]);
-    console.log('252번gameInfo:', gameInfo[0].blackTeamPlayer);
-    console.log('252번gameInfo:', gameInfo[0].blackTeamObserver);
+    console.log('252번gameInfo:', gameInfo);  
+    console.log('253번gameInfo[0]:', gameInfo[0]);  //
+    console.log('254번gameInfo[0].bp:', gameInfo[0].blackTeamPlayer);
+    console.log('255번gameInfo[0].bp.state:', gameInfo[0].blackTeamPlayer.state);
+    console.log('256번gameInfo[0].bo:', gameInfo[0].blackTeamObserver);
+    console.log('257번gameInfo[0].bo.state:', gameInfo[0].blackTeamObserver.state);
 
 // 88번gameInfo: [
 //    {
@@ -269,11 +271,11 @@ const gameFinishShow = async (req, res) => {
 
 
     //훈수채팅 수
-    const findTeachingCnt = 0;
-    user.forEach((user) => {
-      findTeachingCnt = user.teachingCnt
-    });
-    console.log("219,show,훈수채팅수",findTeachingCnt)
+    // const findTeachingCnt = 0;
+    // user.forEach((user) => {
+    //   findTeachingCnt = user.teachingCnt
+    // });
+    // console.log("219,show,훈수채팅수",findTeachingCnt)
     //point
     const usePoint = findTeachingCnt * 10; //쓴 포인트
     const getPoint = usePoint * 0.5; //얻은 포인트
