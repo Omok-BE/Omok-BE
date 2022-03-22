@@ -241,7 +241,7 @@ const gameFinishShow = async (req, res) => {
         },
       },
     ]);
-    console.log('244번gameInfo:', gameInfo); 
+    // console.log('244번gameInfo:', gameInfo); 
     // 252번gameInfo: [
 //    {
 //      blackTeamPlayer: [ [Object] ],
@@ -250,14 +250,14 @@ const gameFinishShow = async (req, res) => {
 //      whiteTeamObserver: [Object]
 //    }
 //  ] 
-    console.log('253번gameInfo[0]:', gameInfo[0]);  
+    // console.log('253번gameInfo[0]:', gameInfo[0]);  
 //    253번gameInfo[0]: {
 //      blackTeamPlayer: [ [Object] ],
 //      blackTeamObserver: [ [Object] ],
 //      whiteTeamPlayer: [ [Object] ],
 //      whiteTeamObserver: [ [Object] ]
 //    }
-    console.log('260번gameInfo[0].bp:', gameInfo[0].blackTeamPlayer);
+    // console.log('260번gameInfo[0].bp:', gameInfo[0].blackTeamPlayer);
     // 254번gameInfo[0].bp: [
     //      {
     //        id: 'ad',
@@ -269,10 +269,10 @@ const gameFinishShow = async (req, res) => {
 
     // 255번gameInfo[0].bp.state: undefined
 
-    console.log('272번gameInfo[0].bp[0].state:', gameInfo[0].blackTeamPlayer[0].state);
+    // console.log('272번gameInfo[0].bp[0].state:', gameInfo[0].blackTeamPlayer[0].state);
     // 278번gameInfo[0].bp[0].state: blackPlayer
 
-    console.log('275번gameInfo[0].bo:', gameInfo[0].blackTeamObserver);
+    // console.log('275번gameInfo[0].bo:', gameInfo[0].blackTeamObserver);
     // 2564번gameInfo[0].bo: [
     //      {
     //        id: 'ac',
@@ -282,7 +282,7 @@ const gameFinishShow = async (req, res) => {
     //      }
     //    ]
 
-    console.log('285번gameInfo[0].bo[0].state:', gameInfo[0].blackTeamObserver[0].state);
+    // console.log('285번gameInfo[0].bo[0].state:', gameInfo[0].blackTeamObserver[0].state);
     //280번gameInfo[0].bo[0].state: blackObserver
 
 
