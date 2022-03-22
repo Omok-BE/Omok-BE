@@ -180,7 +180,7 @@ const fastPlayer = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).send({
-      errorMessage: '/lobby/fastPlayer/:id 에러',
+      errorMessage: '빈 플레이어 방이 없습니다.',
     });
   }
 };
@@ -238,7 +238,7 @@ const fastObserver = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).send({
-      errorMessage: '/lobby/fastObserver/:id 에러',
+      errorMessage: '대기중인 방이 없습니다.',
     });
   }
 };
