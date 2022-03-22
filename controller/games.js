@@ -110,14 +110,17 @@ const gameFinish = async (req, res) => {
     const score = userInfo.score;
     const point = userInfo.point;
     const state = userInfo.state;
-    // console.log("113,id:",id)  //ab
-    console.log("114,score:",score)  //score:[ { win: 0 }, { lose: 0 } ]
-    console.log("115,score[0]:",score[0])  //score[0]: { win: 0 }
-    console.log("116,score[0].win:",score[0].win)  //score[0].win: 0 
-    console.log("117,score[1]:",score[1])  //score[1]: { lose: 0 }
-    console.log("118,point>>",point)  //1000
-    console.log("119,point+150>>",point+150) //1150 
-    console.log("120,point타입>>",typeof(point))  //Number
+    console.log("113,id:",id)  //ab
+    // console.log("114,score:",score)  //score:[ { win: 0 }, { lose: 0 } ]
+    // console.log("115,score[0]:",score[0])  //score[0]: { win: 0 }
+    // console.log("116,score[0].win:",score[0].win)  //score[0].win: 0 
+    // console.log("117,score[1]:",score[1])  //score[1]: { lose: 0 }
+    // console.log("118,point>>",point)  //1000
+    // console.log("119,point+150>>",point+150) //1150 
+    // console.log("120,point타입>>",typeof(point))  //Number
+    //////////////////////////////////게임끝나고 여기까지 온다음 소켓에서 disconnecting됨(ad).
+    //업뎃 되기전 유저정보가 winPlayer거치고 소켓 퇴장함(ad).
+
 
     //승자id
     const resultId = result.win;
@@ -200,6 +203,7 @@ const gameFinish = async (req, res) => {
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
+        console.log(206,loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
         console.log("204,옵저버옵저버계산계산!!!!!!!!!!!!!!!!!!!!!!")
         const count4 = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
@@ -226,9 +230,9 @@ const gameFinishShow = async (req, res) => {
   try { //내id,  내게임방번호, 내게임승자id
     const { id, gameNum, result } = req.body;
     console.log('189,결과창show,req.body:', req.body);
-    console.log('190,결과창show,id:', id);
-    console.log('191,결과창show,gameNum:', gameNum);
-    console.log('192,결과창show,result:', result);
+    // console.log('190,결과창show,id:', id);
+    // console.log('191,결과창show,gameNum:', gameNum);
+    // console.log('192,결과창show,result:', result);
     
     let [user] = await Users.find({ id: id });
     console.log("194,user", user);
@@ -240,9 +244,9 @@ const gameFinishShow = async (req, res) => {
     const usePoint = findTeachingCnt * 10; //쓴 포인트
     const getPoint = usePoint * 0.5; //얻은 포인트
     const totalPoint = user.point  //총 포인트 (gameFinish에서 총포인트 업뎃됨)
-    console.log('203결과창show,usePoint', usePoint);
-    console.log('204결과창show,getPoint', getPoint);
-    console.log('205결과창show,totalPoint', totalPoint);
+    // console.log('203결과창show,usePoint', usePoint);
+    // console.log('204결과창show,getPoint', getPoint);
+    // console.log('205결과창show,totalPoint', totalPoint);
 
     //player- 이긴팀, 진팀 
     let win = [];
