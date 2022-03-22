@@ -210,7 +210,6 @@ const gameFinishShow = async (req, res) => {
     console.log('210,결과창show진입:');
     console.log('211,결과창show,req.body:', req.body);
 
-
     //내id로 내정보만 찾기
     let user = await Users.findOne({id:id}, {_id:false, id:true, point:true, state:true, teachingCnt:true});
     console.log("216,show,user:",user) // user: {id:"user1", state:"player", teachingCnt:2}
@@ -269,6 +268,7 @@ const gameFinishShow = async (req, res) => {
         }
       }
     ]);
+    console.log("271,show,gameUsers:",gameUsers); 
     console.log("272,show,gameUsers[0]:",gameUsers[0]); 
     console.log("273,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // []
     console.log("274,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);  //undefined
