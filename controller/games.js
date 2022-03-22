@@ -216,7 +216,7 @@ const gameFinishShow = async (req, res) => {
     // console.log("213,show,user:",user) // user: {id:"user1", state:"player", teachingCnt:2}
     //모든 유저 정보 찾기
     let user2 = await Users.find({}, {_id:false, id:true, state:true, teachingCnt:true});
-    console.log("217,show,user2:",user2) // user: [{id:"user1", state:"player"},{}...]
+    // console.log("217,show,user2:",user2) // user: [{id:"user1", state:"player"},{}...]
     // console.log("218,show,user2[0]:",user2[0]) // user: {id:"user1", state:"player"}
     //find로 전체 유저id와 정보 찾고 gameNum으로 observerId찾은 후에 유저id와 observerId
 
