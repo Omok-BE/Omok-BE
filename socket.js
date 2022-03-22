@@ -462,16 +462,16 @@ gameRoom.on('connect', async (socket) => {
   socket.on("pointerOmog", (data) => {
     if (pointer){
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
-        console.log("Pointer들어가");
+        console.log("Pointer돌어가");
         return;
       }
       (bboard[xyToIndex(data.x, data.y)] = 3)
-      data.board = bboard;
-      // data.order
-      pointer = flase;
-      console.log("Pointer 훈수", pointer);
+        data.board = bboard;
+        // data.order
+        pointer = false;
+        console.log("Pointer 훈수", pointer);
 
-      gameRoom.to(thisgameNum).emit("pointerOmog", data, count, pointer);
+        gameRoom.to(thisgameNum).emit("pointerOmog", data, count, pointer);
     }
   });
 
@@ -487,8 +487,9 @@ gameRoom.on('connect', async (socket) => {
   
   //오목 게임
   socket.on('omog', (data, state) => {
-    if (bboard[xyToIndex(data.x, data.y)] != -1) {
-      console.log('돌아가');
+    if (bboard[xyToIndex(data.x, data.y)] != -1 &&
+        bboard[xyToIndex(data.x, data.y)] != 3) {
+      console.log('돌아가', bboard);
     } else if (
       (state == 'playerW' && count % 2 == 0) ||
       (state == 'playerB' && count % 2 !== 0)
