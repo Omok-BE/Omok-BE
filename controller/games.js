@@ -86,8 +86,8 @@ const gameStart = async (req, res) => {
         },
       },
     ]);
-    // console.log('88번gameInfo[0]:', gameInfo[0]);
-    console.log("~~~~~~API- gameStart 진입2222~~~~");
+    console.log('89번gameInfo[0]:', gameInfo[0]);
+    console.log("~~~~~~API- gameStart 나가기나가기");
     res.status(200).json({
       gameInfo,
       ok: true,
