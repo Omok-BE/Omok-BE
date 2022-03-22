@@ -201,11 +201,23 @@ const gameFinish = async (req, res) => {
 };
 
 
-//결과창 post--작업중
+//결과창 post--작업중 
 const gameFinishShow = async (req, res) => {
   try { //내id,  내게임방번호, 내게임승자id
     const { id, gameNum, result } = req.body;
-    console.log('212,결과창show,req.body:', req.body);
+    console.log('208,결과창show,req.body:', req.body);
+
+
+    //내id로 내정보만 찾기
+    let user = await Users.findOne({id:id}, {_id:false, id:true, state:true, teachingCnt:true});
+    console.log("213,show,user:",user) // user: [{id:"user1", state:"player", teachingCnt:2}]
+    console.log("214,show,user[0]:",user[0]) // user: [{id:"user1", state:"player", teachingCnt:2}]
+    //모든 유저 정보 찾기
+    let user2 = await Users.find({}, {_id:false, id:true, state:true, teachingCnt:true});
+    console.log("217,show,user2:",user2) // user: [{id:"user1", state:"player"},{}...]
+    console.log("218,show,user2[0]:",user2[0]) // user: [{id:"user1", state:"player"},{}...]
+
+
 
     // 내겜방 유저들의 정보 찾기 id, score, point, state 
     const gameUsers = await Games.aggregate([
@@ -254,10 +266,10 @@ const gameFinishShow = async (req, res) => {
         }
       }
     ]);
-    console.log("257,gameUsers[0]:",gameUsers[0]);
-    console.log("258,gameUsers[0].bo:",gameUsers[0].blackTeamObserver);
-    console.log("259,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);
-    console.log("260,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt);
+    console.log("269,show,gameUsers[0]:",gameUsers[0]);
+    console.log("270,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver);
+    console.log("271,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);
+    console.log("272,show,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt);
 
 
     //훈수채팅 수
