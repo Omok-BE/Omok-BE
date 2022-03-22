@@ -193,11 +193,82 @@ const gameFinishShow = async (req, res) => {
     const { id, gameNum, result } = req.body;
     console.log('212,결과창show,req.body:', req.body);
     
-    //내가 필요한 값만 찾기
-    let user = await Users.find({id, state, teachingCnt});
-    console.log("215,show,user:",user) // user: [{},{}...]
+    //내id로 내정보만 찾기
+    let user = await Users.findOne({id:id}, {_id:false, id:true, state:true, teachingCnt:true});
+    console.log("199,show,user:",user) // user: [{id:"user1", state:"player", teachingCnt:2}]
+    //모든 유저 정보 찾기
+    // let user2 = await Users.find({}, {_id:false, id:true, state:true, teachingCnt:true});
+    // console.log("200,show,user2:",user2) // user: [{id:"user1", state:"player"},{}...]
 
-    //훈수채팅 수  /user 배열 돌아서 teachingCnt만 찾기
+
+
+    // 내겜방 유저들의 정보 찾기 id, score, point, state 
+    const gameInfo = await Games.aggregate([
+      {
+        $match: { gameNum: Number(gameNum) },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'blackTeamPlayer',
+          foreignField: 'id',
+          as: 'blackTeamPlayer',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'blackTeamObserver',
+          foreignField: 'id',
+          as: 'blackTeamObserver',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'whiteTeamPlayer',
+          foreignField: 'id',
+          as: 'whiteTeamPlayer',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'whiteTeamObserver',
+          foreignField: 'id',
+          as: 'whiteTeamObserver',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
+          blackTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+          whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
+          whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+        },
+      },
+    ]);
+    console.log('252번gameInfo:', gameInfo);
+    console.log('252번gameInfo:', gameInfo[0]);
+    console.log('252번gameInfo:', gameInfo[0].blackTeamPlayer);
+    console.log('252번gameInfo:', gameInfo[0].blackTeamObserver);
+
+// 88번gameInfo: [
+//    {
+//      blackTeamPlayer: [ [Object] ],
+//      blackTeamObserver: [ [Object] ],
+//      whiteTeamPlayer: [ [Object] ],
+//      whiteTeamObserver: []
+//    }
+//  ]
+
+
+
+
+
+
+    //훈수채팅 수
     const findTeachingCnt = 0;
     user.forEach((user) => {
       findTeachingCnt = user.teachingCnt
