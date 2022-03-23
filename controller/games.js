@@ -342,6 +342,8 @@ const gameFinishShow = async (req, res) => {
         console.log("342,show, lose배열에 진화이트옵추가:", lose);
       }
     } 
+    console.log("show,win배열 총정보:",win)
+    console.log("show,lose배열 총정보:",lose)
 
     res.status(200).json({
       win,
