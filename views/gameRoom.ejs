@@ -42,6 +42,10 @@
         padding-top: 70px;
     }
 
+    .homeButton{
+        float: right;
+    }
+
     .gameRoom {
         width: 1300px;
         padding-top: 50px;
@@ -97,12 +101,19 @@ function deleteRoom(gameNum){
         });
     };
 };
+// 관리자 홈페이지로 이동
+function home() {
+    window.location.replace("/admin/page")
+}
 </script>
 
 <body>
     <form class="title_warp">
         <h2 class="title">오목조목 게임방 관리 페이지</h2>
     </form> <br>
+    <div class="homeButton">
+        <button type="button" class="btn btn-success" onclick="home()">관리자 홈페이지로</button>
+    </div>
     <section>
         <div class="gameRoom">
             <table class="table">
