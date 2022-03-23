@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오목조목 관리자 페이지</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!--font-->
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+    * {
+        font-family: 'Sunflower', sans-serif;
+        font-size: 13px;
+    }
+
+    .title_warp {
+        height: 200px;
+        background-color: #66CDAA;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 40px;
+        color: white;
+        padding-top: 70px;
+    }
+
+    .button {
+        padding-top: 100px;
+        margin: auto;
+        text-align: center;
+        width: 500px;
+    }
+
+    .articles {
+        width: 1200px;
+        padding-top: 50px;
+        margin: auto;
+    }
+</style>
+<script>
+// 대기실 관리
+function waitingRoom(){
+    window.location.replace("/admin/waitingRoom")
+}
+function gameRoom(){
+    window.location.replace("/admin/gameRoom")
+}
+function users(){
+    window.location.replace("/admin/users")
+}
+
+</script>
+
+<body>
+    <form class="title_warp">
+        <h2 class="title">오목조목 관리자 페이지</h2>
+    </form> <br>
+    <div class="button">
+        <button type="button" class="btn btn-success btn-lg" onclick="waitingRoom()">대기실 관리</button>
+        <button type="button" class="btn btn-success btn-lg" onclick="gameRoom()">게임방 관리</button>
+        <button type="button" class="btn btn-success btn-lg" onclick="users()">유저 관리</button>
+    </div>
+</body>
+
+</html>

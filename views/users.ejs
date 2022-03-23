@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오목조목 유저 관리 페이지</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!--font-->
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+    * {
+        font-family: 'Sunflower', sans-serif;
+        font-size: 13px;
+    }
+
+    .title_warp {
+        height: 200px;
+        background-color: #66CDAA;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 40px;
+        color: white;
+        padding-top: 70px;
+    }
+
+    .users {
+        width: 1200px;
+        padding-top: 50px;
+        margin: auto;
+    }
+
+    .point {
+        float:left;
+        width: 100px;
+        height: 30px;
+    }
+
+    #button {
+        float: left;
+    }
+</style>
+<script>
+
+$(document).ready(function () {
+    getUserList();
+});
+
+// 유저리스트 불러오기
+function getUserList() {
+    $.ajax({
+        type: "GET",
+        url: "/admin/users/list",
+        data: {},
+        success: function (response) {
+            let userList = response.userList;
+            for (let user of userList) {
+                let id = user.id;
+                let win = user.score[0].win;
+                let lose = user.score[1].lose;
+                let state = user.state;
+                let point = user.point;
+                let temp_html = `<tr>
+                                    <th scope="col">${id}</th>
+                                    <th scope="col">${win}</th>
+                                    <th scope="col">${lose}</th>
+                                    <th scope="col">${state}</th>
+                                    <th scope="col">${point}</th>
+                                    <th scope="col"><textarea name="point" id="point" class='point' cols="50" rows="1" placeholder="point"required></textarea>
+                                    <button type="button" id='button' class="btn btn-success" onclick="editPoint('${id}')">변경</button></th>
+                                    <th scope="col"><button type="button" class="btn btn-success" onclick="deleteUser('${id}')">삭제</button></th>
+                                    </tr>`
+                                    $("#userList").append(temp_html);
+                                }
+                            }
+                        })
+                    };
+
+    // 코멘트 수정
+function editPoint(Id) {
+    let point = $("#point").val();
+    $.ajax({
+        type: "PUT",
+        url: "/admin/users/editPoint/" + Id,
+        data: { point },
+        success: function (response) {
+            alert("포인트가 수정되었습니다.")
+            window.location.replace("/admin/users");
+            },
+            error: function (error) {
+                alert(error.responseJSON.errorMessage);
+            }
+    })
+};
+
+
+function deleteUser(id){
+    let deleteConfirm = confirm("정말로 삭제하시겠습니까?")
+    if (deleteConfirm === true) {
+    $.ajax({
+            type: "DELETE",
+            url: "/admin/users/delete/" + id,
+            data: {},
+            success: function (response) {
+                alert(response.message);
+                window.location.replace("/admin/users");
+            },
+            error: function (error) {
+                alert(error.responseJSON.errorMessage);
+            }
+        });
+    };
+};
+
+</script>
+
+
+<body>
+    <form class="title_warp">
+        <h2 class="title">오목조목 대기실 관리 페이지</h2>
+    </form> <br>
+    <section>
+        <div class="users">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">유저 아이디</th>
+                        <th scope="col">score(승)</th>
+                        <th scope="col">score(패)</th>
+                        <th scope="col">상태</th>
+                        <th scope="col">포인트</th>
+                        <th scope="col">포인트 변경</th>
+                        <th scope="col">유저 삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="userList">
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+</html>
