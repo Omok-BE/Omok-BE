@@ -67,8 +67,8 @@ function getGameRooms() {
             let gameRooms = response.gameRooms;
             console.log(gameRooms)
             for (let gameRoom of gameRooms) {
-                let gameNum = gameRoom.roomNum;
-                let gameName = gameRoom.roomName;
+                let gameNum = gameRoom.gameNum;
+                let gameName = gameRoom.gameName;
                 let blackPlayer = gameRoom.blackPlayer;
                 let whitePlayer = gameRoom.whitePlayer;
                 let temp_html = `<tr>

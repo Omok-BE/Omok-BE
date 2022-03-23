@@ -70,12 +70,12 @@ function getWaitingRooms() {
                 let roomNum = waitingRoom.roomNum;
                 console.log(roomNum)
                 let roomName = waitingRoom.roomName;
-                let playerCnt = waitingRoom.roomName;
+                let playerCnt = waitingRoom.playerCnt;
                 let observerCnt = waitingRoom.observerCnt;
                 let state = waitingRoom.state;
                 let temp_html = `<tr>
                                     <th scope="col">${roomNum}</th>
-                                    <th scope="col">${roomName}</th>
+                                    <th scope="col">${playerCnt}</th>
                                     <th scope="col">${playerCnt}</th>
                                     <th scope="col">${observerCnt}</th>
                                     <th scope="col">${state}</th>
