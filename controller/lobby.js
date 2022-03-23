@@ -204,26 +204,26 @@ const fastObserver = async (req, res) => {
       existRooms.blackTeamObserver.length < existRooms.whiteTeamObserver.length
     ) {
       await User.updateOne({ id }, { $set: { state: 'blackObserver' } });
-      await Room.updateOne(
-        { roomNum: existRooms.roomNum },
-        { $addToSet: { blackTeamObserver: id } }
-      );
-      await Room.updateOne(
-        { roomNum: existRooms.roomNum },
-        { $inc: { observerCnt: 1 } }
-      );
+    //   await Room.updateOne(
+    //     { roomNum: existRooms.roomNum },
+    //     { $addToSet: { blackTeamObserver: id } }
+    //   );
+    //   await Room.updateOne(
+    //     { roomNum: existRooms.roomNum },
+    //     { $inc: { observerCnt: 1 } }
+    //   );
     } else if (
       existRooms.blackTeamObserver.length > existRooms.whiteTeamObserver.length
     ) {
       await User.updateOne({ id }, { $set: { state: 'whiteObserver' } });
-      await Room.updateOne(
-        { roomNum: existRooms.roomNum },
-        { $addToSet: { whiteTeamObserver: id } }
-      );
-      await Room.updateOne(
-        { roomNum: existRooms.roomNum },
-        { $inc: { observerCnt: 1 } }
-      );
+    //   await Room.updateOne(
+    //     { roomNum: existRooms.roomNum },
+    //     { $addToSet: { whiteTeamObserver: id } }
+    //   );
+    //   await Room.updateOne(
+    //     { roomNum: existRooms.roomNum },
+    //     { $inc: { observerCnt: 1 } }
+    //   );
     }
 
     const userInfo = await User.findOne(
