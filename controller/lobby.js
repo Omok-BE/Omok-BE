@@ -243,6 +243,41 @@ const fastObserver = async (req, res) => {
   }
 };
 
+const roomNumJoin = (req, res) => {
+    try{
+        const { id, roomNum } = req.body
+
+        const findroom = await Room.findOne({ roomNum });
+        //해당 roomNum방 있는지
+        if(findroom.length === 0){
+            if(findroom.whiteTeamPlayer.length === 0){
+                await User.updateOne({ id }, {$set : { state: 'whitePlayer' }})
+                await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: me.id }})
+            }else {
+                await User.updateOne({ id }, {$set : { state: 'blackObserver' }})
+                await Room.updateOne(
+                    { roomNum: existRooms.roomNum },
+                    { $addToSet: { blackTeamObserver: id } }
+                  );
+            }
+        }
+        const userInfo = await User.findOne(
+            { id: id },
+            { _id: false, id: true, score: true, point: true, state: true }
+          );
+        
+        res.status(201).send({
+            userInfo,
+            roomNum
+        })
+    }catch(err){
+        console.log(err);
+        res.status(400).send({
+        errorMessage: '입장할 수 없는 방번호 입니다',
+        });
+    }
+}
+
 module.exports = {
   lobby,
   userList,
@@ -253,4 +288,5 @@ module.exports = {
   postJoinRoom,
   fastPlayer,
   fastObserver,
+  roomNumJoin,
 };
