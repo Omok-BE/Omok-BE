@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오목조목 관리자 로그인 페이지</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="/loginCheck.js"></script>
+    <!--font-->
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+    * {
+        font-family: 'Sunflower', sans-serif;
+        font-size: 13px;
+    }
+
+    .title_warp {
+        height: 200px;
+        background-color: #66CDAA;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 40px;
+        color: white;
+        padding-top: 70px;
+    }
+
+    .info {
+        font-size: 20px;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+    .userForm {
+        width: 200px;
+        margin: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .button {
+        text-align: center;
+    }
+</style>
+<script>
+    // 관리자 로그인 
+    function login() {
+        const id = $("#id").val();
+        const pass = $("#pass").val();
+        $.ajax({
+            type: "POST",
+            url: "/admin/login",
+            data: {
+                id,
+                pass,
+            },
+            success: function (response) {
+                window.location.replace("/admin/page");
+            },
+            error: function (error) {
+                alert(error.responseJSON.errorMessage);
+            }
+        });
+    };
+</script>
+
+<body>
+    <form class="title_warp">
+        <h2 class="title">오목조목 관리자 로그인 페이지</h2>
+    </form> <br>
+    <p class="info">👉🏻 관 리 자 로 그 인</p>
+    <form class="userForm">
+        <table>
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" name="id" id="id" placeholder="아이디" required /></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" name="pass" id="pass" placeholder="비밀번호" required /></td>
+            </tr>
+        </table>
+    </form>
+    <div class="button">
+        <button type="button" class="btn btn-success" onclick="login()">관리자 로그인</button>
+    </div>
+
+</html>

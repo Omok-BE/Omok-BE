@@ -8,6 +8,7 @@ connect();
 const usersRouter = require('./routes/users');
 const lobbyRouter = require('./routes/lobby');
 const gameRouter = require('./routes/games');
+const adminRouter = require('./routes/admin')
 
 const requestMiddleware = (req, res, next) => {
   console.log(
@@ -33,5 +34,10 @@ app.use(
 );
 
 app.use('/', [usersRouter, lobbyRouter, gameRouter]);
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.static('./views'));
+app.use('/admin', adminRouter)
 
 module.exports = app;

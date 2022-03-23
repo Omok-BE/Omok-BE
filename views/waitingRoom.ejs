@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오목조목 대기실 관리 페이지</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!--font-->
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+    * {
+        font-family: 'Sunflower', sans-serif;
+        font-size: 13px;
+    }
+
+    .title_warp {
+        height: 200px;
+        background-color: #66CDAA;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 40px;
+        color: white;
+        padding-top: 70px;
+    }
+    
+    .waitingRoom {
+        width: 1300px;
+        padding-top: 50px;
+        margin: auto;
+    }
+</style>
+<script>
+$(document).ready(function () {
+    getWaitingRooms();
+});
+
+// 대기실 불러오기
+function getWaitingRooms() {
+    $.ajax({
+        type: "GET",
+        url: "/admin/waitingRoom/list",
+        data: {},
+        success: function (response) {
+            let waitingRooms = response.waitingRooms;
+            console.log(waitingRooms)
+            for (let waitingRoom of waitingRooms) {
+                let roomNum = waitingRoom.roomNum;
+                console.log(roomNum)
+                let roomName = waitingRoom.roomName;
+                let playerCnt = waitingRoom.roomName;
+                let observerCnt = waitingRoom.observerCnt;
+                let state = waitingRoom.state;
+                let temp_html = `<tr>
+                                    <th scope="col">${roomNum}</th>
+                                    <th scope="col">${roomName}</th>
+                                    <th scope="col">${playerCnt}</th>
+                                    <th scope="col">${observerCnt}</th>
+                                    <th scope="col">${state}</th>
+                                    <th scope="col"><button type="button" class="btn btn-success" onclick="deleteRoom(${roomNum})">삭제</button></th>
+                                    </tr>`
+                                    $("#waitingRoomList").append(temp_html);
+                                }
+                            }
+                        })
+                    };
+                    
+function deleteRoom(roomNum){
+    let deleteConfirm = confirm("정말로 삭제하시겠습니까?")
+    if (deleteConfirm === true) {
+    $.ajax({
+            type: "DELETE",
+            url: "/admin/waitingRoom/delete/" + roomNum,
+            data: {},
+            success: function (response) {
+                alert(response.message);
+                window.location.replace("/admin/waitingRoom");
+            },
+            error: function (error) {
+                alert(error.responseJSON.errorMessage);
+            }
+        });
+    };
+};
+
+</script>
+
+<body>
+    <form class="title_warp">
+        <h2 class="title">오목조목 대기실 관리 페이지</h2>
+    </form> <br>
+    <section>
+        <div class="waitingRoom">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">대기실 번호</th>
+                        <th scope="col">대기실 이름</th>
+                        <th scope="col">플레이어 인원</th>
+                        <th scope="col">관전자 인원</th>
+                        <th scope="col">방 상태</th>
+                        <th scope="col">삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="waitingRoomList">
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+</html>
