@@ -243,7 +243,7 @@ const fastObserver = async (req, res) => {
   }
 };
 
-const roomNumJoin = (req, res) => {
+const roomNumJoin = async (req, res) => {
     try{
         const { id, roomNum } = req.body
 
