@@ -57,7 +57,7 @@ $(document).ready(function () {
     getGameRooms();
 });
 
-// 게임방 불러오기
+// 게임방 리스트 불러오기
 function getGameRooms() {
     $.ajax({
         type: "GET",
@@ -83,7 +83,7 @@ function getGameRooms() {
                             }
                         })
                     };
-                    
+// 게임방 삭제하기
 function deleteRoom(gameNum){
     let deleteConfirm = confirm("정말로 삭제하시겠습니까?")
     if (deleteConfirm === true) {
