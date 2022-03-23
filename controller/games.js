@@ -147,52 +147,52 @@ const gameFinish = async (req, res) => {
     //whitePlayer 이김
     if (winPlayer.state === 'whitePlayer') {
       console.log("옵저버포인트계산- whitePlayer 이김")
-      console.log("149,thisTeachingCnt:", thisTeachingCnt)
+      // console.log("149,thisTeachingCnt:", thisTeachingCnt)
       if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         console.log("151, 화이트옵 이긴포인트계산 whitePlayer이겼을때")
         //포인트 업데이트
         console.log("153,화이트옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("154,화이트옵 이긴포인트 업뎃전:", winTotalPoint)
+        // console.log("154,화이트옵 이긴포인트 업뎃전:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        console.log("156,화이트옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("157,화이트옵 이긴포인트 업뎃후후:", winTotalPoint)
+        // console.log("156,화이트옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
+        // console.log("157,화이트옵 이긴포인트 업뎃후후:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("159,화이트옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("159,화이트옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
       } else if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         console.log("161,블랙옵 진포인트계산 whitePlayer이겼을때")
-        console.log("162,블랙옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("163,블랙옵 진포인트 업뎃전:",loseTotalPoint)
+        // console.log("162,블랙옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("163,블랙옵 진포인트 업뎃전:",loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        console.log("165,블랙옵 진thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("166,블랙옵 진포인트 업뎃후후:", loseTotalPoint)
+        // console.log("165,블랙옵 진thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
+        // console.log("166,블랙옵 진포인트 업뎃후후:", loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("168,블랙옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("168,블랙옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
       }
     }
     
     //blackPlayer 이김
     if (winPlayer.state === 'blackPlayer') {
       console.log("옵저버포인트계산-blackPlayer 이김")
-      console.log("175,thisTeachingCnt:", thisTeachingCnt)
+      // console.log("175,thisTeachingCnt:", thisTeachingCnt)
       if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         console.log("177,블랙옵 이긴포인트계산 blackPlayer이겼을때")
         //포인트 업데이트
-        console.log("179,블랙옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("180,블랙옵 이긴포인트 업뎃전:", winTotalPoint)
+        // console.log("179,블랙옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("180,블랙옵 이긴포인트 업뎃전:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        console.log("182,블랙옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("183,블랙옵 이긴포인트 업뎃후후:", winTotalPoint)
+        // console.log("182,블랙옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
+        // console.log("183,블랙옵 이긴포인트 업뎃후후:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("185,블랙옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("185,블랙옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
       } else if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         console.log("187,화이트옵 진포인트계산 blackPlayer이겼을때")
-        console.log("188,화이트옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("189,화이트옵 진포인트 업뎃전:",loseTotalPoint)
+        // console.log("188,화이트옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("189,화이트옵 진포인트 업뎃전:",loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        console.log("191,화이트옵 진thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("192,화이트옵 진포인트 업뎃후후:", loseTotalPoint)
+        // console.log("191,화이트옵 진thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
+        // console.log("192,화이트옵 진포인트 업뎃후후:", loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("194,화이트옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("194,화이트옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
       }
     }
     res.status(200).json({
