@@ -141,52 +141,52 @@ const gameFinish = async (req, res) => {
     const winUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
     const winGetTeachingPoint = winUseTeachingPoint * 0.5; //얻은 포인트
     const winTotalPoint = winGetTeachingPoint + winUseTeachingPoint + point; //총 포인트
-
     //이긴 Player가 white팀 일때
     console.log("옵저버포인트계산-이긴 Player가 white팀 일때")
     if (winPlayer.state === 'whitePlayer') {
-      console.log("148,thisTeachingCnt:", thisTeachingCnt)
+      // console.log("147,whitePlayer이김)
+      // console.log("148,thisTeachingCnt:", thisTeachingCnt)
       if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         //포인트 업데이트
-        console.log("151,화이트옵thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("151,화이트옵thisTeachingCnt업뎃전:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        console.log("153,화이트옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
+        // console.log("153,화이트옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("155,화이트옵thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("155,화이트옵thisTeachingCnt리셋000:", thisTeachingCnt)
       } else if (state === 'blackObserver' && thisTeachingCnt !== 0) {
-        console.log("157,블랙옵thisTeachingCnt:", thisTeachingCnt)
+        // console.log("157,블랙옵thisTeachingCnt:", thisTeachingCnt)
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
-        console.log("161,블랙옵thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("161,블랙옵thisTeachingCnt업뎃전:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        console.log("163,블랙옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
+        // console.log("163,블랙옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("165,블랙옵thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("165,블랙옵thisTeachingCnt리셋000:", thisTeachingCnt)
       }
     }
     
     //이긴 Player가 black팀 일때
     console.log("옵저버포인트계산-이긴 Player가 black팀 일때")
     if (winPlayer.state === 'blackPlayer') {
-      console.log("172,thisTeachingCnt:", thisTeachingCnt)
+      // console.log("172,thisTeachingCnt:", thisTeachingCnt)
       if (state === 'blackObserver' && thisTeachingCnt !== 0) {
         //point updateOne
-        console.log("175,블랙옵thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("175,블랙옵thisTeachingCnt업뎃전:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
-        console.log("177,블랙옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
+        // console.log("177,블랙옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("179,블랙옵thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("179,블랙옵thisTeachingCnt리셋000:", thisTeachingCnt)
       } else if (state === 'whiteObserver' && thisTeachingCnt !== 0) {
         //point
         const loseUseTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
         const loseTotalPoint = point - loseUseTeachingPoint; //게임후 총 포인트
-        console.log("184,loseTotalPoint:",loseTotalPoint)
-        console.log("185,화이트옵thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("184,loseTotalPoint:",loseTotalPoint)
+        // console.log("185,화이트옵thisTeachingCnt업뎃전:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
-        console.log("187,화이트옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
+        // console.log("187,화이트옵thisTeachingCnt업뎃후후:", thisTeachingCnt)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("189,화이트옵thisTeachingCnt리셋000:", thisTeachingCnt)
+        // console.log("189,화이트옵thisTeachingCnt리셋000:", thisTeachingCnt)
       }
     }
     res.status(200).json({
@@ -264,14 +264,14 @@ const gameFinishShow = async (req, res) => {
         }
       }
     ]);
-    console.log("267,show,gameUsers:",gameUsers); 
-    console.log("268,show,gameUsers[0]:",gameUsers[0]); 
-    console.log("269,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // [{}]
-    console.log("270,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);  //undefined
-    console.log("271,show,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt);
-    console.log("272,show,gameUsers[0].bp:",gameUsers[0].blackTeamPlayer); // [{a:"a", b:[ [], [] ], c:1, ...}]
-    console.log("273,show,gameUsers[0].bp[0]:",gameUsers[0].blackTeamPlayer[0]);  //undefined
-    console.log("274,show,gameUsers[0].bp[0].teachingCnt:",gameUsers[0].blackTeamPlayer[0].teachingCnt);
+    // console.log("267,show,gameUsers:",gameUsers); 
+    // console.log("268,show,gameUsers[0]:",gameUsers[0]); 
+    // console.log("269,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // [{}]
+    // console.log("270,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);  //undefined
+    // console.log("271,show,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt);
+    // console.log("272,show,gameUsers[0].bp:",gameUsers[0].blackTeamPlayer); // [{a:"a", b:[ [], [] ], c:1, ...}]
+    // console.log("273,show,gameUsers[0].bp[0]:",gameUsers[0].blackTeamPlayer[0]);  //undefined
+    // console.log("274,show,gameUsers[0].bp[0].teachingCnt:",gameUsers[0].blackTeamPlayer[0].teachingCnt);
 
 
 
@@ -279,11 +279,11 @@ const gameFinishShow = async (req, res) => {
 
     //내id로 내정보만 찾기. 한명 한명 찾음.
     let user = await Users.findOne({id:id}, {_id:false, id:true, score:true, point:true, state:true, teachingCnt:true});
-    console.log("282,show,user:",user) // user: {id:"user1", state:"player", teachingCnt:2}
-    console.log("283,show,user.id", user.id)   //
-    console.log("284,show,user.point", user.point)   // 1000
-    console.log("285,show,user.state", user.state)   // 1000
-    console.log("286,show,user.teachingCnt", user.teachingCnt)   //2
+    // console.log("282,show,user:",user) // user: {id:"user1", state:"player", teachingCnt:2}
+    // console.log("283,show,user.id", user.id)   //
+    // console.log("284,show,user.point", user.point)   // 1000
+    // console.log("285,show,user.state", user.state)   // 1000
+    // console.log("286,show,user.teachingCnt", user.teachingCnt)   //2
     
     //모든 유저 정보 한번에 찾기
     let allUser = await Users.find({}, {_id:false, id:true, score:true, point:true, state:true, teachingCnt:true});
