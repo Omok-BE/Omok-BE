@@ -249,27 +249,27 @@ const roomNumJoin = async (req, res) => {
 
         const findroom = await Room.findOne({ roomNum });
         //해당 roomNum방 있는지
-        if(findroom.length === 0){
-            if(findroom.whiteTeamPlayer.length === 0){
+        if(findroom.length !== 0){
+            if(!findroom.whiteTeamPlayer){
                 await User.updateOne({ id }, {$set : { state: 'whitePlayer' }})
                 await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: id }})
             }else {
                 await User.updateOne({ id }, {$set : { state: 'blackObserver' }})
                 await Room.updateOne(
-                    { roomNum: roomNum },
+                    { roomNum },
                     { $addToSet: { blackTeamObserver: id } }
                   );
             }
+            const userInfo = await User.findOne(
+                { id: id },
+                { _id: false, id: true, score: true, point: true, state: true }
+              );
+            res.status(201).send({
+                userInfo,
+                roomNum
+            })
         }
-        const userInfo = await User.findOne(
-            { id: id },
-            { _id: false, id: true, score: true, point: true, state: true }
-          );
         
-        res.status(201).send({
-            userInfo,
-            roomNum
-        })
     }catch(err){
         console.log(err);
         res.status(400).send({
