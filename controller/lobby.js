@@ -252,7 +252,7 @@ const roomNumJoin = async (req, res) => {
         if(findroom.length === 0){
             if(findroom.whiteTeamPlayer.length === 0){
                 await User.updateOne({ id }, {$set : { state: 'whitePlayer' }})
-                await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: me.id }})
+                await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: id }})
             }else {
                 await User.updateOne({ id }, {$set : { state: 'blackObserver' }})
                 await Room.updateOne(
