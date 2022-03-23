@@ -256,7 +256,7 @@ const roomNumJoin = async (req, res) => {
             }else {
                 await User.updateOne({ id }, {$set : { state: 'blackObserver' }})
                 await Room.updateOne(
-                    { roomNum: existRooms.roomNum },
+                    { roomNum: roomNum },
                     { $addToSet: { blackTeamObserver: id } }
                   );
             }
