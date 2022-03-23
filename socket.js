@@ -462,7 +462,7 @@ gameRoom.on('connect', async (socket) => {
   socket.on("pointerOmog", (data) => {
     if (pointer){
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
-        console.log("Pointer돌어가");
+        console.log("Pointer돌아가");
         return;
       }
       (bboard[xyToIndex(data.x, data.y)] = 3)
