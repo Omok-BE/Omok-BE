@@ -97,6 +97,7 @@ const userinfo = async (req, res) => {
     const { id } = req.params;
 
     const userinfo = await User.findOne({ id });
+    console.log(userinfo)
     res.send({
       id: userinfo.id,
       nickname: userinfo.nickname,
