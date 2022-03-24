@@ -410,14 +410,14 @@ gameRoom.on('connect', async (socket) => {
     console.log('소켓닉네임은???', socket.nickname);
   });
 
-  //개별 game방 Join
+  //game방 Join
   socket.on('joinGame', async (gameNum) => {
     thisgameNum = gameNum;
     console.log(`조인게임방번호:${gameNum}`);
     socket.join(gameNum);
     const observerCnt = gameRoomCount(gameNum) - 2;
     console.log('416,game방소켓Join_observerCnt:', observerCnt);
-    await Rooms.updateOne({ gameNum }, { $set: { observerCnt, playerCnt: 2 } });
+    await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
   //game방 채팅
@@ -515,13 +515,14 @@ gameRoom.on('connect', async (socket) => {
     try {
       gameRoom.to(thisgameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
-      // await Users.updateOne({ id: socket.nickname }, { $set: { teachingCnt: 0 }}); 
+      await Users.updateOne({ id: socket.nickname }, { $set: { state: 'online' }}); 
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-      await Rooms.updateOne({ gameNum: thisgameNum }, { $set: { observerCnt } });
+      await Rooms.updateOne({ roomNum: thisgameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
       console.log('게임방 퇴장 소켓 room ', socket.rooms);
       console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
       console.log('게임방 퇴장 소켓 id', socket.id);
+
     } catch (error) {
       console.log(error);
     }

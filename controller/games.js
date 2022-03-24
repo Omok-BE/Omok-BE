@@ -14,11 +14,6 @@ const gameCreate = async (req, res) => {
     } = req.body;
     const state = 'ingame';
     await Rooms.updateOne({ roomNum }, { $set: { state } });
-    console.log(roomNum);
-    console.log(blackTeamPlayer);
-    console.log(blackTeamObserver);
-    console.log(whiteTeamPlayer);
-    console.log(whiteTeamObserver);
     const room = await Rooms.findOne({ roomNum });
     await Games.create({
       gameNum: roomNum,
