@@ -426,10 +426,9 @@ const gameDelete = async (req, res) => {
     console.log("API,gameDelete,req.params:",req.params)
     console.log("API,gameDelete,gameNum:",gameNum)
     console.log("API,gameDelete,gameNum타입:",typeof(gameNum))
-    const existGamePlayers = await Games.findOne({ gameNum: gameNum },
-                                       { _id: false, blackTeamPlayer: true, whiteTeamPlayer: true });
-    if (!existGamePlayers.blackTeamPlayer || !existGamePlayers.whiteTeamPlayer){
-      await Rooms.deleteOne({ roomNum: gameNum });
+    const existGame = await Games.findOne({ gameNum });
+    if (existGame){
+      await Rooms.deleteOne({ roomNum: Number(gameNum) });
       await Games.deleteOne({ gameNum: Number(gameNum) });
     }
 
