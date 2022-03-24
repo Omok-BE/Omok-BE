@@ -651,19 +651,19 @@ gameRoom.on('connect', async (socket) => {
       console.log('게임방 퇴장 소켓 id', socket.id);
       console.log('게임방 퇴장 소켓.nickname', socket.nickname);
 
-      const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, point:true, state:true });
+      const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
       if (outPlayer.state === 'blackPlayer'){
-        await Users.updateOne({ id:socket.nickname }, { $set: { $inc: { 'score.0.win':1 } }});  //승 +1
+        await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
       } else {
-        await Users.updateOne({ id:socket.nickname }, { $set: { $inc: { 'score.1.lose':1 } }});  //패 +1
+        await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
       }
       if (outPlayer.state === 'whitePlayer'){
-        await Users.updateOne({ id:socket.nickname }, { $set: { $inc: { 'score.0.win':1 } }});  //승 +1
+        await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
       } else {
-        await Users.updateOne({ id:socket.nickname }, { $set: { $inc: { 'score.1.lose':1 } }});  //패 +1
+        await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
       }
 
