@@ -1,3 +1,4 @@
+const { number } = require('joi');
 const mongoose = require('mongoose');
 
 const usersSchema = new mongoose.Schema({
@@ -10,7 +11,8 @@ const usersSchema = new mongoose.Schema({
   teachingCnt: {
     type: Number,
     default:0
-  }
+  },
+  profileImage: String
 });
 
 module.exports = mongoose.model('Users', usersSchema);
