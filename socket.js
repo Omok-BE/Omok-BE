@@ -517,7 +517,7 @@ gameRoom.on('connect', async (socket) => {
       const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       await Users.updateOne({ id: socket.nickname }, { $set: { state: 'online' }}); 
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-      await Rooms.updateOne({ gameNum: thisgameNum }, { $set: { observerCnt } });
+      await Rooms.updateOne({ roomNum: thisgameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
       console.log('게임방 퇴장 소켓 room ', socket.rooms);
       console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
