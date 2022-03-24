@@ -312,7 +312,7 @@ const gameFinishShow = async (req, res) => {
 
       //화이트플레이어 패 계산
       const loseInfo = {id:whiteP.id, usePoint:0, getPoint:-50, 
-                                        totalPoint:totalPoint, state:whiteP.state };
+                                        totalPoint:whiteP.id, state:whiteP.state };
       losePlayerArray.push(loseInfo);
       console.log("317,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
       
