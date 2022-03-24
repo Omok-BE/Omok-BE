@@ -300,108 +300,95 @@ const gameFinishShow = async (req, res) => {
     //player- black 승
     let winPlayerArray = [];
     let losePlayerArray = [];
-    if (result.win === blackP.id || result.win === whiteP.id) {
-      console.log("304,Show,이긴블랙플레이어 계산")
-      //블랙플레이어가 이겼을때
-      if(result.win === blackP.id){ 
-        const winInfo = {id:blackP.id, usePoint:0, getPoint:150, 
-                                        totalPoint:blackP.point, state:blackP.state };
-        winPlayerArray.push(winInfo);    
-        console.log("310,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
-       //화이트플레이어가 졌을때
-      }else if(result.win !== whiteP.id){  
-        console.log("313,Show진화이트플레이어 계산")
-        const loseInfo = {id:whiteP.id, usePoint:0, getPoint:-50, 
-                                          totalPoint:totalPoint, state:whiteP.state };
-        losePlayerArray.push(loseInfo);
-        console.log("317,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
-      }
+    let winObserverArray1 = [];
+    let loseObserverArray1 = [];
+    if (result.win === blackP.id) {
+      console.log("306,Show,이긴블랙 플레이어는:", result.win)
+      //블랙플레이어 승 계산
+      const winInfo = {id:blackP.id, usePoint:0, getPoint:150, 
+                                      totalPoint:blackP.point, state:blackP.state };
+      winPlayerArray.push(winInfo);    
+      console.log("311,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
+
+      //화이트플레이어 패 계산
+      const loseInfo = {id:whiteP.id, usePoint:0, getPoint:-50, 
+                                        totalPoint:totalPoint, state:whiteP.state };
+      losePlayerArray.push(loseInfo);
+      console.log("317,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
+      
+        //블랙옵저버 승 계산
+      if (blackO.state === 'blackObserver') {
+        //이긴팀 포인트 업데이트
+        const usePoint = blackO.teachingCnt  * 10  //쓴포인트
+        const getPoint = usePoint * 0.5  //얻은포인트
+        const addPoint = 20 //추가포인트
+        const totalPoint = blackO.point + usePoint + getPoint + addPoint;  //총포인트
+        const winObserver = { id:blackO.id, usePoint:usePoint, getPoint:getPoint, 
+                                              totalPoint:totalPoint, state:blackO.state };
+        winObserverArray1.push(winObserver);
+        console.log("329,show, 이긴블랙옵 winObserverArray1는?", winObserverArray1);
+      
+        //화이트옵저버 패 계산
+      } else if (whiteO.state === 'whiteObserver') {
+        //진팀 포인트 업데이트
+        const usePoint = whiteO.teachingCnt  * 10  //쓴포인트
+        const getPoint = usePoint * 0.5  //얻은포인트
+        const penalty = 20 //진팀 패널티
+        const totalPoint = whiteO.point - usePoint - getPoint - penalty;  //총포인트
+        const loseObserver = { id:whiteO.id, usePoint:usePoint, getPoint:getPoint, 
+                                              totalPoint:totalPoint, state:whiteO.state };
+        loseObserverArray2.push(loseObserver);
+        console.log("341,show, 진화이트옵 loseObserverArray1는?", loseObserverArray1);
+      } 
     } 
 
     //player- white 승
-    if (result.win === whiteP.id || result.win === blackP.id) {
-      console.log("323,Show,이긴화이트플레이어 계산")
-      //화이트플레이어가 이겼을때
-      if(result.win === id){
-        const winInfo = {id:whiteP.id, usePoint:0, getPoint:150, 
-                                         totalPoint:whiteP.point, state:whiteP.state };
-        winPlayerArray.push(winInfo);
-        console.log("329,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
-       //블랙플레이어가 졌을때
-      } else if (result.win !== id){  
-        console.log("332,Show진블랙플레이어 계산")
-        const loseInfo = {id:blackP.id, usePoint:0, getPoint:-50, 
-                                          totalPoint:totalPoint, state:blackP.state };
-        losePlayerArray.push(loseInfo);
-        console.log("336,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
-      }
-    }
-    console.log("339,show,winPlayerArray:",winPlayerArray)
-    console.log("340,show,losePlayerArray:",losePlayerArray)
-   
-    //Observer- whitePlayer 이겼을때 
-    let winObserverArray1 = [];
-    let loseObserverArray1 = [];
-    if (result.win === whiteP.id && whiteO.state === 'whiteObserver'){
-    // if (result.win === whiteP.id){ if(whiteO.state === 'whiteObserver'){  } }  
-      console.log("346,show, 이긴화이트팀 화이트옵 계산")
-      console.log("347,show, 이긴화이트플레이어 아이디:",result.win)
-      //이긴팀 포인트 업데이트
-      const usePoint = whiteO.teachingCnt  * 10  //쓴포인트
-      const getPoint = usePoint * 0.5  //얻은포인트
-      const addPoint = 20 //추가포인트
-      const totalPoint = whiteO.point + usePoint + getPoint + addPoint;  //총포인트
-      const winObserver = { id:whiteO.id, usePoint:usePoint, getPoint:getPoint, 
-                                            totalPoint:totalPoint, state:whiteO.state };
-      winObserverArray1.push(winObserver);
-      console.log("356,show, 이긴화이트옵 winObserverArray1은?", winObserverArray1);
-    //blackObserver 짐
-    } else if (result.win === whiteP.id && blackO.state === 'blackObserver') {
-      console.log("359,show, 진블랙옵 계산")
-      //진팀 포인트 업데이트
-      const usePoint = blackO.teachingCnt  * 10;  //쓴포인트
-      const getPoint = usePoint * 0.5;  //얻은포인트
-      const penalty = 20; //진팀패널티
-      const totalPoint = blackO.point - usePoint - getPoint - penalty;  //총포인트
-      const loseObserver = { id:blackO.id, usePoint:usePoint, getPoint:getPoint, 
-                                            totalPoint:totalPoint, state:blackO.state };
-      loseObserverArray1.push(loseObserver);
-      console.log("368,show, 진블랙옵 loseObserverArray1은?", loseObserverArray1)
-    }
-      
-    //Observer- blackPlayer 이겼을때
     let winObserverArray2 = [];
     let loseObserverArray2 = [];
-    if (result.win === blackP.id && blackO.state === 'blackObserver') {
-      console.log("375,show, 이긴블랙팀 블랙옵 계산")
-      console.log("376,show, 이긴블랙플레이어 아이디:", result.win)
-      //이긴팀 포인트 업데이트
-      const usePoint = blackO.teachingCnt  * 10  //쓴포인트
-      const getPoint = usePoint * 0.5  //얻은포인트
-      const addPoint = 20 //추가포인트
-      const totalPoint = blackO.point + usePoint + getPoint + addPoint;  //총포인트
-      const winObserver = { id:blackO.id, usePoint:usePoint, getPoint:getPoint, 
-                                            totalPoint:totalPoint, state:blackO.state };
-      winObserverArray2.push(winObserver);
-      console.log("385,show, 이긴블랙옵 winObserverArray2는?", winObserverArray2);
-    //whiteObserver 짐
-    } else if (result.win === blackP.id && whiteO.state === 'whiteObserver') {
-      console.log("388,show, 진화이트옵 계산")
-      //진팀 포인트 업데이트
-      const usePoint = whiteO.teachingCnt  * 10  //쓴포인트
-      const getPoint = usePoint * 0.5  //얻은포인트
-      const penalty = 20 //진팀 패널티
-      const totalPoint = whiteO.point - usePoint - getPoint - penalty;  //총포인트
-      const loseObserver = { id:whiteO.id, usePoint:usePoint, getPoint:getPoint, 
-                                            totalPoint:totalPoint, state:whiteO.state };
-      loseObserverArray2.push(loseObserver);
-      console.log("397,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
-    } 
+    if (result.win === whiteP.id) {
+      console.log("349,Show,이긴화이트 플레이어는:", result.win)
+      //화이트플레이어 승 계산
+      const winInfo = {id:whiteP.id, usePoint:0, getPoint:150, 
+                                      totalPoint:whiteP.point, state:whiteP.state };
+      winPlayerArray.push(winInfo);    
+      console.log("354,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
+
+      //블랙플레이어 패 계산
+      const loseInfo = {id:blackP.id, usePoint:0, getPoint:-50, 
+                                        totalPoint:blackP.point, state:blackP.state };
+      losePlayerArray.push(loseInfo);
+      console.log("360,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
+      
+        //화이트옵저버 승 계산
+      if (whiteO.state === 'whiteObserver') {
+        //이긴팀 포인트 업데이트
+        const usePoint = whiteO.teachingCnt  * 10  //쓴포인트
+        const getPoint = usePoint * 0.5  //얻은포인트
+        const addPoint = 20 //추가포인트
+        const totalPoint = whiteO.point + usePoint + getPoint + addPoint;  //총포인트
+        const winObserver = { id:whiteO.id, usePoint:usePoint, getPoint:getPoint, 
+                                              totalPoint:totalPoint, state:whiteO.state };
+        winObserverArray2.push(winObserver);
+        console.log("372,show, 이긴블랙옵 winObserverArray2는?", winObserverArray2);
+      
+        //블랙옵저버 패 계산
+      } else if (blackO.state === 'blackObserver') {
+        //진팀 포인트 업데이트
+        const usePoint = blackO.teachingCnt  * 10  //쓴포인트
+        const getPoint = usePoint * 0.5  //얻은포인트
+        const penalty = 20 //진팀 패널티
+        const totalPoint = blackO.point - usePoint - getPoint - penalty;  //총포인트
+        const loseObserver = { id:blackO.id, usePoint:usePoint, getPoint:getPoint, 
+                                              totalPoint:totalPoint, state:blackO.state };
+        loseObserverArray2.push(loseObserver);
+        console.log("384,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
+      } 
+    }  
     const win = [...winPlayerArray, ...winObserverArray1, ...winObserverArray2];
     const lose = [...losePlayerArray, ...loseObserverArray1, ...loseObserverArray2];
-    console.log("401,show,win배열 총정보:",win)
-    console.log("402,show,lose배열 총정보:",lose)
-    console.log("403,result",result)
+    console.log("389,show,win배열 총정보:",win)
+    console.log("390,show,lose배열 총정보:",lose)
+    console.log("391,result",result)
 
     res.status(200).json({
       win,
