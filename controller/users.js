@@ -104,6 +104,7 @@ const userinfo = async (req, res) => {
       point: userinfo.point,
       state: userinfo.state,
     });
+    console.log(userinfo)
   } catch (err) {
     console.log(err);
     res.status(401).send({
