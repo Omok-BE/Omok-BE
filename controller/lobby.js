@@ -156,16 +156,16 @@ const fastPlayer = async (req, res) => {
 
     if (!existRooms.blackTeamPlayer) {
       await User.updateOne({ id }, { $set: { state: 'blackPlayer' } });
-      await Room.updateOne(
-        { roomNum: existRooms.roomNum },
-        { $set: { playerCnt: 2, blackTeamPlayer: id } }
-      );
+    //   await Room.updateOne(
+    //     { roomNum: existRooms.roomNum },
+    //     { $set: { playerCnt: 2, blackTeamPlayer: id } }
+    //   );
     } else if (!existRooms.whiteTeamPlayer) {
       await User.updateOne({ id }, { $set: { state: 'whitePlayer' } });
-      await Room.updateOne(
-        { roomNum: existRooms.roomNum },
-        { $set: { playerCnt: 2, whiteTeamPlayer: id } }
-      );
+    //   await Room.updateOne(
+    //     { roomNum: existRooms.roomNum },
+    //     { $set: { playerCnt: 2, whiteTeamPlayer: id } }
+    //   );
     }
 
     const userInfo = await User.findOne(
@@ -252,13 +252,13 @@ const roomNumJoin = async (req, res) => {
         if(findroom.length !== 0){
             if(!findroom.whiteTeamPlayer){
                 await User.updateOne({ id }, {$set : { state: 'whitePlayer' }})
-                await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: id }})
+                // await Room.updateOne({ roomNum }, {$set: { whiteTeamPlayer: id }})
             }else {
                 await User.updateOne({ id }, {$set : { state: 'blackObserver' }})
-                await Room.updateOne(
-                    { roomNum },
-                    { $addToSet: { blackTeamObserver: id } }
-                  );
+                // await Room.updateOne(
+                //     { roomNum },
+                //     { $addToSet: { blackTeamObserver: id } }
+                //   );
             }
             const userInfo = await User.findOne(
                 { id: id },
