@@ -319,7 +319,7 @@ const gameFinishShow = async (req, res) => {
         //블랙옵저버 승 계산
       if (blackO.state === 'blackObserver') {
         //이긴팀 포인트 업데이트
-        const usePoint = blackO.teachingCnt  * 10  //쓴포인트
+        const usePoint = blackO.teachingCnt  * 10  //쓴포인트 
         const getPoint = usePoint * 0.5  //얻은포인트
         const addPoint = 20 //추가포인트
         const totalPoint = blackO.point + usePoint + getPoint + addPoint;  //총포인트
