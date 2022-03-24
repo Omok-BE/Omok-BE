@@ -119,19 +119,19 @@ const gameFinish = async (req, res) => {
       if (resultId === id) {
         //승Player
         const winPScore = await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } });  //승 +1
-        const winPPoint =await Users.updateOne({ id: resultId }, { $set: { point: point + 150 } });  //포인트 +150
+        const winPPoint =await Users.updateOne({ id: resultId }, { $set: { point: point + 200 } });  //포인트 +150
         const winPTeachingCnt =await Users.updateOne({ id: resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇을 해도 포인트 계산이 안됨.
         // console.log("128,winPScorer계산후:",winPScore)
         // console.log("129,winPPoint계산후:",winPPoint)
-        console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
+        console.log(`API_우승자 score에 1승, point에 +200이 추가되었습니다.`);
       } else if(resultId !== id) {
         //패Player
         const losePScore = await Users.updateOne({ id: id }, { $inc: { 'score.1.lose': 1 } });  //패 +1
-        const losePPoint = await Users.updateOne({ id: id }, { $set: { point: point - 50 } });  //포인트 -50
+        const losePPoint = await Users.updateOne({ id: id }, { $set: { point: point - 100 } });  //포인트 -50
         const losePTeachingCnt = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
         // console.log("137,losePScore계산후:",losePScore)
         // console.log("138,losePPoint계산후:",losePPoint)
-        console.log(`API_패자 score에 1패, point에 -50이 추가되었습니다.`);
+        console.log(`API_패자 score에 1패, point에 -100이 추가되었습니다.`);
       }
     }
     //Observer
@@ -139,8 +139,8 @@ const gameFinish = async (req, res) => {
     const observerTeachingCnt = await Users.findOne({ id: id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     //이긴팀 point
-    const useTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
-    const winGetTeachingPoint = useTeachingPoint * 0.5; //얻은 포인트
+    const useTeachingPoint = thisTeachingCnt * 20; //쓴 포인트
+    const winGetTeachingPoint = useTeachingPoint * 1; //얻은 포인트
     const addPoint = 20  //승리팀 추가 포인트
     const winTotalPoint = point + winGetTeachingPoint + useTeachingPoint + addPoint; //게임후 총 포인트
     //진팀 point
