@@ -125,8 +125,8 @@ const gameFinish = async (req, res) => {
         const winPScore = await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } });  //승 +1
         const winPPoint =await Users.updateOne({ id: resultId }, { $set: { point: point + 150 } });  //포인트 +150
         const winPTeachingCnt =await Users.updateOne({ id: resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇을 해도 포인트 계산이 안됨.
-        console.log("128,winPScorer계산후:",winPScore)
-        console.log("129,winPPoint계산후:",winPPoint)
+        // console.log("128,winPScorer계산후:",winPScore)
+        // console.log("129,winPPoint계산후:",winPPoint)
         console.log("130,winPTeachingCnt계산후:",winPTeachingCnt)
         console.log(`API_우승자 score에 1승, point에 +150이 추가되었습니다.`);
       } else if(resultId !== id) {
@@ -134,8 +134,8 @@ const gameFinish = async (req, res) => {
         const losePScore = await Users.updateOne({ id: id }, { $inc: { 'score.1.lose': 1 } });  //패 +1
         const losePPoint = await Users.updateOne({ id: id }, { $set: { point: point - 50 } });  //포인트 -50
         const losePTeachingCnt = await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
-        console.log("137,losePScore계산후:",losePScore)
-        console.log("138,losePPoint계산후:",losePPoint)
+        // console.log("137,losePScore계산후:",losePScore)
+        // console.log("138,losePPoint계산후:",losePPoint)
         console.log("139,losePTeachingCnt계산후:",losePTeachingCnt)
         console.log(`API_패자 score에 1패, point에 -50이 추가되었습니다.`);
       }
@@ -155,24 +155,24 @@ const gameFinish = async (req, res) => {
     //whitePlayer 이김
     if (winPlayer.state === 'whitePlayer') {
       console.log("옵저버포인트계산- whitePlayer 이김")
-      console.log("158,thisTeachingCnt:", thisTeachingCnt)
+      // console.log("158,thisTeachingCnt:", thisTeachingCnt)
       if (state === 'whiteObserver') {
         console.log("160, 화이트옵 이긴포인트계산 whitePlayer이겼을때")
         //포인트 업데이트
-        console.log("162,화이트옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("163,화이트옵 이긴포인트 업뎃전:", winTotalPoint)
+        // console.log("162,화이트옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("163,화이트옵 이긴포인트 업뎃전:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
         console.log("165,화이트옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("166,화이트옵 이긴포인트 업뎃후후:", winTotalPoint)
+        // console.log("166,화이트옵 이긴포인트 업뎃후후:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
         console.log("168,화이트옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
       } else if (state === 'blackObserver') {
         console.log("170,블랙옵 진포인트계산 whitePlayer이겼을때")
-        console.log("171,블랙옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("172,블랙옵 진포인트 업뎃전:",loseTotalPoint)
+        // console.log("171,블랙옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("172,블랙옵 진포인트 업뎃전:",loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
         console.log("174,블랙옵 진thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("175,블랙옵 진포인트 업뎃후후:", loseTotalPoint)
+        // console.log("175,블랙옵 진포인트 업뎃후후:", loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
         console.log("177,블랙옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
       }
@@ -181,27 +181,27 @@ const gameFinish = async (req, res) => {
     //blackPlayer 이김
     if (winPlayer.state === 'blackPlayer') {
       console.log("옵저버포인트계산-blackPlayer 이김")
-      console.log("184,thisTeachingCnt:", thisTeachingCnt)
+      // console.log("184,thisTeachingCnt:", thisTeachingCnt)
       //blackObserver 이김
       if (state === 'blackObserver') {
         console.log("187,블랙옵 이긴포인트계산 blackPlayer이겼을때")
-        console.log("188,블랙옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("189,블랙옵 이긴포인트 업뎃전:", winTotalPoint)
+        // console.log("188,블랙옵 이긴thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("189,블랙옵 이긴포인트 업뎃전:", winTotalPoint)
         //포인트 업데이트
         await Users.updateOne({ id: id }, { $set: { point: winTotalPoint } });
         console.log("192,블랙옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("193,블랙옵 이긴포인트 업뎃후후:", winTotalPoint)
+        // console.log("193,블랙옵 이긴포인트 업뎃후후:", winTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
         console.log("195,블랙옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
       //whiteObserver 짐
       } else if (state === 'whiteObserver') {
         console.log("198,화이트옵 진포인트계산 blackPlayer이겼을때")
-        console.log("199,화이트옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
-        console.log("200,화이트옵 진포인트 업뎃전:",loseTotalPoint)
+        // console.log("199,화이트옵 진thisTeachingCnt업뎃전:", thisTeachingCnt)
+        // console.log("200,화이트옵 진포인트 업뎃전:",loseTotalPoint)
         //포인트 업데이트
         await Users.updateOne({ id: id }, { $set: { point: loseTotalPoint } });
         console.log("203,화이트옵 진thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
-        console.log("204,화이트옵 진포인트 업뎃후후:", loseTotalPoint)
+        // console.log("204,화이트옵 진포인트 업뎃후후:", loseTotalPoint)
         await Users.updateOne({ id: id }, { $set: { teachingCnt: 0 }}); 
         console.log("206,화이트옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
       }
@@ -275,13 +275,13 @@ const gameFinishShow = async (req, res) => {
       }
     ]);
      
-    console.log("331,show,gameUsers[0]:",gameUsers[0]); 
-    console.log("332,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // [{}]
+    // console.log("331,show,gameUsers[0]:",gameUsers[0]); 
+    // console.log("332,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // [{}]
     console.log("333,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
-    console.log("334,show,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt); //2
-    console.log("335,show,gameUsers[0].bp:",gameUsers[0].blackTeamPlayer); // [{a:"a", b:[ [], [] ], c:1, ...}]
+    // console.log("334,show,gameUsers[0].bo[0].teachingCnt:",gameUsers[0].blackTeamObserver[0].teachingCnt); //2
+    // console.log("335,show,gameUsers[0].bp:",gameUsers[0].blackTeamPlayer); // [{a:"a", b:[ [], [] ], c:1, ...}]
     console.log("336,show,gameUsers[0].bp[0]:",gameUsers[0].blackTeamPlayer[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
-    console.log("337,show,gameUsers[0].bp[0].teachingCnt:",gameUsers[0].blackTeamPlayer[0].teachingCnt);
+    // console.log("337,show,gameUsers[0].bp[0].teachingCnt:",gameUsers[0].blackTeamPlayer[0].teachingCnt);
 
     const blackP = gameUsers[0].blackTeamPlayer[0]
     const blackO = gameUsers[0].blackTeamObserver[0]
@@ -307,7 +307,7 @@ const gameFinishShow = async (req, res) => {
         const winInfo = {id:blackP.id, usePoint:0, getPoint:150, 
                                         totalPoint:blackP.point, state:blackP.state };
         winPlayerArray.push(winInfo);    
-        console.log("310,show,winInfo:",winInfo);
+        // console.log("310,show,winInfo:",winInfo);
         console.log("311,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
        //화이트플레이어가 졌을때
       }else {  
@@ -315,7 +315,7 @@ const gameFinishShow = async (req, res) => {
         const loseInfo = {id:whiteP.id, usePoint:0, getPoint:-50, 
                                           totalPoint:totalPoint, state:whiteP.state };
         losePlayerArray.push(loseInfo);
-        console.log("318,show,loseInfo", loseInfo)
+        // console.log("318,show,loseInfo", loseInfo)
         console.log("319,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
       }
     } 
@@ -331,7 +331,7 @@ const gameFinishShow = async (req, res) => {
         const winInfo = {id:whiteP.id, usePoint:usePoint, getPoint:getPoint, 
                                         totalPoint:totalPoint, state:whiteP.state };
         winPlayerArray.push(winInfo);
-        console.log("334,show,winInfo:",winInfo);
+        // console.log("334,show,winInfo:",winInfo);
         console.log("335,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
        //블랙플레이어가 졌을때
       } else {  
@@ -342,7 +342,7 @@ const gameFinishShow = async (req, res) => {
         const loseInfo = {id:blackP.id, usePoint:usePoint, getPoint:getPoint, 
                                           totalPoint:totalPoint, state:blackP.state };
         losePlayerArray.push(loseInfo);
-        console.log("345,show,loseInfo", loseInfo)
+        // console.log("345,show,loseInfo", loseInfo)
         console.log("346,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
       }
     }
@@ -355,7 +355,7 @@ const gameFinishShow = async (req, res) => {
     if (result.win === whiteP.id) {
       console.log("356,show, 이긴화이트팀 화이트옵 계산")
       console.log("357,show, 이긴화이트플레이어 아이디:",result.win)
-      console.log("358,show, 이긴화이트 whiteP.id는:",whiteP.id)
+      // console.log("358,show, 이긴화이트 whiteP.id는:",whiteP.id)
       //whiteObserver 이김
       if (whiteO.state === 'whiteObserver' ) {
         console.log("282,show, 이긴화이트옵 계산")
@@ -378,7 +378,7 @@ const gameFinishShow = async (req, res) => {
         const loseObserver = { id:blackO.id, usePoint:usePoint, getPoint:getPoint, 
                                              totalPoint:totalPoint, state:blackO.state };
         loseObserverArray1.push(loseObserver);
-        console.log("381,API,show 진블랙옵저버정보는?", loseObserver);
+        // console.log("381,API,show 진블랙옵저버정보는?", loseObserver);
         console.log("382,show, 진블랙옵 loseObserverArray1은?", loseObserverArray1)
       }
     }
@@ -388,7 +388,7 @@ const gameFinishShow = async (req, res) => {
     if (result.win === blackP.id) {
       console.log("389,show, 이긴블랙팀 블랙옵 계산")
       console.log("390,show, 이긴블랙플레이어 아이디:", result.win)
-      console.log("391,show, 이긴블랙 blackP.id는:", blackP.id)
+      // console.log("391,show, 이긴블랙 blackP.id는:", blackP.id)
       //blackObserver 이김
       if (blackO.state === 'blackObserver') {
         console.log("394,show, 이긴블랙옵 계산")
@@ -399,7 +399,7 @@ const gameFinishShow = async (req, res) => {
         const winObserver = { id:blackO.id, usePoint:usePoint, getPoint:getPoint, 
                                              totalPoint:totalPoint, state:blackO.state };
         winObserverArray2.push(winObserver);
-        console.log("402,API,show 이긴블랙옵저버정보는?", winObserver);
+        // console.log("402,API,show 이긴블랙옵저버정보는?", winObserver);
         console.log("403,show, 이긴블랙옵 winObserverArray2는?", winObserverArray2);
       //whiteObserver 짐
       } else if (whiteO.state === 'whiteObserver') {
@@ -412,7 +412,7 @@ const gameFinishShow = async (req, res) => {
         const loseObserver = { id:whiteO.id, usePoint:usePoint, getPoint:getPoint, 
                                               totalPoint:totalPoint, state:whiteO.state };
         loseObserverArray2.push(loseObserver);
-        console.log("415,API,show 진화이트옵저버정보는?", loseObserver);
+        // console.log("415,API,show 진화이트옵저버정보는?", loseObserver);
         console.log("416,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
       }
     } 
