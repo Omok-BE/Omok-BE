@@ -513,7 +513,7 @@ gameRoom.on('connect', async (socket) => {
   
   // console.log("겜방연결후 bboard",bboard);
   // console.log("겜방연결후count",count);
-  console.log('겜방연결후socket', socket);
+  // console.log('겜방연결후socket', socket);
   console.log('겜방연결후socket.id', socket.id);
 
   socket.onAny((event) => {
@@ -668,6 +668,8 @@ gameRoom.on('connect', async (socket) => {
       }
 
       const state = outPlayer.state
+      console.log("671,겜방소켓state:",state)
+      console.log("672,겜방소켓outPlayer:",outPlayer)
       gameRoom.to(thisgameNum).emit("byebye",state)
     } catch (error) {
       console.log(error);
