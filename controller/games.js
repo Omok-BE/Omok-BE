@@ -341,7 +341,7 @@ const gameFinishShow = async (req, res) => {
           const totalPoint = whiteO[i].point - usePoint - getPoint - penalty;  //총포인트
           const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                    totalPoint:totalPoint, state:whiteO[i].state };
-          loseObserverArray2.push(loseObserver);
+          loseObserverArray1.push(loseObserver);
         }
       } 
       console.log("343,show, 진화이트옵 loseObserverArray1는?", loseObserverArray1);
