@@ -242,7 +242,10 @@ const gameFinishShow = async (req, res) => {
                                                    totalPoint:totalPoint, state:blackO[i].state };
           winObserverArray1.push(winObserver);
 
-          console.log("238,show,win,blackO[i].point", blackO[i].point)
+          console.log("245,show,win,blackO[i].point", blackO[i].point)
+          console.log("246,show,win,blackO[i]",blackO[i])  
+          console.log("247,show,win,usePoint",usePoint)  
+
           // if(isNaN(""))
         }
       }
@@ -259,8 +262,9 @@ const gameFinishShow = async (req, res) => {
           const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                    totalPoint:totalPoint, state:whiteO[i].state };
           loseObserverArray1.push(loseObserver);
-          console.log("238,show,lose,whiteO[i].point", whiteO[i].point)
-
+          console.log("264,show,lose,whiteO[i].point", whiteO[i].point)
+          console.log("265,show,lose,whiteO[i]",whiteO[i])  
+          console.log("267,show,lose,usePoint",usePoint)  
         }
       } 
       console.log("337,show, 진화이트옵 loseObserverArray1는?", loseObserverArray1);
@@ -294,7 +298,9 @@ const gameFinishShow = async (req, res) => {
         const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                   totalPoint:totalPoint, state:whiteO[i].state };
         winObserverArray2.push(winObserver);
-        console.log("238,show,win,whiteO[i].point", whiteO[i].point)
+        console.log("299,show,win,whiteO[i].point", whiteO[i].point)
+        console.log("300,show,win,whiteO[i]",whiteO[i])  
+        console.log("303,show,win,usePoint",usePoint)  
         }
       }  
       console.log("370,show, 이긴블랙옵 winObserverArray2는?", winObserverArray2);
@@ -310,7 +316,9 @@ const gameFinishShow = async (req, res) => {
           const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                   totalPoint:totalPoint, state:blackO[i].state };
           loseObserverArray2.push(loseObserver);
-          console.log("238,show,lose,blackO[i].point", blackO[i].point)
+          console.log("319,show,lose,blackO[i].point", blackO[i].point)
+          console.log("320,show,lose,blackO[i]",blackO[i])  
+          console.log("321,show,lose,usePoint",usePoint)  
         }
       } 
       console.log("385,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
