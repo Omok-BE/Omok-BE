@@ -640,6 +640,24 @@ gameRoom.on('connect', async (socket) => {
   socket.on('disconnecting', async () => {
     //game방 퇴장 메시지
     try {
+      gameRoom.to(thisgameNum).emit('bye', socket.id);
+      const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
+      // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
+      await Rooms.updateOne({ roomNum:thisgameNum }, { $set: { observerCnt } });
+      console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
+      console.log('게임방 퇴장 소켓 id', socket.id);
+      console.log('게임방 퇴장 소켓.nickname', socket.nickname);
+      console.log('게임방 퇴장 소켓 room ', socket.rooms);
+      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on('byebye', async (state) => {
+    try{
+      console.log("664,겜방소켓 byebye이벤트 state:",state)
+
       const inGameIds = await Games.findOne({ gameNum:thisgameNum },  
                                               ({_id:false, blackTeamPlayer:true, whiteTeamPlayer:true }));
       console.log("645,소켓disconnecting,inGameIds:",inGameIds)  
@@ -660,28 +678,21 @@ gameRoom.on('connect', async (socket) => {
         await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
       }
-      const state = outPlayer.state
-      console.log("664,겜방소켓state:",state)
+      // const state = outPlayer.state
+
       console.log("655,소켓disconnecting,inGameIds:",inGameIds) 
       console.log("666,겜방소켓outPlayer:",outPlayer)
       gameRoom.to(thisgameNum).emit("byebye",state)
-
-
-
-      gameRoom.to(thisgameNum).emit('bye', socket.id);
-      const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
-     
-      // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-      await Rooms.updateOne({ roomNum:thisgameNum }, { $set: { observerCnt } });
-      console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-      console.log('게임방 퇴장 소켓 id', socket.id);
-      console.log('게임방 퇴장 소켓.nickname', socket.nickname);
-      console.log('게임방 퇴장 소켓 room ', socket.rooms);
-      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
-    } catch (error) {
-      console.log(error);
+      //옵저버그냥 나가고, 플레이어는 결과페이지
+      //
+    
+    
+    
+    } catch(err) {
+      console.log("겜방소켓 byebye이벤트 에러:",error);
     }
   });
+
 
   //게임결과창
   socket.on('result', async (winner, loser) => {

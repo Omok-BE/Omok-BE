@@ -382,7 +382,7 @@ const gameDelete = async (req, res) => {
     // gameRoom.to(thisgameNum).emit("byebye",state)
 
     
-    const existGame = await Games.findOne({ gameNum });
+    const existGame = await Games.findOne({ gameNum:gameNum });
     console.log("388,delete,existGame:",existGame)
     if (existGame){
       const deleteRoomNum = await Rooms.deleteOne({ roomNum: Number(gameNum) });
