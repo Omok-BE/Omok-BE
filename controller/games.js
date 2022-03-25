@@ -332,7 +332,7 @@ const gameFinishShow = async (req, res) => {
 };
 
 
-//게임중간에 play가 나갈때 게임방 삭제 --작업중
+//결과창에서 나가기버튼 클릭시 게임방 삭제 --작업중
 const gameDelete = async (req, res) => {
   try {
     const { gameNum } = req.params;
@@ -341,7 +341,7 @@ const gameDelete = async (req, res) => {
     //게임방내 유저 state별 정보 id,score,point,state
     const gameInfo = await gameUserInfo(gameNum);
 
-    // //게임중간에 플레이어가 나갔을 경우
+    // //게임방에서 플레이어가 나갔을 경우
     // //id만 찾기
     // const inGameIds = await Games.find({ gameNum }, { _id:false, blackTeamPlayer:true, blackTeamObserver:true,
     //                                                               whiteTeamPlayer:true, whiteTeamObserver:true })
@@ -358,7 +358,7 @@ const gameDelete = async (req, res) => {
     // for(let i=0; i<idsArray.length; i++){
     //   outPlayer = await Users.findOne({ id:idsArray[i]}, { _id:false, id, point, state });
     
-    //   //게임중 나간 플레이어 state가 if안 state와 일치하면 조건식 발동-- 나간플레이어 찾는방법?
+    //   //게임임방에서 나간 플레이어 state가 if안 state와 일치하면 조건식 발동-- 나간플레이어 찾는방법?
     //   if (outPlayer.state === 'blackPlayer'){
     //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.0.win':1 } });  //승 +1
     //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
@@ -379,7 +379,6 @@ const gameDelete = async (req, res) => {
     // const state = outPlayer.state
     // console.log("671,겜방소켓state:",state)
     // console.log("672,겜방소켓outPlayer:",outPlayer)
-    // gameRoom.to(thisgameNum).emit("byebye",state)
 
     
     const existGame = await Games.findOne({ gameNum:gameNum });
@@ -392,7 +391,7 @@ const gameDelete = async (req, res) => {
     }
 
     // ↓ 여기에 state업뎃문 위치시키면 결과창 화면에서 나가기버튼 안먹힘!!
-    //게임중간에 나간 유저 state 'online'변경
+    //게임방에서 나간 유저 state 'online'변경
     // const outGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
     // console.log("400,afterGameUserState:", outGameUserState)
     
