@@ -46,6 +46,7 @@ waitingRoom.on('connection', (socket) => {
         { roomNum },
         { $set: { playerCnt, blackTeamPlayer: socket.nickname } }
         );
+        console.log(socket.nickname)
         console.log("블랙플레이어들어옴")
     } else {
       await Rooms.updateMany(
