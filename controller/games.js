@@ -257,7 +257,7 @@ const gameFinishShow = async (req, res) => {
           const penalty = 20; //진팀 패널티
           const getPoint = usePoint * 1 - penalty; //얻은포인트
           const totalPoint = whiteO[i].point - usePoint - getPoint;  //총포인트
-          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
+          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:- getPoint, 
                                                    totalPoint:totalPoint, state:whiteO[i].state };
           loseObserverArray1.push(loseObserver);
           console.log("263,show,lose,whiteO[i]",whiteO[i])  
@@ -307,7 +307,7 @@ const gameFinishShow = async (req, res) => {
           const penalty = 20; //진팀 패널티
           const getPoint = usePoint * 1 - penalty;  //얻은포인트
           const totalPoint = blackO[i].point - usePoint - getPoint;  //총포인트
-          const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
+          const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: - getPoint, 
                                                   totalPoint:totalPoint, state:blackO[i].state };
           loseObserverArray2.push(loseObserver);
           console.log("313,show,lose,blackO[i]",blackO[i])  
