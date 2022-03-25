@@ -492,7 +492,7 @@ function check_44( x,  y,board)
 
 //게임방 socket
 const gameRoom = io.of('/game');
-let thisgameNum;
+let thisGameNum;
 
 // x,y 좌표를 배열의 index값으로 변환
 let xyToIndex = (x, y) => {
@@ -533,8 +533,7 @@ gameRoom.on('connect', async (socket) => {
 
   //game방 Join
   socket.on('joinGame', async (gameNum) => {
-    
-    thisgameNum = gameNum;
+    thisGameNum=gameNum
     console.log(`조인게임방번호:${gameNum}`);
     socket.join(gameNum);
     const observerCnt = gameRoomCount(gameNum) - 2;
@@ -546,7 +545,7 @@ gameRoom.on('connect', async (socket) => {
   socket.on('chat', (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
     console.log('게임방 채팅data:', data);
-    gameRoom.to(thisgameNum).emit('chat', data);
+    gameRoom.to(gameNum).emit('chat', data);
   });
 
   //game방 훈수채팅W
@@ -556,7 +555,7 @@ gameRoom.on('connect', async (socket) => {
     console.log('훈수쳇W data:', data);
     
     //teachingCnt 업데이트
-    gameRoom.to(thisgameNum).emit('teachingW', data);
+    gameRoom.to(gameNum).emit('teachingW', data);
     
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
@@ -567,7 +566,7 @@ gameRoom.on('connect', async (socket) => {
     console.log('훈수쳇B data:', data);
 
     //teachingCnt 업데이트
-    gameRoom.to(thisgameNum).emit('teachingB', data);
+    gameRoom.to(gameNum).emit('teachingB', data);
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
   //game방 훈수채팅- 플라잉
@@ -577,7 +576,7 @@ gameRoom.on('connect', async (socket) => {
     console.log('플라잉채팅 data♬♪:', data);
     
     //teachingCnt 업데이트
-    gameRoom.to(thisgameNum).emit('flyingWord', data);
+    gameRoom.to(gameNum).emit('flyingWord', data);
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
 
@@ -589,16 +588,16 @@ gameRoom.on('connect', async (socket) => {
     const data = {name:socket.nickname, pointer:pointer};
     console.log("Pointer♬♪:",socket.nickname);
     console.log("Pointer data♬♪:",data);
-    gameRoom.to(thisgameNum).emit("Pointer", data,chat);
+    gameRoom.to(gameNum).emit("Pointer", data,chat);
   }); 
   
   //오목 게임
-  socket.on('omog', (data, state) => {
+  socket.on('omog', (data, state, gameNum) => {
     if(count % 2 == 0) {
       if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
         let bye=0
         console.log("걸렸구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
-        gameRoom.to(thisgameNum).emit("omog", data,bye,state);
+        gameRoom.to(gameNum).emit("omog", data,bye,state);
         return;
       }
       console.log("삼삼하구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
@@ -621,11 +620,11 @@ gameRoom.on('connect', async (socket) => {
       count++;
       data.count = count;
       console.log('오목게임', count, state);
-      gameRoom.to(thisgameNum).emit('omog', data);
+      gameRoom.to(gameNum).emit('omog', data);
     }
   });
   //Pointer 훈수 실질적으로 오목두는 부분
-  socket.on("pointerOmog", (data) => {
+  socket.on("pointerOmog", (data, gameNum) => {
     if (pointer){
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
         console.log("Pointer돌아가");
@@ -637,7 +636,7 @@ gameRoom.on('connect', async (socket) => {
         pointer = false;
         console.log("Pointer 훈수", pointer);
 
-        gameRoom.to(thisgameNum).emit("pointerOmog", data, count, pointer);
+        gameRoom.to(gameNum).emit("pointerOmog", data, count, pointer);
     }
   });
 
@@ -667,10 +666,10 @@ gameRoom.on('connect', async (socket) => {
       // console.log("662,겜방소켓,outPlayer:",outPlayer)
 
 
-      gameRoom.to(thisgameNum).emit('bye', socket.id);
-      const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
+      gameRoom.to(thisGameNum).emit('bye', socket.id);
+      const observerCnt = gameRoomCount(thisGameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-      await Rooms.updateOne({ roomNum:thisgameNum }, { $set: { observerCnt } });
+      await Rooms.updateOne({ roomNum:thisGameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
       console.log('게임방 퇴장 소켓 id', socket.id);
       console.log('게임방 퇴장 소켓.nickname', socket.nickname);
@@ -682,21 +681,15 @@ gameRoom.on('connect', async (socket) => {
   });
 
   //게임방 나갈떄
-  socket.on('byebye', async (state) => {
+  socket.on('byebye', async (state, gameNum) => {
     try{
-      gameRoom.to(thisgameNum).emit("byebye",state);
+      gameRoom.to(gameNum).emit("byebye",state);
       console.log("겜방소켓 byebye이벤트 성공");
     } catch(err) {
       console.log("겜방소켓 byebye이벤트 에러:",err);
     }
   });
 
-
-  //게임결과창
-  socket.on('result', async (winner, loser) => {
-    console.log('게임결과_소켓 winner:', winner);
-    console.log('게임결과_소켓 loser:', loser);
-    gameRoom.to(thisgameNum).emit('result', { winner, loser });
     
     // //게임결과 후 게임방, 대기방 삭제
     // const existGame = await Games.findOne({ gameNum:thisgameNum });
@@ -711,7 +704,6 @@ gameRoom.on('connect', async (socket) => {
     // //게임결과 후 결과창 '나가기'버튼 클릭 유저 state 'online'변경
     // const afterGameUserState = await Users.updateOne({ id:socket.id }, { $set: { state: 'online' }}); 
     // console.log("400,afterGameUserState:", afterGameUserState)
-  });
 });
 
 module.exports = { httpServer };
