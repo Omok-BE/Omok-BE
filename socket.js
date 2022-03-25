@@ -1,6 +1,7 @@
 const app = require('./app');
 const Users = require('./models/users');
 const Rooms = require('./models/rooms');
+const Boards = require('./models/boards');
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
@@ -499,9 +500,6 @@ let xyToIndex = (x, y) => {
   return x + y * 19;
 };
 
-let bboard;
-let count;
-let pointer;
 
 //접속자 수
 function gameRoomCount(gameNum) {
@@ -510,9 +508,6 @@ function gameRoomCount(gameNum) {
 
 //game방 연결
 gameRoom.on('connect', async (socket) => {
-  bboard = new Array(Math.pow(19, 2)).fill(-1);
-  count = 0;
-  pointer = false;
   console.log('★★game 소켓 연결됨★★');
   
   // console.log("겜방연결후 bboard",bboard);
@@ -591,13 +586,17 @@ gameRoom.on('connect', async (socket) => {
     gameRoom.to(gameNum).emit("Pointer", data,chat);
   }); 
   
-  //오목 게임
+  //오목 게임 좌표값을 받아 좌표값에 해당하는 값을
   socket.on('omog', (data, state, gameNum) => {
+    const findBoard = await Boards.findOne({gameNum});
+    let bboard = findBoard.board;
+    const count = findBoard.count;
+
     if(count % 2 == 0) {
       if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
-        let bye=0
+        let checkSamsam=0 //삼삼확인
         console.log("걸렸구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
-        gameRoom.to(gameNum).emit("omog", data,bye,state);
+        gameRoom.to(gameNum).emit("omog", data,checkSamsam,state);
         return;
       }
       console.log("삼삼하구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
@@ -619,12 +618,17 @@ gameRoom.on('connect', async (socket) => {
       // data.order
       count++;
       data.count = count;
+      await Boards.updateMany({gameNum},{$set: {count, board:bboard}});
       console.log('오목게임', count, state);
       gameRoom.to(gameNum).emit('omog', data);
     }
   });
   //Pointer 훈수 실질적으로 오목두는 부분
   socket.on("pointerOmog", (data, gameNum) => {
+    const findBoard = await Boards.findOne({gameNum});
+    let bboard = findBoard.board;
+    const count = findBoard.count;
+
     if (pointer){
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
         console.log("Pointer돌아가");
@@ -633,7 +637,7 @@ gameRoom.on('connect', async (socket) => {
       (bboard[xyToIndex(data.x, data.y)] = 3)
         data.board = bboard;
         // data.order
-        pointer = false;
+        let pointer = false;
         console.log("Pointer 훈수", pointer);
 
         gameRoom.to(gameNum).emit("pointerOmog", data, count, pointer);

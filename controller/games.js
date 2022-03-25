@@ -2,6 +2,7 @@ const _ = require('mongoose-sequence');
 const Games = require('../models/games');
 const Rooms = require('../models/rooms');
 const Users = require('../models/users');
+const Boards = require('../models/boards');
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
@@ -24,6 +25,12 @@ const gameCreate = async (req, res) => {
       whiteTeamPlayer,
       whiteTeamObserver,
     });
+    const board = new Array(Math.pow(19, 2)).fill(-1);
+    await Boards.create({
+      gameNum: roomNum,
+      board:board
+    });
+
     res.status(201).json({ ok: true });
   } catch (error) {
     console.log(error);
