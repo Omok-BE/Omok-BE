@@ -697,19 +697,6 @@ gameRoom.on('connect', async (socket) => {
     console.log('게임결과_소켓 loser:', loser);
     gameRoom.to(thisgameNum).emit('result', { winner, loser });
     
-    // //게임결과 후 게임방, 대기방 삭제
-    // const existGame = await Games.findOne({ gameNum:thisgameNum });
-    // if (existGame){
-    //   console.log("$$$$$$$$$$")
-    //   const deleteRoomNum = await Rooms.deleteOne({ roomNum:thisgameNum });
-    //   const deleteGameNum = await Games.deleteOne({ gameNum:thisgameNum });
-    //   console.log("690,소켓 게임결과창,deleteRoomNum",deleteRoomNum)
-    //   console.log("691,소켓 게임결과창,deleteGameNum",deleteGameNum)
-    // }
-    
-    // //게임결과 후 결과창 '나가기'버튼 클릭 유저 state 'online'변경
-    // const afterGameUserState = await Users.updateOne({ id:socket.id }, { $set: { state: 'online' }}); 
-    // console.log("400,afterGameUserState:", afterGameUserState)
   });
 });
 

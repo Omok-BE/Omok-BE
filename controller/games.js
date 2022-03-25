@@ -183,7 +183,7 @@ const gameFinishShow = async (req, res) => {
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
      
-    console.log("269,show,gameInfo[0]:",gameInfo[0]); 
+    console.log("269,show,gameInfo[0]:",gameInfo); 
     // console.log("280,show,gameInfo[0].bo:",gameInfo[0].blackTeamObserver); // [{}]
     // console.log("281,show,gameInfo[0].bo[0]:",gameInfo[0].blackTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
     // console.log("282,show,gameInfo[0].wo[0]:",gameInfo[0].whiteTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
@@ -338,49 +338,6 @@ const gameDelete = async (req, res) => {
     const { gameNum } = req.params;
     console.log("API,gameDelete,req.params:",req.params)
 
-    //게임방내 유저 state별 정보 id,score,point,state
-    // const gameInfo = await gameUserInfo(gameNum);
-
-    // //게임방에서 플레이어가 나갔을 경우
-    // //id만 찾기
-    // const inGameIds = await Games.find({ gameNum }, { _id:false, blackTeamPlayer:true, blackTeamObserver:true,
-    //                                                               whiteTeamPlayer:true, whiteTeamObserver:true })
-    // const a = []
-    // a.push(inGameIds.blackTeamPlayer)
-    // const b = inGameIds.blackTeamObserver
-    // const c = []
-    //   c.push(inGameIds.whiteTeamPlayer)
-    // const d = inGameIds.whiteTeamObserver
-    // const idsArray = a.concat(b,c,d)
-    // console.log("370,idsArray",idsArray)
-
-    // let outPlayer = {};
-    // for(let i=0; i<idsArray.length; i++){
-    //   outPlayer = await Users.findOne({ id:idsArray[i]}, { _id:false, id, point, state });
-    
-    //   //게임임방에서 나간 플레이어 state가 if안 state와 일치하면 조건식 발동-- 나간플레이어 찾는방법?
-    //   if (outPlayer.state === 'blackPlayer'){
-    //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.0.win':1 } });  //승 +1
-    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
-    //   } else if (outPlayer.state === 'whitePlayer'){
-    //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.1.lose':1 } });  //패 +1
-    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
-    //   }
-    //   if (outPlayer.state === 'whitePlayer'){
-    //     await Users.updateOne({ id:idsArray[i] }, {  inc: { 'score.0.win':1 } });  //승 +1
-    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
-    //   } else if (outPlayer.state === 'blackPlayer'){
-    //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.1.lose':1 } });  //패 +1
-    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
-    //   }
-
-    // }
-    // console.log("376,outPlayer",outPlayer)
-    // const state = outPlayer.state
-    // console.log("671,겜방소켓state:",state)
-    // console.log("672,겜방소켓outPlayer:",outPlayer) 
-
-    
     const existGame = await Games.findOne({ gameNum:gameNum });
     console.log("388,delete,existGame:",existGame)
     if (existGame){
@@ -390,11 +347,6 @@ const gameDelete = async (req, res) => {
       console.log("391,deleteGameNum",deleteGameNum)
     }
 
-    // ↓ 여기에 state업뎃문 위치시키면 결과창 화면에서 나가기버튼 안먹힘!!
-    //게임방에서 나간 유저 state 'online'변경
-    // const outGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
-    // console.log("400,afterGameUserState:", outGameUserState)
-    
     res.status(200).json({
         ok: true,
         message: '대기방, 게임방 삭제 성공!',
