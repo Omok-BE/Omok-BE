@@ -395,9 +395,9 @@ const gameFinishShow = async (req, res) => {
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
     await Users.updateOne({ id:id }, { $set: { teachingCnt: 0 }});
-    // //게임후 유저 state 'online'변경
-    // const afterGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
-    // console.log("400,afterGameUserState:", afterGameUserState)
+    //게임후 유저 state 'online'변경
+    const afterGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
+    console.log("400,afterGameUserState:", afterGameUserState)
 
     res.status(200).json({
       win,
