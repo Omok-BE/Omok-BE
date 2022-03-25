@@ -1,3 +1,4 @@
+const _ = require('mongoose-sequence');
 const Games = require('../models/games');
 const Rooms = require('../models/rooms');
 const Users = require('../models/users');
@@ -36,52 +37,10 @@ const gameStart = async (req, res) => {
     console.log("~~~~~~API- gameStart 진입~~~~")
     const { gameNum } = req.params;
     console.log("43,gameStart의 gameNum", gameNum);
-    const gameInfo = await Games.aggregate([
-      {
-        $match: { gameNum: Number(gameNum) },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'blackTeamPlayer',
-          foreignField: 'id',
-          as: 'blackTeamPlayer',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'blackTeamObserver',
-          foreignField: 'id',
-          as: 'blackTeamObserver',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'whiteTeamPlayer',
-          foreignField: 'id',
-          as: 'whiteTeamPlayer',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'whiteTeamObserver',
-          foreignField: 'id',
-          as: 'whiteTeamObserver',
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
-          blackTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
-          whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
-          whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
-        },
-      },
-    ]);
+
+    //게임방내 유저 state별 정보
+    const gameInfo = await gameUserInfo(gameNum);
+
     console.log('89번gameInfo[0]:', gameInfo[0]);
     console.log("~~~~~~API- gameStart 나가기나가기");
     res.status(200).json({
@@ -97,6 +56,9 @@ const gameStart = async (req, res) => {
     });
   }
 };
+
+
+
 
 //결과창 post
 const gameFinish = async (req, res) => {
@@ -218,66 +180,21 @@ const gameFinishShow = async (req, res) => {
     console.log('218,결과창show진입:');
     console.log('219,결과창show,req.body:', req.body);
 
-    // 내겜방 유저들의 정보 찾기 id, score, point, state 
-    const gameUsers = await Games.aggregate([
-      {
-        $match: { gameNum: Number(gameNum) },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'blackTeamPlayer',
-          foreignField: 'id',
-          as: 'blackTeamPlayer',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'blackTeamObserver',
-          foreignField: 'id',
-          as: 'blackTeamObserver',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'whiteTeamPlayer',
-          foreignField: 'id',
-          as: 'whiteTeamPlayer',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'whiteTeamObserver',
-          foreignField: 'id',
-          as: 'whiteTeamObserver',
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-          blackTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-          whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-          whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt: 1 },
-        }
-      }
-    ]);
+    //게임방내 유저 state별 정보
+    const gameInfo = await gameUserInfo(gameNum);
      
-    console.log("269,show,gameUsers[0]:",gameUsers[0]); 
-    // console.log("280,show,gameUsers[0].bo:",gameUsers[0].blackTeamObserver); // [{}]
-    // console.log("281,show,gameUsers[0].bo[0]:",gameUsers[0].blackTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
-    // console.log("282,show,gameUsers[0].wo[0]:",gameUsers[0].whiteTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
-    // console.log("283,show,gameUsers[0].bp:",gameUsers[0].blackTeamPlayer); // [{a:"a", b:[ [], [] ], c:1, ...}]
-    // console.log("284,show,gameUsers[0].bp[0]:",gameUsers[0].blackTeamPlayer[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
+    console.log("269,show,gameInfo[0]:",gameInfo[0]); 
+    // console.log("280,show,gameInfo[0].bo:",gameInfo[0].blackTeamObserver); // [{}]
+    // console.log("281,show,gameInfo[0].bo[0]:",gameInfo[0].blackTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
+    // console.log("282,show,gameInfo[0].wo[0]:",gameInfo[0].whiteTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
+    // console.log("283,show,gameInfo[0].bp:",gameInfo[0].blackTeamPlayer); // [{a:"a", b:[ [], [] ], c:1, ...}]
+    // console.log("284,show,gameInfo[0].bp[0]:",gameInfo[0].blackTeamPlayer[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
 
-    const blackP = gameUsers[0].blackTeamPlayer[0]
-    const blackO = gameUsers[0].blackTeamObserver
-    const whiteP = gameUsers[0].whiteTeamPlayer[0]
-    const whiteO = gameUsers[0].whiteTeamObserver
-    // gameUsers[0].bo[0]: 
+    const blackP = gameInfo[0].blackTeamPlayer[0]
+    const blackO = gameInfo[0].blackTeamObserver
+    const whiteP = gameInfo[0].whiteTeamPlayer[0]
+    const whiteO = gameInfo[0].whiteTeamObserver
+    // gameInfo[0].bo[0]: 
     //   {
     //     id: 'test4',
     //     score: [ { win: 13 }, { lose: 6 } ],
@@ -415,62 +332,134 @@ const gameFinishShow = async (req, res) => {
 };
 
 
-//게임중간에 play가 나갈때 게임방 삭제 --작업중
+//결과창에서 나가기버튼 클릭시 게임방 삭제 --작업중
 const gameDelete = async (req, res) => {
   try {
     const { gameNum } = req.params;
     console.log("API,gameDelete,req.params:",req.params)
-    console.log("API,gameDelete,gameNum:",gameNum)
-    console.log("API,gameDelete,gameNum타입:",typeof(gameNum))
 
-    // //게임중간에 플레이어가 나갔을 경우
-    // const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
-    // if (outPlayer.state === 'blackPlayer'){
-    //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
-    //   await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
-    // } else if (outPlayer.state === 'whitePlayer'){
-    //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-    //   await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
+    //게임방내 유저 state별 정보 id,score,point,state
+    const gameInfo = await gameUserInfo(gameNum);
+
+    // //게임방에서 플레이어가 나갔을 경우
+    // //id만 찾기
+    // const inGameIds = await Games.find({ gameNum }, { _id:false, blackTeamPlayer:true, blackTeamObserver:true,
+    //                                                               whiteTeamPlayer:true, whiteTeamObserver:true })
+    // const a = []
+    // a.push(inGameIds.blackTeamPlayer)
+    // const b = inGameIds.blackTeamObserver
+    // const c = []
+    //   c.push(inGameIds.whiteTeamPlayer)
+    // const d = inGameIds.whiteTeamObserver
+    // const idsArray = a.concat(b,c,d)
+    // console.log("370,idsArray",idsArray)
+
+    // let outPlayer = {};
+    // for(let i=0; i<idsArray.length; i++){
+    //   outPlayer = await Users.findOne({ id:idsArray[i]}, { _id:false, id, point, state });
+    
+    //   //게임임방에서 나간 플레이어 state가 if안 state와 일치하면 조건식 발동-- 나간플레이어 찾는방법?
+    //   if (outPlayer.state === 'blackPlayer'){
+    //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.0.win':1 } });  //승 +1
+    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
+    //   } else if (outPlayer.state === 'whitePlayer'){
+    //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.1.lose':1 } });  //패 +1
+    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
+    //   }
+    //   if (outPlayer.state === 'whitePlayer'){
+    //     await Users.updateOne({ id:idsArray[i] }, {  inc: { 'score.0.win':1 } });  //승 +1
+    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
+    //   } else if (outPlayer.state === 'blackPlayer'){
+    //     await Users.updateOne({ id:idsArray[i] }, { $inc: { 'score.1.lose':1 } });  //패 +1
+    //     await Users.updateOne({ id:idsArray[i] }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
+    //   }
+
     // }
-    // if (outPlayer.state === 'whitePlayer'){
-    //   await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
-    //   await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
-    // } else if (outPlayer.state === 'blackPlayer'){
-    //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-    //   await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
-    // }
+    // console.log("376,outPlayer",outPlayer)
     // const state = outPlayer.state
     // console.log("671,겜방소켓state:",state)
     // console.log("672,겜방소켓outPlayer:",outPlayer)
-    // gameRoom.to(thisgameNum).emit("byebye",state)
 
     
-    const existGame = await Games.findOne({ gameNum });
+    const existGame = await Games.findOne({ gameNum:gameNum });
+    console.log("388,delete,existGame:",existGame)
     if (existGame){
       const deleteRoomNum = await Rooms.deleteOne({ roomNum: Number(gameNum) });
       const deleteGameNum = await Games.deleteOne({ gameNum: Number(gameNum) });
-      console.log("428,deleteRoomNum",deleteRoomNum)
-      console.log("429,deleteGameNum",deleteGameNum)
+      console.log("390,deleteRoomNum",deleteRoomNum)
+      console.log("391,deleteGameNum",deleteGameNum)
     }
 
     // ↓ 여기에 state업뎃문 위치시키면 결과창 화면에서 나가기버튼 안먹힘!!
-    //게임중간에 나간 유저 state 'online'변경
+    //게임방에서 나간 유저 state 'online'변경
     // const outGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
     // console.log("400,afterGameUserState:", outGameUserState)
     
     res.status(200).json({
         ok: true,
-        message: '게임방에서 나가기 성공!',
+        message: '대기방, 게임방 삭제 성공!',
     });
   } catch (err) {
     // console.log(`API_방에서 나가기 에러: ${err}`);
-    console.err("API_방에서 나가기 에러:",err)
+    console.err("API_gameDelete 방삭제 에러:",err)
     res.status(400).json({
       ok: false,
-      errorMessage: '게임방에서 나가기 실패',
+      errorMessage: '대기방, 게임방 삭제 실패',
     });
   }
 };
+
+//게임방내 유저 state별 정보
+async function gameUserInfo(gameNum) {
+  return await Games.aggregate([
+    {
+      $match: { gameNum: Number(gameNum) },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'blackTeamPlayer',
+        foreignField: 'id',
+        as: 'blackTeamPlayer',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'blackTeamObserver',
+        foreignField: 'id',
+        as: 'blackTeamObserver',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'whiteTeamPlayer',
+        foreignField: 'id',
+        as: 'whiteTeamPlayer',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'whiteTeamObserver',
+        foreignField: 'id',
+        as: 'whiteTeamObserver',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
+        blackTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+        whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
+        whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+      },
+    },
+  ]);
+}
+
+
 
 module.exports = {
   gameCreate,
