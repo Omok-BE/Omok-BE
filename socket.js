@@ -678,7 +678,7 @@ gameRoom.on('connect', async (socket) => {
   });
 
   //게임결과창
-  socket.on('result', (winner, loser) => {
+  socket.on('result', async (winner, loser) => {
     console.log('게임결과_소켓 winner:', winner);
     console.log('게임결과_소켓 loser:', loser);
     gameRoom.to(thisgameNum).emit('result', { winner, loser });
