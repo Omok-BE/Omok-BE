@@ -190,6 +190,7 @@ waitingRoom.on('connection', (socket) => {
   // 관전자로 변경시 정보 업데이트_210315
   socket.on('changeToObserver', async (data) => {
     const { roomNum, previousTeam, wantTeam } = data;
+    console.log(roomNum, previousTeam, wantTeam)
     if (previousTeam.includes('Observer')) {
       if (wantTeam === 'blackObserver') {
         await Rooms.updateOne(
