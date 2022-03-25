@@ -39,6 +39,7 @@ waitingRoom.on('connection', (socket) => {
     const role = `${roomNum}player`;
     socket.join(roomNum);
     socket.join(role);
+    console.log("체크", roomNum, state, role)
     const playerCnt = waitingRoomCount(role);
     if (state === 'blackPlayer') {
       await Rooms.updateMany(
@@ -52,6 +53,7 @@ waitingRoom.on('connection', (socket) => {
       );
     }
     const userInfos = await findUserInfos(roomNum);
+    console.log(userInfos)
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
   });
 
