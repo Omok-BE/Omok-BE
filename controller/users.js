@@ -22,14 +22,14 @@ const signup = async (req, res) => {
       });
       return;
     }
-    // if(!profileImage){
-    //     res.status(400).send({
-    //         ok: 'false',
-    //         errorMessage: '프로필을 선택하지 않았습니다.'
-    //     });
-    // }else {
-    //     profileUrl = 'http://15.165.158.25/images/'+ profileImage + '.svg'
-    // }
+    if(!profileImage){
+        res.status(400).send({
+            ok: 'false',
+            errorMessage: '프로필을 선택하지 않았습니다.'
+        });
+    }else {
+        profileUrl = 'http://15.165.158.25/images/'+ profileImage + '.svg'
+    }
 
 
     const encodedPass = crypto
@@ -43,7 +43,7 @@ const signup = async (req, res) => {
       score: [{ win: 0 }, { lose: 0 }],
       point: 1000,
       state: 'offline',
-    //   profileImage: profileUrl,
+      profileImage: profileUrl,
     });
     await user.save();
 
