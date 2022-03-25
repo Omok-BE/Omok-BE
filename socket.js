@@ -33,7 +33,7 @@ waitingRoom.on('connection', (socket) => {
 
   //플레이어로 입장시 정보 업데이트_210315
   socket.on('enterRoomPlayer', async (data) => {
-    console.log(data)
+    console.log("데이터", data)
     const { roomNum, state } = data;
     roomNumber = roomNum;
     const role = `${roomNum}player`;
