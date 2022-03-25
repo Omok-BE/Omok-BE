@@ -45,7 +45,8 @@ waitingRoom.on('connection', (socket) => {
       await Rooms.updateMany(
         { roomNum },
         { $set: { playerCnt, blackTeamPlayer: socket.nickname } }
-      );
+        );
+        console.log("블랙플레이어들어옴")
     } else {
       await Rooms.updateMany(
         { roomNum },
@@ -53,7 +54,7 @@ waitingRoom.on('connection', (socket) => {
       );
     }
     const userInfos = await findUserInfos(roomNum);
-    console.log(userInfos)
+    console.log(userInfos, userInfos.blackPlayerInfo)
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
   });
 
