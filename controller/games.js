@@ -433,8 +433,8 @@ const gameDelete = async (req, res) => {
     }
 
     //게임중간에 나간 유저 state 'online'변경
-    const afterGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
-    console.log("400,afterGameUserState:", afterGameUserState)
+    // const outGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
+    // console.log("400,afterGameUserState:", outGameUserState)
     
     res.status(200).json({
         ok: true,
