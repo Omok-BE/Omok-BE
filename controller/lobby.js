@@ -58,15 +58,6 @@ const createRoom = async (req, res) => {
   try {
     const { roomName, id } = req.body;
 
-    const newRoom = new Room({
-      roomName: roomName,
-      playerCnt: 1,
-      observerCnt: 0,
-      state: 'wait',
-      blackPlayer: id,
-    });
-    await newRoom.save();
-
     await User.updateOne({ id: id }, { $set: { state: 'blackPlayer' } });
     const myInfo = await User.findOne({ id: id });
     const userInfo = {
@@ -75,6 +66,15 @@ const createRoom = async (req, res) => {
       score: myInfo.score,
       point: myInfo.point,
     };
+
+    const newRoom = new Room({
+      roomName: roomName,
+      playerCnt: 1,
+      observerCnt: 0,
+      state: 'wait',
+      blackPlayer: id,
+    });
+    await newRoom.save();
 
     const roomNum = await newRoom.roomNum;
     res.send({ roomNum, userInfo });
@@ -103,37 +103,45 @@ const postJoinRoom = async (req, res) => {
   const { roomNum, id, state } = req.body;
 
   try {
-    const user = await User.updateOne({ id: id }, { $set: { state: state } });
-    const postuser = await User.findOne({ id: id });
-    const userInfo = {
-      id: postuser.id,
-      state: postuser.state,
-      score: postuser.score,
-      point: postuser.point,
-    };
 
-    // Roomdb에도 state에 맞는 값으로 정보 변경하기
-    if (state === 'blackPlayer') {
-      await Room.updateOne({ roomNum }, { $set: { blackTeamPlayer: id } });
-      await Room.updateOne({ roomNum }, { $inc: { playerCnt: 1 } });
-    } else if (state === 'whitePlayer') {
-      await Room.updateOne({ roomNum }, { $set: { whiteTeamPlayer: id } });
-      await Room.updateOne({ roomNum }, { $inc: { playerCnt: 1 } });
-    } else if (state === 'blackObserver') {
-      await Room.updateOne(
-        { roomNum },
-        { $addToSet: { blackTeamObserver: id } }
-      );
-      await Room.updateOne({ roomNum }, { $inc: { observerCnt: 1 } });
-    } else if (state === 'whiteObserver') {
-      await Room.updateOne(
-        { roomNum },
-        { $addToSet: { whiteTeamObserver: id } }
-      );
-      await Room.updateOne({ roomNum }, { $inc: { observerCnt: 1 } });
+    const roomState = await Room.findOne({ roomNum }, { state: true })
+    if(roomState.state === 'ingame'){
+      res.status(400).send({
+        message: '게임이 시작된 방입니다.',
+      })
+    }else {
+      const user = await User.updateOne({ id: id }, { $set: { state: state } });
+      const postuser = await User.findOne({ id: id });
+      const userInfo = {
+        id: postuser.id,
+        state: postuser.state,
+        score: postuser.score,
+        point: postuser.point,
+      };
+
+      // Roomdb에도 state에 맞는 값으로 정보 변경하기
+      // if (state === 'blackPlayer') {
+      //   await Room.updateOne({ roomNum }, { $set: { blackTeamPlayer: id } });
+      //   await Room.updateOne({ roomNum }, { $inc: { playerCnt: 1 } });
+      // } else if (state === 'whitePlayer') {
+      //   await Room.updateOne({ roomNum }, { $set: { whiteTeamPlayer: id } });
+      //   await Room.updateOne({ roomNum }, { $inc: { playerCnt: 1 } });
+      // } else if (state === 'blackObserver') {
+      //   await Room.updateOne(
+      //     { roomNum },
+      //     { $addToSet: { blackTeamObserver: id } }
+      //   );
+      //   await Room.updateOne({ roomNum }, { $inc: { observerCnt: 1 } });
+      // } else if (state === 'whiteObserver') {
+      //   await Room.updateOne(
+      //     { roomNum },
+      //     { $addToSet: { whiteTeamObserver: id } }
+      //   );
+      //   await Room.updateOne({ roomNum }, { $inc: { observerCnt: 1 } });
+      // }
+      res.status(201).send(userInfo);
     }
-
-    res.status(201).send(userInfo);
+    
   } catch (err) {
     console.log(err);
     res.status(400).send({
