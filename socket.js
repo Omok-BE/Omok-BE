@@ -590,7 +590,7 @@ gameRoom.on('connect', async (socket) => {
   socket.on('omog', async (data, state, gameNum) => {
     const findBoard = await Boards.findOne({gameNum});
     let bboard = findBoard.board;
-    const count = findBoard.count;
+    let count = findBoard.count;
 
     if(count % 2 == 0) {
       if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
@@ -627,7 +627,7 @@ gameRoom.on('connect', async (socket) => {
   socket.on("pointerOmog", async (data, gameNum) => {
     const findBoard = await Boards.findOne({gameNum});
     let bboard = findBoard.board;
-    const count = findBoard.count;
+    let count = findBoard.count;
 
     if (pointer){
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
