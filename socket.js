@@ -662,10 +662,11 @@ gameRoom.on('connect', async (socket) => {
       }
       const state = outPlayer.state
       console.log("664,겜방소켓state:",state)
-      console.log("665,겜방소켓outPlayer:",outPlayer)
+      console.log("655,소켓disconnecting,inGameIds:",inGameIds) 
+      console.log("666,겜방소켓outPlayer:",outPlayer)
       gameRoom.to(thisgameNum).emit("byebye",state)
 
-      
+
 
       gameRoom.to(thisgameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
@@ -673,10 +674,10 @@ gameRoom.on('connect', async (socket) => {
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne({ roomNum:thisgameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-      console.log('게임방 퇴장 소켓 room ', socket.rooms);
-      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
       console.log('게임방 퇴장 소켓 id', socket.id);
       console.log('게임방 퇴장 소켓.nickname', socket.nickname);
+      console.log('게임방 퇴장 소켓 room ', socket.rooms);
+      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
     } catch (error) {
       console.log(error);
     }
@@ -688,15 +689,15 @@ gameRoom.on('connect', async (socket) => {
     console.log('게임결과_소켓 loser:', loser);
     gameRoom.to(thisgameNum).emit('result', { winner, loser });
     
-    //게임결과 후 게임방, 대기방 삭제
-    const existGame = await Games.findOne({ gameNum:thisgameNum });
-    if (existGame){
-      console.log("$$$$$$$$$$")
-      const deleteRoomNum = await Rooms.deleteOne({ roomNum:thisgameNum });
-      const deleteGameNum = await Games.deleteOne({ gameNum:thisgameNum });
-      console.log("690,소켓 게임결과창,deleteRoomNum",deleteRoomNum)
-      console.log("691,소켓 게임결과창,deleteGameNum",deleteGameNum)
-    }
+    // //게임결과 후 게임방, 대기방 삭제
+    // const existGame = await Games.findOne({ gameNum:thisgameNum });
+    // if (existGame){
+    //   console.log("$$$$$$$$$$")
+    //   const deleteRoomNum = await Rooms.deleteOne({ roomNum:thisgameNum });
+    //   const deleteGameNum = await Games.deleteOne({ gameNum:thisgameNum });
+    //   console.log("690,소켓 게임결과창,deleteRoomNum",deleteRoomNum)
+    //   console.log("691,소켓 게임결과창,deleteGameNum",deleteGameNum)
+    // }
     
     // //게임결과 후 결과창 '나가기'버튼 클릭 유저 state 'online'변경
     // const afterGameUserState = await Users.updateOne({ id:socket.id }, { $set: { state: 'online' }}); 

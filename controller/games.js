@@ -337,8 +337,6 @@ const gameDelete = async (req, res) => {
   try {
     const { gameNum } = req.params;
     console.log("API,gameDelete,req.params:",req.params)
-    console.log("API,gameDelete,gameNum:",gameNum)
-    console.log("API,gameDelete,gameNum타입:",typeof(gameNum))
 
     //게임방내 유저 state별 정보 id,score,point,state
     const gameInfo = await gameUserInfo(gameNum);
@@ -385,11 +383,12 @@ const gameDelete = async (req, res) => {
 
     
     const existGame = await Games.findOne({ gameNum });
+    console.log("388,delete,existGame:",existGame)
     if (existGame){
       const deleteRoomNum = await Rooms.deleteOne({ roomNum: Number(gameNum) });
       const deleteGameNum = await Games.deleteOne({ gameNum: Number(gameNum) });
-      console.log("428,deleteRoomNum",deleteRoomNum)
-      console.log("429,deleteGameNum",deleteGameNum)
+      console.log("390,deleteRoomNum",deleteRoomNum)
+      console.log("391,deleteGameNum",deleteGameNum)
     }
 
     // ↓ 여기에 state업뎃문 위치시키면 결과창 화면에서 나가기버튼 안먹힘!!
@@ -399,14 +398,14 @@ const gameDelete = async (req, res) => {
     
     res.status(200).json({
         ok: true,
-        message: '게임방에서 나가기 성공!',
+        message: '대기방, 게임방 삭제 성공!',
     });
   } catch (err) {
     // console.log(`API_방에서 나가기 에러: ${err}`);
-    console.err("API_방에서 나가기 에러:",err)
+    console.err("API_gameDelete 방삭제 에러:",err)
     res.status(400).json({
       ok: false,
-      errorMessage: '게임방에서 나가기 실패',
+      errorMessage: '대기방, 게임방 삭제 실패',
     });
   }
 };
