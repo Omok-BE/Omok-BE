@@ -183,7 +183,7 @@ const gameFinishShow = async (req, res) => {
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
      
-    console.log("269,show,gameInfo[0]:",gameInfo); 
+    console.log("269,show,gameInfo[0]:",gameInfo[0]); 
     // console.log("280,show,gameInfo[0].bo:",gameInfo[0].blackTeamObserver); // [{}]
     // console.log("281,show,gameInfo[0].bo[0]:",gameInfo[0].blackTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
     // console.log("282,show,gameInfo[0].wo[0]:",gameInfo[0].whiteTeamObserver[0]);  //{ id:"1",score:[{win:1},{lose:1}], point:0 ...}
