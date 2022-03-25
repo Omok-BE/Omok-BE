@@ -33,7 +33,6 @@ waitingRoom.on('connection', (socket) => {
 
   //플레이어로 입장시 정보 업데이트_210315
   socket.on('enterRoomPlayer', async (data) => {
-    console.log("데이터", data)
     const { roomNum, state } = data;
     roomNumber = roomNum;
     const role = `${roomNum}player`;
@@ -190,7 +189,6 @@ waitingRoom.on('connection', (socket) => {
   // 관전자로 변경시 정보 업데이트_210315
   socket.on('changeToObserver', async (data) => {
     const { roomNum, previousTeam, wantTeam } = data;
-    console.log(roomNum, previousTeam, wantTeam)
     if (previousTeam.includes('Observer')) {
       if (wantTeam === 'blackObserver') {
         await Rooms.updateOne(
