@@ -40,6 +40,7 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     console.log("체크", roomNum, state, role)
+    console.log("체크", socket.rooms)
     const playerCnt = waitingRoomCount(role);
     if (state === 'blackPlayer') {
       await Rooms.updateMany(
@@ -48,15 +49,18 @@ waitingRoom.on('connection', (socket) => {
         );
         console.log(socket.nickname)
         console.log("블랙플레이어들어옴")
+        console.log("체크", socket.rooms)
     } else {
       await Rooms.updateMany(
         { roomNum },
         { $set: { playerCnt, whiteTeamPlayer: socket.nickname } }
       );
     }
+    console.log("체크", socket.rooms)
     const userInfos = await findUserInfos(roomNum);
     console.log(userInfos, userInfos.blackPlayerInfo)
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
+    console.log("체크", socket.rooms)
   });
 
   //관전자로 입장시 정보 업데이트_210315
