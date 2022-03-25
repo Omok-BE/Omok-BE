@@ -587,7 +587,7 @@ gameRoom.on('connect', async (socket) => {
   }); 
   
   //오목 게임 좌표값을 받아 좌표값에 해당하는 값을
-  socket.on('omog', (data, state, gameNum) => {
+  socket.on('omog', async (data, state, gameNum) => {
     const findBoard = await Boards.findOne({gameNum});
     let bboard = findBoard.board;
     const count = findBoard.count;
@@ -624,7 +624,7 @@ gameRoom.on('connect', async (socket) => {
     }
   });
   //Pointer 훈수 실질적으로 오목두는 부분
-  socket.on("pointerOmog", (data, gameNum) => {
+  socket.on("pointerOmog", async (data, gameNum) => {
     const findBoard = await Boards.findOne({gameNum});
     let bboard = findBoard.board;
     const count = findBoard.count;
