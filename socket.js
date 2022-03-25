@@ -682,10 +682,10 @@ gameRoom.on('connect', async (socket) => {
     console.log('게임결과_소켓 winner:', winner);
     console.log('게임결과_소켓 loser:', loser);
     gameRoom.to(thisgameNum).emit('result', { winner, loser });
-
-    // //게임후 유저 state 'online'변경
-    // const afterGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
-    // console.log("400,afterGameUserState:", afterGameUserState)
+    
+    //게임후 결과창 '나가기'버튼 클릭 유저 state 'online'변경
+    const afterGameUserState = await Users.updateOne({ id:socket.id }, { $set: { state: 'online' }}); 
+    console.log("400,afterGameUserState:", afterGameUserState)
   });
 });
 
