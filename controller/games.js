@@ -378,7 +378,7 @@ const gameDelete = async (req, res) => {
     // console.log("376,outPlayer",outPlayer)
     // const state = outPlayer.state
     // console.log("671,겜방소켓state:",state)
-    // console.log("672,겜방소켓outPlayer:",outPlayer)
+    // console.log("672,겜방소켓outPlayer:",outPlayer) 
 
     
     const existGame = await Games.findOne({ gameNum:gameNum });
