@@ -32,7 +32,8 @@ waitingRoom.on('connection', (socket) => {
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   //플레이어로 입장시 정보 업데이트_210315
-  socket.on('enterRoomPlayer', async (roomNum, state) => {
+  socket.on('enterRoomPlayer', async (data) => {
+    const { roomNum, state } = data;
     roomNumber = roomNum;
     const role = `${roomNum}player`;
     socket.join(roomNum);
@@ -54,8 +55,8 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //관전자로 입장시 정보 업데이트_210315
-  socket.on('enterRoomObserver', async (roomNum, state) => {
-    console.log("관전자 입장 state",roomNum, state)
+  socket.on('enterRoomObserver', async (data) => {
+    const { roomNum, state } = data;
     const role = `${roomNum}observer`;
     socket.join(roomNum);
     socket.join(role);
@@ -78,7 +79,8 @@ waitingRoom.on('connection', (socket) => {
   });
 
   // 플레이어로 변경시 정보 업데이트_210315
-  socket.on('changeToPlayer', async (roomNum, previousTeam, wantTeam) => {
+  socket.on('changeToPlayer', async (data) => {
+    const { roomNum, previousTeam, wantTeam } = data;
     if (previousTeam.includes('Player')) {
       if (wantTeam === 'blackPlayer') {
         await Rooms.updateMany(
@@ -185,7 +187,8 @@ waitingRoom.on('connection', (socket) => {
   });
 
   // 관전자로 변경시 정보 업데이트_210315
-  socket.on('changeToObserver', async (roomNum, previousTeam, wantTeam) => {
+  socket.on('changeToObserver', async (data) => {
+    const { roomNum, previousTeam, wantTeam } = data;
     if (previousTeam.includes('Observer')) {
       if (wantTeam === 'blackObserver') {
         await Rooms.updateOne(
@@ -275,9 +278,10 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //대기실 내 채팅_210303
-  socket.on('chat', (roomNum, chat) => {
-    const data = { nickname: socket.nickname, chat };
-    waitingRoom.to(roomNum).emit('chat', data);
+  socket.on('chat', (data) => {
+    const { roomNum, chat } = data;
+    const chatData = { nickname: socket.nickname, chat };
+    waitingRoom.to(roomNum).emit('chat', chatData);
   });
 
   //게임 시작_210315
@@ -360,8 +364,8 @@ async function findUserInfos(roomNum) {
     },
     {
       $project: {
-        blackPlayerInfo: { id: 1, score: 1, point: 1, state: 1 },
-        whitePlayerInfo: { id: 1, score: 1, point: 1, state: 1 },
+        blackPlayerInfo: { id: 1, score: 1, point: 1, state: 1, profileImage: 1 },
+        whitePlayerInfo: { id: 1, score: 1, point: 1, state: 1, profileImage: 1 },
         blackTeamObserver: 1,
         whiteTeamObserver: 1,
         _id: 0,
