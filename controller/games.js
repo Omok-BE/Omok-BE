@@ -234,6 +234,9 @@ const gameFinishShow = async (req, res) => {
           const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                    totalPoint:totalPoint, state:blackO[i].state };
           winObserverArray1.push(winObserver);
+
+          console.log("238,show,win,blackO[i].point", blackO[i].point)
+          // if(isNaN(""))
         }
       }
       console.log("322,show, 이긴블랙옵 winObserverArray1는?", winObserverArray1);
@@ -249,6 +252,8 @@ const gameFinishShow = async (req, res) => {
           const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                    totalPoint:totalPoint, state:whiteO[i].state };
           loseObserverArray1.push(loseObserver);
+          console.log("238,show,lose,whiteO[i].point", whiteO[i].point)
+
         }
       } 
       console.log("337,show, 진화이트옵 loseObserverArray1는?", loseObserverArray1);
@@ -282,6 +287,7 @@ const gameFinishShow = async (req, res) => {
         const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                   totalPoint:totalPoint, state:whiteO[i].state };
         winObserverArray2.push(winObserver);
+        console.log("238,show,win,whiteO[i].point", whiteO[i].point)
         }
       }  
       console.log("370,show, 이긴블랙옵 winObserverArray2는?", winObserverArray2);
@@ -297,6 +303,7 @@ const gameFinishShow = async (req, res) => {
           const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                                   totalPoint:totalPoint, state:blackO[i].state };
           loseObserverArray2.push(loseObserver);
+          console.log("238,show,lose,blackO[i].point", blackO[i].point)
         }
       } 
       console.log("385,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
