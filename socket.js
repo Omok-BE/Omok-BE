@@ -533,6 +533,7 @@ gameRoom.on('connect', async (socket) => {
 
   //game방 Join
   socket.on('joinGame', async (gameNum) => {
+    
     thisgameNum = gameNum;
     console.log(`조인게임방번호:${gameNum}`);
     socket.join(gameNum);
@@ -542,14 +543,14 @@ gameRoom.on('connect', async (socket) => {
   });
 
   //game방 채팅
-  socket.on('chat', (chat) => {
+  socket.on('chat', (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
     console.log('게임방 채팅data:', data);
     gameRoom.to(thisgameNum).emit('chat', data);
   });
 
   //game방 훈수채팅W
-  socket.on('teachingW', async (chat) => {
+  socket.on('teachingW', async (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
     console.log('훈수쳇W소켓닉네임:', socket.nickname);
     console.log('훈수쳇W data:', data);
@@ -560,7 +561,7 @@ gameRoom.on('connect', async (socket) => {
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
   //game방 훈수채팅B
-  socket.on('teachingB', async (chat) => {
+  socket.on('teachingB', async (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
     console.log('훈수쳇B소켓닉네임:', socket.nickname);
     console.log('훈수쳇B data:', data);
@@ -570,7 +571,7 @@ gameRoom.on('connect', async (socket) => {
     await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
   });
   //game방 훈수채팅- 플라잉
-  socket.on('flyingWord', async (chat) => {
+  socket.on('flyingWord', async (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
     console.log('플라잉채팅 닉네임♬♪:', socket.nickname);
     console.log('플라잉채팅 data♬♪:', data);
@@ -583,7 +584,7 @@ gameRoom.on('connect', async (socket) => {
   
 
   //game방 채팅으로 받는부분
-  socket.on("Pointer", (chat) =>{
+  socket.on("Pointer", (chat, gameNum) =>{
     pointer = true;
     const data = {name:socket.nickname, pointer:pointer};
     console.log("Pointer♬♪:",socket.nickname);
