@@ -450,10 +450,10 @@ async function gameUserInfo(gameNum) {
     {
       $project: {
         _id: 0,
-        blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
-        blackTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
-        whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1 },
-        whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1 },
+        blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
+        blackTeamObserver: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
+        whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
+        whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
       },
     },
   ]);
