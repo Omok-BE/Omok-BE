@@ -119,8 +119,8 @@ const gameFinish = async (req, res) => {
       if (resultId === id) {
         //승Player
         const winPScore = await Users.updateOne({ id: resultId }, { $inc: { 'score.0.win': 1 } });  //승 +1
-        const winPPoint =await Users.updateOne({ id: resultId }, { $set: { point: point + 200 } });  //포인트 +150
-        const winPTeachingCnt =await Users.updateOne({ id: resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇을 해도 포인트 계산이 안됨.
+        const winPPoint = await Users.updateOne({ id: resultId }, { $set: { point: point + 200 } });  //포인트 +150
+        const winPTeachingCnt = await Users.updateOne({ id: resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇을 해도 포인트 계산이 안됨.
         // console.log("128,winPScorer계산후:",winPScore)
         // console.log("129,winPPoint계산후:",winPPoint)
         console.log(`API_우승자 score에 1승, point에 +200이 추가되었습니다.`);
@@ -395,9 +395,8 @@ const gameFinishShow = async (req, res) => {
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
     await Users.updateOne({ id:id }, { $set: { teachingCnt: 0 }});
-    //게임후 유저 state 'online'변경
-    const afterGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
-    console.log("400,afterGameUserState:", afterGameUserState)
+    //게임결과 후 유저 state 'online'변경
+    await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
 
     res.status(200).json({
       win,
@@ -416,9 +415,8 @@ const gameFinishShow = async (req, res) => {
 };
 
 
-//게임방에서 play가 나갈때 게임방삭제 --작업중
+//게임중간에 play가 나갈때 게임방 삭제 --작업중
 const gameDelete = async (req, res) => {
-  //순서:먼저 전인원이 겜방에서 대기방으로 이동 후 마지막 플레이어가 겜방 나갈때 방삭제
   try {
     const { gameNum } = req.params;
     console.log("API,gameDelete,req.params:",req.params)
@@ -432,6 +430,7 @@ const gameDelete = async (req, res) => {
       console.log("429,deleteGameNum",deleteGameNum)
     }
 
+    // ↓ 여기에 state업뎃문 위치시키면 결과창 화면에서 나가기버튼 안먹힘!!
     //게임중간에 나간 유저 state 'online'변경
     // const outGameUserState = await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
     // console.log("400,afterGameUserState:", outGameUserState)
