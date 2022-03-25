@@ -339,7 +339,7 @@ const gameDelete = async (req, res) => {
     console.log("API,gameDelete,req.params:",req.params)
 
     //게임방내 유저 state별 정보 id,score,point,state
-    const gameInfo = await gameUserInfo(gameNum);
+    // const gameInfo = await gameUserInfo(gameNum);
 
     // //게임방에서 플레이어가 나갔을 경우
     // //id만 찾기
