@@ -640,37 +640,38 @@ gameRoom.on('connect', async (socket) => {
   socket.on('disconnecting', async () => {
     //game방 퇴장 메시지
     try {
-      gameRoom.to(thisgameNum).emit('bye', socket.id);
-      const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
-      await Users.updateOne({ id: socket.nickname }, { $set: { state: 'online' }}); 
-      // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-      await Rooms.updateOne({ roomNum: thisgameNum }, { $set: { observerCnt } });
-      console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-      console.log('게임방 퇴장 소켓 room ', socket.rooms);
-      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
-      console.log('게임방 퇴장 소켓 id', socket.id);
-      console.log('게임방 퇴장 소켓.nickname', socket.nickname);
-
+      //게임중간에 플레이어가 나갔을 경우
       const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
       if (outPlayer.state === 'blackPlayer'){
         await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
-      } else {
+      } else if (outPlayer.state === 'whitePlayer'){
         await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
       }
       if (outPlayer.state === 'whitePlayer'){
         await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point + 100 } });  //포인트 +100
-      } else {
+      } else if (outPlayer.state === 'blackPlayer'){
         await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
         await Users.updateOne({ id:socket.nickname }, { $set: { point: outPlayer.point - 50 } });  //포인트 -50
       }
-
       const state = outPlayer.state
       console.log("671,겜방소켓state:",state)
       console.log("672,겜방소켓outPlayer:",outPlayer)
       gameRoom.to(thisgameNum).emit("byebye",state)
+
+
+      gameRoom.to(thisgameNum).emit('bye', socket.id);
+      const observerCnt = gameRoomCount(thisgameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
+      await Users.updateOne({ id:socket.nickname }, { $set: { state: 'online' }}); 
+      // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
+      await Rooms.updateOne({ roomNum:thisgameNum }, { $set: { observerCnt } });
+      console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
+      console.log('게임방 퇴장 소켓 room ', socket.rooms);
+      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
+      console.log('게임방 퇴장 소켓 id', socket.id);
+      console.log('게임방 퇴장 소켓.nickname', socket.nickname);
     } catch (error) {
       console.log(error);
     }
