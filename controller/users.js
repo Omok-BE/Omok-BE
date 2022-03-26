@@ -28,7 +28,7 @@ const signup = async (req, res) => {
             errorMessage: '프로필을 선택하지 않았습니다.'
         });
     }else {
-        profileUrl = 'http://15.165.158.25/images/'+ profileImage + '.svg'
+        profileUrl = 'http://13.125.221.178/images/'+ profileImage + '.svg'
     }
 
 
