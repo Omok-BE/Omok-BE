@@ -1,7 +1,7 @@
-const app = require('../app');
-const Users = require('../models/users');
-const Rooms = require('../models/rooms');
-const Boards = require('../models/boards');
+const app = require('./app');
+const Users = require('./models/users');
+const Rooms = require('./models/rooms');
+const Boards = require('./models/boards');
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
