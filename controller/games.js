@@ -218,16 +218,20 @@ const gameFinishShow = async (req, res) => {
     if (result.win === blackP.id) {
       console.log("219,Show,이긴블랙 플레이어는:", result.win)
       //블랙플레이어 승 계산
-      const existBPoint = gameInfo[0].blackTeamPlayer[0].point
-      const winInfo = {id:blackP.id, usePoint:0, getPoint:200, existPoint:existBPoint,
-                                          totalPoint:blackP.point, state:blackP.state };
+      const getBPoint = 200  //우승포인트 
+      const existBPoint = blackP.point  //게임전 포인트
+      const totalBPoint = existBPoint + getBPoint  // 게임후 총 포인트
+      const winInfo = {id:blackP.id, usePoint:0, getPoint: + getBPoint, existPoint:existBPoint ,
+                                          totalPoint:totalBPoint, state:blackP.state };
       winPlayerArray.push(winInfo);    
       console.log("225,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
 
       //화이트플레이어 패 계산
-      const existWPoint = gameInfo[0].whiteTeamPlayer[0].point
-      const loseInfo = {id:whiteP.id, usePoint:0, getPoint:-100, existPoint:existWPoint,
-                                        totalPoint:whiteP.point, state:whiteP.state };
+      const getWPoint = 100  //패배 패널티포인트
+      const existWPoint = whiteP.point  //게임전 포인트
+      const totalWPoint = existWPoint - getWPoint // 게임후 총 포인트
+      const loseInfo = {id:whiteP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint ,
+                                        totalPoint:totalWPoint, state:whiteP.state };
       losePlayerArray.push(loseInfo);
       console.log("232,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
       
@@ -240,7 +244,7 @@ const gameFinishShow = async (req, res) => {
           const getPoint = usePoint * 1 + addPoint; //얻은포인트
           const existPoint = blackO[i].point  //기존포인트
           const totalPoint = blackO[i].point + usePoint + getPoint;  //총포인트
-          const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
+          const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: + getPoint, 
                                 existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
           winObserverArray1.push(winObserver);
           console.log("246,show,win,blackO[i]",blackO[i])  
@@ -259,7 +263,7 @@ const gameFinishShow = async (req, res) => {
           const getPoint = usePoint * 1 - penalty; //얻은포인트
           const existPoint = whiteO[i].point  //기존포인트
           const totalPoint = whiteO[i].point - usePoint - getPoint;  //총포인트
-          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:- getPoint, 
+          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: - getPoint, 
                                  existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
           loseObserverArray1.push(loseObserver);
           console.log("265,show,lose,whiteO[i]",whiteO[i])  
@@ -274,14 +278,20 @@ const gameFinishShow = async (req, res) => {
     if (result.win === whiteP.id) {
       console.log("275,Show,이긴화이트 플레이어는:", result.win)
       //화이트플레이어 승 계산
-      const winInfo = {id:whiteP.id, usePoint:0, getPoint:200, 
-                                      totalPoint:whiteP.point, state:whiteP.state };
+      const getBPoint = 200  //우승포인트 
+      const existBPoint = whiteP.point  //게임전 포인트
+      const totalBPoint = existBPoint + getBPoint  // 게임후 총 포인트
+      const winInfo = {id:whiteP.id, usePoint:0, getPoint: + getBPoint, existPoint:existBPoint ,
+                                          totalPoint:totalBPoint, state:whiteP.state };
       winPlayerArray.push(winInfo);    
       console.log("279,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
 
       //블랙플레이어 패 계산
-      const loseInfo = {id:blackP.id, usePoint:0, getPoint:-100, 
-                                        totalPoint:blackP.point, state:blackP.state };
+      const getWPoint = 100  //패배 패널티포인트
+      const existWPoint = blackP.point  //게임전 포인트
+      const totalWPoint = existWPoint - getWPoint // 게임후 총 포인트
+      const loseInfo = {id:blackP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint ,
+                                        totalPoint:totalWPoint, state:blackP.state };
       losePlayerArray.push(loseInfo);
       console.log("285,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
       
@@ -294,7 +304,7 @@ const gameFinishShow = async (req, res) => {
         const getPoint = usePoint * 1 + addPoint; //얻은포인트
         const existPoint = whiteO[i].point  //기존포인트
         const totalPoint = whiteO[i].point + usePoint + getPoint;  //총포인트
-        const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
+        const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: + getPoint, 
                                       existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
         winObserverArray2.push(winObserver);
         console.log("299,show,win,whiteO[i]",whiteO[i])  
