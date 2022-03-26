@@ -1,4 +1,4 @@
-const { httpServer } = require('./socket');
+const { httpServer } = require('./socket/socket');
 const port = process.env.PORT;
 
 httpServer.listen(port, () => {
