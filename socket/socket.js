@@ -378,6 +378,19 @@ async function findUserInfos(roomNum) {
   return userInfos;
 }
 
+
+
+
+
+//게임방 socket
+const gameRoom = io.of('/game');
+let thisGameNum;
+
+// x,y 좌표를 배열의 index값으로 변환
+let xyToIndex = (x, y) => {
+  return x + y * 19;
+};
+
 function check_33(x,  y, board){
 	let count3 = 0;
 	// 가로체크.
@@ -490,17 +503,6 @@ function check_44( x,  y,board)
 	if (count4 > 1) return 1;
 	else return 0;
 }
-
-
-
-//게임방 socket
-const gameRoom = io.of('/game');
-let thisGameNum;
-
-// x,y 좌표를 배열의 index값으로 변환
-let xyToIndex = (x, y) => {
-  return x + y * 19;
-};
 
 
 //접속자 수
