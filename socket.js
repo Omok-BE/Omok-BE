@@ -39,28 +39,20 @@ waitingRoom.on('connection', (socket) => {
     const role = `${roomNum}player`;
     socket.join(roomNum);
     socket.join(role);
-    console.log("체크", roomNum, state, role)
-    console.log("체크", socket.rooms)
     const playerCnt = waitingRoomCount(role);
     if (state === 'blackPlayer') {
       await Rooms.updateMany(
         { roomNum },
         { $set: { playerCnt, blackTeamPlayer: socket.nickname } }
         );
-        console.log(socket.nickname)
-        console.log("블랙플레이어들어옴")
-        console.log("체크", socket.rooms)
     } else {
       await Rooms.updateMany(
         { roomNum },
         { $set: { playerCnt, whiteTeamPlayer: socket.nickname } }
       );
     }
-    console.log("체크", socket.rooms)
     const userInfos = await findUserInfos(roomNum);
-    console.log(userInfos, userInfos.blackPlayerInfo)
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
-    console.log("체크", socket.rooms)
   });
 
   //관전자로 입장시 정보 업데이트_210315
@@ -320,19 +312,19 @@ waitingRoom.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     let roomNum = roomNumber
     const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
-    if(room.blackTeamPlayer &&  room.blackTeamPlayer === id){
+    if(room.blackTeamPlayer === id){
       await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
     }
-    if(room.whiteTeamPlayer && room.whiteTeamPlayer === id){
+    if(room.whiteTeamPlayer === id){
       await Rooms.updateOne({ roomNum }, { $set: {whiteTeamPlayer: null }})
     }
-    if (room.blackTeamObserver && room.blackTeamObserver.includes(id)) {
+    if (room.blackTeamObserver.includes(id)) {
       await Rooms.updateOne(
         { roomNum },
         { $pull: { blackTeamObserver: id } }
       );
     }
-    if (room.whiteTeamObserver && room.whiteTeamObserver.includes(id)) {
+    if (room.whiteTeamObserver.includes(id)) {
       await Rooms.updateOne(
         { roomNum },
         { $pull: { whiteTeamObserver: id } }
