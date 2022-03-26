@@ -371,8 +371,6 @@ const gameDelete = async (req, res) => {
         message: '대기방, 게임방 삭제 성공!',
     });
   } catch (err) {
-    // console.log(`API_방에서 나가기 에러: ${err}`);
-    console.err("API_gameDelete 방삭제 에러:",err)
     res.status(400).json({
       ok: false,
       errorMessage: '대기방, 게임방 삭제 실패',
