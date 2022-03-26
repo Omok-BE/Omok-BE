@@ -23,8 +23,7 @@ let roomNumber;
 let id;
 
 waitingRoom.on('connection', (socket) => {
-  console.log('connect client on waitingRoom ✅');
-  console.log('대기실 socket.id', socket.id);
+  console.log('connect client on waitingRoom ✅', socket.id);
   socket.onAny((event) => {
     console.log(`Socket Event: ${event}`);
   });
@@ -184,7 +183,6 @@ waitingRoom.on('connection', (socket) => {
     }
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
-    console.log('플레이어로 변경', '이전팀: ', previousTeam, '옮길 팀: ', wantTeam);
   });
 
   // 관전자로 변경시 정보 업데이트_210315
@@ -310,6 +308,7 @@ waitingRoom.on('connection', (socket) => {
 
   //퇴장시 대기실 DB 최신화_210319
   socket.on('disconnect', async () => {
+    try{
     let roomNum = roomNumber
     const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
     if(room.blackTeamPlayer === id){
@@ -332,6 +331,9 @@ waitingRoom.on('connection', (socket) => {
     }
     const userInfos = await findUserInfos(roomNumber);
     waitingRoom.to(roomNumber).emit('bye', id, userInfos);
+  } catch(error) {
+    console.log(error)
+  }
   });
 
 });
