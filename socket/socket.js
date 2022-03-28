@@ -7,7 +7,7 @@ const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomPlayer, enterRoomObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
 const { peopleInRoomUpdate } = require('../lib/roomSocket/roomOutUpdate')
-const { nickname } = require('../lib/socket/socket')
+const SocketEvent = require('../lib/socket/socket')
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
@@ -55,7 +55,7 @@ waitingRoom.on('connection', (socket) => {
 
   //socket nickname 설정
   // socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
-  nickname(socket);
+  SocketEvent.nickname(socket);
 
   //플레이어로 입장시 정보 업데이트
   socket.on('enterRoomPlayer', async (data) => {
