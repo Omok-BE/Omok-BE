@@ -24,6 +24,7 @@ const gameCreate = async (req, res) => {
       blackTeamObserver,
       whiteTeamPlayer,
       whiteTeamObserver,
+      timer: room.timer,
     });
     const board = new Array(Math.pow(19, 2)).fill(-1);
     await Boards.create({
@@ -434,6 +435,7 @@ async function gameUserInfo(gameNum) {
         blackTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt:1, profileImage:1 },
         whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
         whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt:1, profileImage:1 },
+        timer: 1
       },
     },
   ]);
