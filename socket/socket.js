@@ -634,6 +634,8 @@ gameRoom.on('connect', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum) => {
     try{
+      console.log("637,소켓,state",state)
+      console.log("638,소켓,gameNum",gameNum)
       //게임방에서 플레이어가 나갔을 경우
       const inGameIds = await Games.findOne({ gameNum:gameNum }, ({_id:false, 
                                                   blackTeamPlayer:true, blackTeamObserver:true, 
