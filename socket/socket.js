@@ -312,8 +312,7 @@ waitingRoom.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     try{
     let roomNum = roomNumber
-    const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
-    console.log("퇴장시",room)
+    const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 });
     if(room.blackTeamPlayer === id){
       await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
     }
