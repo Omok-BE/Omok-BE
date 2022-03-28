@@ -4,7 +4,7 @@ const User = require('../models/users');
 const lobby = async (req, res) => {
   try {
     await Room.deleteMany({ playerCnt: 0, observerCnt: 0 });
-    await User.updateOne({ id: req.params.id }, {state: 'online'})
+    // await User.updateOne({ id: req.params.id }, {state: 'online'})
     const allRoom = await Room.find();
 
     res.send(allRoom);
