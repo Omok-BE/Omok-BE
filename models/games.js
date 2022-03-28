@@ -7,6 +7,7 @@ const gamesSchema = new mongoose.Schema({
   blackTeamObserver: Array,
   whiteTeamPlayer: String,
   whiteTeamObserver: Array,
+  timer: String,
 });
 
 module.exports = mongoose.model('Games', gamesSchema);
