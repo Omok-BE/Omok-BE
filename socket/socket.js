@@ -634,12 +634,13 @@ gameRoom.on('connect', async (socket) => {
   });
 
   //게임방 나갈떄
-  socket.on('byebye', async (state, gameNum) => {
+  socket.on('byebye', async (state, gameNum, id ) => {
     try{
       console.log("637,소켓,state:",state)
       console.log("638,소켓,gameNum:",gameNum)
+      console.log("638,소켓,id:",id)
 
-      gameRoom.to(gameNum).emit("byebye",state);
+      gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
     } catch(err) {
       console.log("겜방소켓 byebye이벤트 에러:",err);
