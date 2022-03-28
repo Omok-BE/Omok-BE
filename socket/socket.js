@@ -64,6 +64,7 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const observerCnt = waitingRoomCount(role);
+    await Users.updateOne({ id: socket.nickname }, { set: { connect: "Online"}})
     if (state === 'blackObserver') {
       await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       await Rooms.updateOne(
@@ -84,6 +85,7 @@ waitingRoom.on('connection', (socket) => {
   // 플레이어로 변경시 정보 업데이트_210315
   socket.on('changeToPlayer', async (data) => {
     const { roomNum, previousTeam, wantTeam } = data;
+    await Users.updateOne({ id: socket.nickname }, { set: { connect: "Online"}})
     if (previousTeam.includes('Player')) {
       if (wantTeam === 'blackPlayer') {
         await Rooms.updateMany(
@@ -313,6 +315,7 @@ waitingRoom.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     try{
     let roomNum = roomNumber
+    await Users.updateOne({ id }, { set: { connect: "Offline"}})
     const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 });
     if(room.blackTeamPlayer === id){
       await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
@@ -477,10 +480,7 @@ function gameRoomCount(gameNum) {
 //game방 연결
 gameRoom.on('connect', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
-  console.log('겜방연결후socket.id', socket.id);
-
-  //겜방입장후 스테이트값 변경 game디비에서 state찾아서 업뎃
-
+    console.log('겜방연결후socket.id', socket.id);
 
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
