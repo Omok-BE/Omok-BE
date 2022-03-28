@@ -18,7 +18,7 @@ const lobby = async (req, res) => {
 // 로비에서 offline제외 유저리스트
 const userList = async (req, res) => {
   try {
-    const allUser = await User.find({ state: { $ne: 'offline' } });
+    const allUser = await User.find({ connect: { $ne: 'offline' } });
 
     res.send(allUser);
   } catch (err) {
@@ -311,6 +311,22 @@ const roomNumJoin = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+  try{
+    const { id } = req.body;
+
+    await User.updateOne({ id }, {connect: 'offline'});
+    res.status(201).send({
+      ok: 'ok',
+    })
+  }catch(err){
+    console.log(err)
+    res.status(401).send({
+      ok: 'false',
+    })
+  }
+}
+
 module.exports = {
   lobby,
   userList,
@@ -322,4 +338,5 @@ module.exports = {
   fastPlayer,
   fastObserver,
   roomNumJoin,
+  logout
 };

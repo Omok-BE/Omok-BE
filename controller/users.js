@@ -43,6 +43,7 @@ const signup = async (req, res) => {
       score: [{ win: 0 }, { lose: 0 }],
       point: 1000,
       state: 'offline',
+      connect: 'offline',
       profileImage: profileUrl,
     });
     await user.save();
@@ -77,7 +78,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.TOKENKEY);
     //user state값 online으로 만들어주는거
     if (token) {
-      await User.updateOne({ id: user.id }, { $set: { state: 'online' } });
+      await User.updateOne({ id: user.id }, { $set: { state: 'online' , connect: "online"} });
     }
     res.send({
       token,

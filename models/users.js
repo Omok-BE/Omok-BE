@@ -12,7 +12,8 @@ const usersSchema = new mongoose.Schema({
     type: Number,
     default:0
   },
-  profileImage: String
+  profileImage: String,
+  connect: String,
 });
 
 module.exports = mongoose.model('Users', usersSchema);
