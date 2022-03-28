@@ -4,6 +4,9 @@ const Rooms = require('../models/rooms');
 const Games = require('../models/games');
 const Boards = require('../models/boards');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
+const { enterRoomPlayer, enterRoomObserver } = require('../lib/roomSocket/roomInUpdate')
+const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
+const { peopleInRoomUpdate } = require('../lib/roomSocket/roomOutUpdate')
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
@@ -60,19 +63,25 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const playerCnt = waitingRoomCount(role);
-    if (state === 'blackPlayer') {
-      await Users.updateMany({ id: socket.nickname }, { set: { state: 'blackPlayer', connect: "online" }});
-      await Rooms.updateMany(
-        { roomNum },
-        { $set: { playerCnt, blackTeamPlayer: socket.nickname } }
-        );
-    } else {
-      await Users.updateMany({ id: socket.nickname }, { set: { state: 'whitePlayer', connect: "online" }});
-      await Rooms.updateMany(
-        { roomNum },
-        { $set: { playerCnt, whiteTeamPlayer: socket.nickname } }
-      );
-    }
+    await enterRoomPlayer({
+      id: socket.nickname,
+      roomNum,
+      playerCnt,
+      state
+    });
+    // if (state === 'blackPlayer') {
+    //   await Users.updateMany({ id: socket.nickname }, { set: { state: 'blackPlayer', connect: "inRoom" }});
+    //   await Rooms.updateMany(
+    //     { roomNum },
+    //     { $set: { playerCnt, blackTeamPlayer: socket.nickname } }
+    //     );
+    // } else {
+    //   await Users.updateMany({ id: socket.nickname }, { set: { state: 'whitePlayer', connect: "inRoom" }});
+    //   await Rooms.updateMany(
+    //     { roomNum },
+    //     { $set: { playerCnt, whiteTeamPlayer: socket.nickname } }
+    //   );
+    // }
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
   });
@@ -85,21 +94,27 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const observerCnt = waitingRoomCount(role);
-    if (state === 'blackObserver') {
-      await Users.updateMany({ id: socket.nickname }, { set: { state: 'blackObserver', connect: "online" }});
-      await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
-      await Rooms.updateOne(
-        { roomNum },
-        { $addToSet: { blackTeamObserver: socket.nickname } }
-      );
-    } else {
-      await Users.updateMany({ id: socket.nickname }, { set: { state: 'whiteObserver', connect: "online" }});
-      await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
-      await Rooms.updateOne(
-        { roomNum },
-        { $addToSet: { whiteTeamObserver: socket.nickname } }
-      );
-    }
+    await enterRoomObserver({
+      id: socket.nickname,
+      roomNum,
+      observerCnt,
+      state
+    });
+    // if (state === 'blackObserver') {
+    //   await Users.updateMany({ id: socket.nickname }, { set: { state: 'blackObserver', connect: "inRoom" }});
+    //   await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
+    //   await Rooms.updateOne(
+    //     { roomNum },
+    //     { $addToSet: { blackTeamObserver: socket.nickname } }
+    //   );
+    // } else {
+    //   await Users.updateMany({ id: socket.nickname }, { set: { state: 'whiteObserver', connect: "inRoom" }});
+    //   await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
+    //   await Rooms.updateOne(
+    //     { roomNum },
+    //     { $addToSet: { whiteTeamObserver: socket.nickname } }
+    //   );
+    // }
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
   });
@@ -108,104 +123,118 @@ waitingRoom.on('connection', (socket) => {
   socket.on('changeToPlayer', async (data) => {
     const { roomNum, previousTeam, wantTeam } = data;
     if (previousTeam.includes('Player')) {
-      if (wantTeam === 'blackPlayer') {
-        await Rooms.updateMany(
-          { roomNum },
-          { $set: { blackTeamPlayer: socket.nickname, whiteTeamPlayer: null } }
-        );
-        await Users.updateOne(
-          { id: socket.nickname},
-          { $set: { state: 'blackPlayer' } }
-        );
-      } else {
-        await Rooms.updateMany(
-          { roomNum },
-          { $set: { blackTeamPlayer: null, whiteTeamPlayer: socket.nickname } }
-        );
-        await Users.updateOne(
-          { id: socket.nickname},
-          { $set: { state: 'whitePlayer' } }
-        );
-      }
+      await ToPlayerFromPlayer({
+        id: socket.nickname,
+        roomNum,
+        previousTeam,
+        wantTeam
+      })
+      // if (wantTeam === 'blackPlayer') {
+      //   await Rooms.updateMany(
+      //     { roomNum },
+      //     { $set: { blackTeamPlayer: socket.nickname, whiteTeamPlayer: null } }
+      //   );
+      //   await Users.updateOne(
+      //     { id: socket.nickname},
+      //     { $set: { state: 'blackPlayer' } }
+      //   );
+      // } else {
+      //   await Rooms.updateMany(
+      //     { roomNum },
+      //     { $set: { blackTeamPlayer: null, whiteTeamPlayer: socket.nickname } }
+      //   );
+      //   await Users.updateOne(
+      //     { id: socket.nickname},
+      //     { $set: { state: 'whitePlayer' } }
+      //   );
+      // }
     } else {
       socket.leave(`${roomNum}observer`);
       socket.join(`${roomNum}player`);
       const playerCnt = waitingRoomCount(`${roomNum}player`);
-      let observerCnt = waitingRoomCount(`${roomNum}observer`);
-      if(!observerCnt) { observerCnt = 0}
-      if (previousTeam === 'blackObserver') {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { blackTeamObserver: socket.nickname } }
-        );
-        if (wantTeam === 'blackPlayer') {
-          await Rooms.updateMany(
-            { roomNum },
-            {
-              $set: {
-                blackTeamPlayer: socket.nickname,
-                playerCnt,
-                observerCnt,
-              },
-            }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'blackPlayer' } }
-          );
-        } else {
-          await Rooms.updateMany(
-            { roomNum },
-            {
-              $set: {
-                whiteTeamPlayer: socket.nickname,
-                playerCnt,
-                observerCnt,
-              },
-            }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'whitePlayer' } }
-          );
-        }
-      } else {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { whiteTeamObserver: socket.nickname } }
-        );
-        if (wantTeam === 'blackPlayer') {
-          await Rooms.updateMany(
-            { roomNum },
-            {
-              $set: {
-                blackTeamPlayer: socket.nickname,
-                playerCnt,
-                observerCnt,
-              },
-            }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'blackPlayer' } }
-          );
-        } else {
-          await Rooms.updateMany(
-            { roomNum },
-            {
-              $set: {
-                whiteTeamPlayer: socket.nickname,
-                playerCnt,
-                observerCnt,
-              },
-            }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'whitePlayer' } }
-          );
-        }
-      }
+      const observerCnt = waitingRoomCount(`${roomNum}observer`);
+      await ToPlayerFromObserver({
+        id: socket.nickname,
+        roomNum,
+        playerCnt,
+        observerCnt,
+        previousTeam,
+        wantTeam,
+      });
+      // if(!observerCnt) { observerCnt = 0}
+      // if (previousTeam === 'blackObserver') {
+      //   await Rooms.updateOne(
+      //     { roomNum },
+      //     { $pull: { blackTeamObserver: socket.nickname } }
+      //   );
+      //   if (wantTeam === 'blackPlayer') {
+      //     await Rooms.updateMany(
+      //       { roomNum },
+      //       {
+      //         $set: {
+      //           blackTeamPlayer: socket.nickname,
+      //           playerCnt,
+      //           observerCnt,
+      //         },
+      //       }
+      //     );
+      //     await Users.updateOne(
+      //       { id: socket.nickname},
+      //       { $set: { state: 'blackPlayer' } }
+      //     );
+      //   } else {
+      //     await Rooms.updateMany(
+      //       { roomNum },
+      //       {
+      //         $set: {
+      //           whiteTeamPlayer: socket.nickname,
+      //           playerCnt,
+      //           observerCnt,
+      //         },
+      //       }
+      //     );
+      //     await Users.updateOne(
+      //       { id: socket.nickname},
+      //       { $set: { state: 'whitePlayer' } }
+      //     );
+      //   }
+      // } else {
+      //   await Rooms.updateOne(
+      //     { roomNum },
+      //     { $pull: { whiteTeamObserver: socket.nickname } }
+      //   );
+      //   if (wantTeam === 'blackPlayer') {
+      //     await Rooms.updateMany(
+      //       { roomNum },
+      //       {
+      //         $set: {
+      //           blackTeamPlayer: socket.nickname,
+      //           playerCnt,
+      //           observerCnt,
+      //         },
+      //       }
+      //     );
+      //     await Users.updateOne(
+      //       { id: socket.nickname},
+      //       { $set: { state: 'blackPlayer' } }
+      //     );
+      //   } else {
+      //     await Rooms.updateMany(
+      //       { roomNum },
+      //       {
+      //         $set: {
+      //           whiteTeamPlayer: socket.nickname,
+      //           playerCnt,
+      //           observerCnt,
+      //         },
+      //       }
+      //     );
+      //     await Users.updateOne(
+      //       { id: socket.nickname},
+      //       { $set: { state: 'whitePlayer' } }
+      //     );
+      //   }
+      // }
     }
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
@@ -214,90 +243,113 @@ waitingRoom.on('connection', (socket) => {
   // 관전자로 변경시 정보 업데이트_210315
   socket.on('changeToObserver', async (data) => {
     const { roomNum, previousTeam, wantTeam } = data;
-    if (previousTeam.includes('Observer')) {
-      if (wantTeam === 'blackObserver') {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { whiteTeamObserver: socket.nickname } }
-        );
-        await Rooms.updateOne(
-          { roomNum },
-          { $addToSet: { blackTeamObserver: socket.nickname } }
-        );
-        await Users.updateOne(
-          { id: socket.nickname},
-          { $set: { state: 'blackObserver' } }
-        );
-      } else {
-        await Rooms.updateOne(
-          { roomNum },
-          { $pull: { blackTeamObserver: socket.nickname } }
-        );
-        await Rooms.updateOne(
-          { roomNum },
-          { $addToSet: { whiteTeamObserver: socket.nickname } }
-        );
-        await Users.updateOne(
-          { id: socket.nickname},
-          { $set: { state: 'whiteObserver' } }
-        );
-      }
-    } else {
+
+    if(previousTeam.includes('Player')){
       socket.leave(`${roomNum}player`);
       socket.join(`${roomNum}observer`);
-      let playerCnt = waitingRoomCount(`${roomNum}player`);
-      if(!playerCnt) { playerCnt = 0}
+      const playerCnt = waitingRoomCount(`${roomNum}player`);
       const observerCnt = waitingRoomCount(`${roomNum}observer`);
-      if (previousTeam === 'blackPlayer') {
-        await Rooms.updateMany(
-          { roomNum },
-          { $set: { blackTeamPlayer: null, playerCnt, observerCnt } }
-        );
-        if (wantTeam === 'blackObserver') {
-          await Rooms.updateOne(
-            { roomNum },
-            { $addToSet: { blackTeamObserver: socket.nickname } }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'blackObserver' } }
-          );
-        } else {
-          await Rooms.updateOne(
-            { roomNum },
-            { $addToSet: { whiteTeamObserver: socket.nickname } }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'whiteObserver' } }
-          );
-        }
-      } else {
-        await Rooms.updateMany(
-          { roomNum },
-          { $set: { whiteTeamPlayer: null, playerCnt, observerCnt } }
-        );
-        if (wantTeam === 'blackObserver') {
-          await Rooms.updateOne(
-            { roomNum },
-            { $addToSet: { blackTeamObserver: socket.nickname } }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'blackObserver' } }
-          );
-        } else {
-          await Rooms.updateOne(
-            { roomNum },
-            { $addToSet: { whiteTeamObserver: socket.nickname } }
-          );
-          await Users.updateOne(
-            { id: socket.nickname},
-            { $set: { state: 'whiteObserver' } }
-          );
-        }
-      }
-    }
+      await ToObserverFromPlayer({
+        id: socket.nickname,
+        roomNum,
+        playerCnt,
+        observerCnt,
+        previousTeam,
+        wantTeam
+      })
+    } else {
+      await ToObserverFromObserver({
+        id: socket.nickname,
+        roomNum,
+        previousTeam,
+        wantTeam
+      })
+    };
+
+    // if (previousTeam.includes('Observer')) {
+    //   if (wantTeam === 'blackObserver') {
+    //     await Rooms.updateOne(
+    //       { roomNum },
+    //       { $pull: { whiteTeamObserver: socket.nickname } }
+    //     );
+    //     await Rooms.updateOne(
+    //       { roomNum },
+    //       { $addToSet: { blackTeamObserver: socket.nickname } }
+    //     );
+    //     await Users.updateOne(
+    //       { id: socket.nickname},
+    //       { $set: { state: 'blackObserver' } }
+    //     );
+    //   } else {
+    //     await Rooms.updateOne(
+    //       { roomNum },
+    //       { $pull: { blackTeamObserver: socket.nickname } }
+    //     );
+    //     await Rooms.updateOne(
+    //       { roomNum },
+    //       { $addToSet: { whiteTeamObserver: socket.nickname } }
+    //     );
+    //     await Users.updateOne(
+    //       { id: socket.nickname},
+    //       { $set: { state: 'whiteObserver' } }
+    //     );
+    //   }
+    // } else {
+    //   socket.leave(`${roomNum}player`);
+    //   socket.join(`${roomNum}observer`);
+    //   let playerCnt = waitingRoomCount(`${roomNum}player`);
+    //   if(!playerCnt) { playerCnt = 0}
+    //   const observerCnt = waitingRoomCount(`${roomNum}observer`);
+    //   if (previousTeam === 'blackPlayer') {
+    //     await Rooms.updateMany(
+    //       { roomNum },
+    //       { $set: { blackTeamPlayer: null, playerCnt, observerCnt } }
+    //     );
+    //     if (wantTeam === 'blackObserver') {
+    //       await Rooms.updateOne(
+    //         { roomNum },
+    //         { $addToSet: { blackTeamObserver: socket.nickname } }
+    //       );
+    //       await Users.updateOne(
+    //         { id: socket.nickname},
+    //         { $set: { state: 'blackObserver' } }
+    //       );
+    //     } else {
+    //       await Rooms.updateOne(
+    //         { roomNum },
+    //         { $addToSet: { whiteTeamObserver: socket.nickname } }
+    //       );
+    //       await Users.updateOne(
+    //         { id: socket.nickname},
+    //         { $set: { state: 'whiteObserver' } }
+    //       );
+    //     }
+    //   } else {
+    //     await Rooms.updateMany(
+    //       { roomNum },
+    //       { $set: { whiteTeamPlayer: null, playerCnt, observerCnt } }
+    //     );
+    //     if (wantTeam === 'blackObserver') {
+    //       await Rooms.updateOne(
+    //         { roomNum },
+    //         { $addToSet: { blackTeamObserver: socket.nickname } }
+    //       );
+    //       await Users.updateOne(
+    //         { id: socket.nickname},
+    //         { $set: { state: 'blackObserver' } }
+    //       );
+    //     } else {
+    //       await Rooms.updateOne(
+    //         { roomNum },
+    //         { $addToSet: { whiteTeamObserver: socket.nickname } }
+    //       );
+    //       await Users.updateOne(
+    //         { id: socket.nickname},
+    //         { $set: { state: 'whiteObserver' } }
+    //       );
+    //     }
+    //   }
+    // }
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
   });
@@ -335,29 +387,33 @@ waitingRoom.on('connection', (socket) => {
   //퇴장시 대기실 DB 최신화_210319
   socket.on('disconnect', async () => {
     try{
-    let roomNum = roomNumber
-    await Users.updateOne({ id }, { set: { connect: "Offline"}})
-    const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 });
-    if(room.blackTeamPlayer === id){
-      await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
-    }
-    if(room.whiteTeamPlayer === id){
-      await Rooms.updateOne({ roomNum }, { $set: {whiteTeamPlayer: null }})
-    }
-    if (room.blackTeamObserver.includes(id)) {
-      await Rooms.updateOne(
-        { roomNum },
-        { $pull: { blackTeamObserver: id } }
-      );
-    }
-    if (room.whiteTeamObserver.includes(id)) {
-      await Rooms.updateOne(
-        { roomNum },
-        { $pull: { whiteTeamObserver: id } }
-      );
-    }
-    const userInfos = await findUserInfos(roomNumber);
-    waitingRoom.to(roomNumber).emit('bye', id, userInfos);
+
+    await peopleInRoomUpdate({
+      id,
+      roomNum: roomNumber
+    });
+    // await Users.updateOne({ id }, { set: { connect: "offline"}})
+    // const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 });
+    // if(room.blackTeamPlayer === id){
+    //   await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
+    // }
+    // if(room.whiteTeamPlayer === id){
+    //   await Rooms.updateOne({ roomNum }, { $set: {whiteTeamPlayer: null }})
+    // }
+    // if (room.blackTeamObserver.includes(id)) {
+    //   await Rooms.updateOne(
+    //     { roomNum },
+    //     { $pull: { blackTeamObserver: id } }
+    //   );
+    // }
+    // if (room.whiteTeamObserver.includes(id)) {
+    //   await Rooms.updateOne(
+    //     { roomNum },
+    //     { $pull: { whiteTeamObserver: id } }
+    //   );
+    // }
+    const userInfos = await findUserInfos(roomNum);
+    waitingRoom.to(roomNum).emit('bye', id, userInfos);
   } catch(error) {
     console.log(error)
   }
