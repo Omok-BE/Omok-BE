@@ -55,7 +55,7 @@ waitingRoom.on('connection', (socket) => {
 
   //socket nickname 설정
   // socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
-  SocketEvent.nickname(socket);
+  SocketEvent.nicknameEvent(socket);
 
   //플레이어로 입장시 정보 업데이트
   socket.on('enterRoomPlayer', async (data) => {
