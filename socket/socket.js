@@ -284,7 +284,7 @@ waitingRoom.on('connection', (socket) => {
     const chatData = { nickname: socket.nickname, chat };
     console.log("emitchat",chatData)
     console.log(socket.rooms)
-    console.log(waitingRoom.rooms)
+    console.log(waitingRoom.adapter.rooms)
     waitingRoom.to(roomNum).emit('chat', chatData);
   });
 
