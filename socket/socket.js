@@ -283,6 +283,8 @@ waitingRoom.on('connection', (socket) => {
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname, chat };
     console.log("emitchat",chatData)
+    console.log(socket.rooms)
+    console.log(waitingRoom.adapter)
     waitingRoom.to(roomNum).emit('chat', chatData);
   });
 
