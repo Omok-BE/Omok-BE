@@ -501,7 +501,7 @@ gameRoom.on('connect', async (socket) => {
     console.log(`조인게임방번호:${gameNum}`);
     socket.join(gameNum);
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('416,game방소켓Join_observerCnt:', observerCnt);
+    console.log('504,game방소켓Join_observerCnt:', observerCnt);
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
@@ -509,7 +509,7 @@ gameRoom.on('connect', async (socket) => {
   socket.on('chat', (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
     console.log('게임방 채팅data:', data);
-    gameRoom.to(gameNum).emit('chat', data);
+    gameRoom.to(gameNum).emit('chat', data, chat.state);
   });
 
   //game방 훈수채팅W
