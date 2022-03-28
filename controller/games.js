@@ -341,7 +341,7 @@ const gameFinishShow = async (req, res) => {
     if(result.win !== blackP.id && id === blackP.id) {  
       console.log(",show,기권패 블랙플레이어id:", id )
       await Users.updateOne({ id:blackP.id }, { $inc: { 'score.1.lose': 1 } }); //  패 +1
-      await Users.updateOne({ id:blackP.id }, { $set: { point: point - 200 } });  //포인트 -200
+      await Users.updateOne({ id:blackP.id }, { $set: { point: blackP.point - 200 } });  //포인트 -200
       console.log(`API_기권패,블랙플레이어"${blackP.id}"에게 1패, -200포인트가 추가되었습니다.`);
       const getOutPlayerPoint = "-200(기권패 포인트)"
       const existBPoint = blackP.point + 200 //기존포인트
@@ -352,7 +352,7 @@ const gameFinishShow = async (req, res) => {
       
       //부전승 화이트플레이어
       await Users.updateOne({ id:whiteP.id }, { $inc: { 'score.0.win': 1 } }); //  승 +1
-      await Users.updateOne({ id:whiteP.id }, { $set: { point: point + 200 } });  //포인트 +200
+      await Users.updateOne({ id:whiteP.id }, { $set: { point: whiteP.point + 200 } });  //포인트 +200
       console.log(`API_부전승,화이트플레이어"${whiteP.id}"에게 1승, +200포인트가 추가되었습니다.`);
       const getLeftPlayerPoint = "200(부전승 포인트)"
       const existWPoint = whiteP.point - 200 //기존포인트
@@ -400,7 +400,7 @@ const gameFinishShow = async (req, res) => {
     if(result.win !== whiteP.id && id === whiteP.id) { 
       console.log(",show,기권패,화이트플레이어id:", id )
       await Users.updateOne({ id:whiteP.id }, { $inc: { 'score.1.lose': 1 } }); //  패 +1
-      await Users.updateOne({ id:whiteP.id }, { $set: { point: point - 200 } });  //포인트 -200
+      await Users.updateOne({ id:whiteP.id }, { $set: { point: whiteP.point - 200 } });  //포인트 -200
       console.log(`API_기권패,화이트플레이어 "${whiteP.id}"에게 1패, -200포인트가 추가되었습니다.`);
       const getOutPlayerPoint = "-200(기권패 포인트)"
       const existBPoint = blackP.point + 200 //기존 포인트
@@ -411,7 +411,7 @@ const gameFinishShow = async (req, res) => {
       
       //부전승 블랙플레이어
       await Users.updateOne({ id:blackP.id }, { $inc: { 'score.0.win': 1 } }); //  승 +1
-      await Users.updateOne({ id:blackP.id }, { $set: { point: point + 200 } });  //포인트 +200
+      await Users.updateOne({ id:blackP.id }, { $set: { point: blackP.point + 200 } });  //포인트 +200
       console.log(`API_부전승,블랙플레이어"${blackP.id}"에게 1승, +200포인트가 추가되었습니다.`);
       const getLeftPlayerPoint = "200(부전승 포인트)"
       const existWPoint = blackP.point - 200 //기존 포인트
