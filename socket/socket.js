@@ -279,8 +279,10 @@ waitingRoom.on('connection', (socket) => {
 
   //대기실 내 채팅_210303
   socket.on('chat', (data) => {
+    console.log("chatdata",data)
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname, chat };
+    console.log("emitchat",chatDate)
     waitingRoom.to(roomNum).emit('chat', chatData);
   });
 
