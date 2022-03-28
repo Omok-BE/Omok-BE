@@ -127,7 +127,6 @@ waitingRoom.on('connection', (socket) => {
       await ToPlayerFromPlayer({
         id: socket.nickname,
         roomNum,
-        previousTeam,
         wantTeam
       })
       // if (wantTeam === 'blackPlayer') {
