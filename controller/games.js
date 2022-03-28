@@ -351,6 +351,7 @@ const gameFinishShow = async (req, res) => {
       message: 'gameFinishShow 성공!',
     });
   } catch (err) {
+    console.log(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: 'gameFinishShow 실패',
@@ -361,6 +362,7 @@ const gameFinishShow = async (req, res) => {
 
 //결과창에서 나가기버튼 클릭시 게임방 삭제 --작업중
 const gameDelete = async (req, res) => {
+  
   try {
     const { gameNum } = req.params;
     console.log("API,gameDelete,req.params:",req.params)
@@ -379,6 +381,7 @@ const gameDelete = async (req, res) => {
         message: '대기방, 게임방 삭제 성공!',
     });
   } catch (err) {
+    console.log(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '대기방, 게임방 삭제 실패',
