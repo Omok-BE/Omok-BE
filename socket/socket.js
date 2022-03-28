@@ -41,13 +41,14 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const playerCnt = waitingRoomCount(role);
-    await Users.updateOne({ id: socket.nickname }, { set: { connect: "online" }});
     if (state === 'blackPlayer') {
+      await Users.updateMany({ id: socket.nickname }, { set: { state: 'blackPlayer', connect: "online" }});
       await Rooms.updateMany(
         { roomNum },
         { $set: { playerCnt, blackTeamPlayer: socket.nickname } }
         );
     } else {
+      await Users.updateMany({ id: socket.nickname }, { set: { state: 'whitePlayer', connect: "online" }});
       await Rooms.updateMany(
         { roomNum },
         { $set: { playerCnt, whiteTeamPlayer: socket.nickname } }
@@ -65,14 +66,15 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const observerCnt = waitingRoomCount(role);
-    await Users.updateOne({ id: socket.nickname }, { set: { connect: "online" }});
     if (state === 'blackObserver') {
+      await Users.updateMany({ id: socket.nickname }, { set: { state: 'blackObserver', connect: "online" }});
       await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       await Rooms.updateOne(
         { roomNum },
         { $addToSet: { blackTeamObserver: socket.nickname } }
       );
     } else {
+      await Users.updateMany({ id: socket.nickname }, { set: { state: 'whiteObserver', connect: "online" }});
       await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       await Rooms.updateOne(
         { roomNum },
