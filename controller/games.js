@@ -255,6 +255,7 @@ const gameFinishShow = async (req, res) => {
           const outObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint+cancelPoint, 
                                   existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
           outObserverArray1.push(outObserver);
+          await Users.updateOne({ id:blackO.id }, { $set: { teachingCnt: 0 }});
           console.log(`225,기권패,블랙팀 옵저버,outObserverArray1:`,outObserverArray1);
         }
       }
@@ -270,6 +271,7 @@ const gameFinishShow = async (req, res) => {
         const leftObserverArray1 = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint+cancelPoint, 
                                 existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
         leftObserverArray1.push(leftObserver);
+        await Users.updateOne({ id:whiteO.id }, { $set: { teachingCnt: 0 }});
         console.log(`225,부전승,화이트팀 옵저버,leftObserverArray1:`,leftObserverArray1); 
         }
       }
@@ -312,6 +314,7 @@ const gameFinishShow = async (req, res) => {
           const outObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint+cancelPoint, 
                                   existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
           outObserverArray2.push(outObserver);
+          await Users.updateOne({ id:whiteO.id }, { $set: { teachingCnt: 0 }});
           console.log(`225,기권패,화이트팀 옵저버,outObserverArray2:`,outObserverArray2);
         }
       }
@@ -327,6 +330,7 @@ const gameFinishShow = async (req, res) => {
         const leftObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint+cancelPoint, 
                                 existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
         leftObserverArray2.push(leftObserver);
+        await Users.updateOne({ id:blackO.id }, { $set: { teachingCnt: 0 }});
         console.log(`225,부전승,블랙팀 옵저버,leftObserverArray2:`,leftObserverArray2); 
         }
       }
