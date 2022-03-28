@@ -279,12 +279,8 @@ waitingRoom.on('connection', (socket) => {
 
   //대기실 내 채팅_210303
   socket.on('chat', (data) => {
-    console.log("chatdata",data)
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname, chat };
-    console.log("emitchat",chatData)
-    console.log(socket.rooms)
-    console.log(waitingRoom.adapter.rooms)
     waitingRoom.to(roomNum).emit('chat', chatData);
   });
 
@@ -316,6 +312,7 @@ waitingRoom.on('connection', (socket) => {
     try{
     let roomNum = roomNumber
     const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 })
+    console.log("퇴장시",room)
     if(room.blackTeamPlayer === id){
       await Rooms.updateOne({ roomNum }, { $set: {blackTeamPlayer: null }})
     }
