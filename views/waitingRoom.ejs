@@ -65,7 +65,6 @@ function getWaitingRooms() {
         data: {},
         success: function (response) {
             let waitingRooms = response.waitingRooms;
-            console.log(waitingRooms)
             for (let waitingRoom of waitingRooms) {
                 let roomNum = waitingRoom.roomNum;
                 let roomName = waitingRoom.roomName;
