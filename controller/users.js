@@ -28,7 +28,7 @@ const signup = async (req, res) => {
             errorMessage: '프로필을 선택하지 않았습니다.'
         });
     }else {
-        profileUrl = 'http://13.125.229.125/images/'+ profileImage + '.svg'
+        profileUrl = 'https://haksae90.shop/images/'+ profileImage + '.svg'
     }
 
 
