@@ -43,8 +43,8 @@ const signup = async (req, res) => {
       score: [{ win: 0 }, { lose: 0 }],
       point: 1000,
       state: 'offline',
-      connect: 'offline',
       profileImage: profileUrl,
+      connect: 'offline',
     });
     await user.save();
 

@@ -144,26 +144,6 @@ const postJoinRoom = async (req, res) => {
         point: postuser.point,
       };
 
-      // Roomdb에도 state에 맞는 값으로 정보 변경하기
-      // if (state === 'blackPlayer') {
-      //   await Room.updateOne({ roomNum }, { $set: { blackTeamPlayer: id } });
-      //   await Room.updateOne({ roomNum }, { $inc: { playerCnt: 1 } });
-      // } else if (state === 'whitePlayer') {
-      //   await Room.updateOne({ roomNum }, { $set: { whiteTeamPlayer: id } });
-      //   await Room.updateOne({ roomNum }, { $inc: { playerCnt: 1 } });
-      // } else if (state === 'blackObserver') {
-      //   await Room.updateOne(
-      //     { roomNum },
-      //     { $addToSet: { blackTeamObserver: id } }
-      //   );
-      //   await Room.updateOne({ roomNum }, { $inc: { observerCnt: 1 } });
-      // } else if (state === 'whiteObserver') {
-      //   await Room.updateOne(
-      //     { roomNum },
-      //     { $addToSet: { whiteTeamObserver: id } }
-      //   );
-      //   await Room.updateOne({ roomNum }, { $inc: { observerCnt: 1 } });
-      // }
       res.status(201).send(userInfo);
     }
     
