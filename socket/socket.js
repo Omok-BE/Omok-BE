@@ -609,6 +609,8 @@ gameRoom.on('connect', async (socket) => {
 
   // game방 퇴장
   socket.on('disconnecting', async () => {
+    gameNum = thisGameNum
+    nickname = socket.nickname
     //game방 퇴장 메시지
     try {
       //게임방에서 플레이어가 나갔을 경우
