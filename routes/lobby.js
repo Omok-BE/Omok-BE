@@ -15,7 +15,7 @@ const {
 } = require('../controller/lobby');
 
 // 로비첫 화면
-router.get('/lobby/:id', lobby);
+router.get('/lobby', lobby);
 
 //로비 유저리스트
 router.get('/lobby/userList', userList);
