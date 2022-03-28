@@ -636,7 +636,7 @@ gameRoom.on('connect', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum, id ) => {
     try{
-      console.log("697,소켓,state:",state)
+      console.log("639,소켓,state:",state)
       console.log("640,소켓,gameNum:",gameNum)
       console.log("641,소켓,id:",id)
 
