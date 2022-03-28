@@ -58,6 +58,7 @@ waitingRoom.on('connection', (socket) => {
   //관전자로 입장시 정보 업데이트_210315
   socket.on('enterRoomObserver', async (data) => {
     const { roomNum, state } = data;
+    roomNumber = roomNum;
     const role = `${roomNum}observer`;
     socket.join(roomNum);
     socket.join(role);
