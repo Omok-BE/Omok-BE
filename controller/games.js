@@ -219,18 +219,18 @@ const gameFinishShow = async (req, res) => {
       console.log("219,Show,이긴블랙 플레이어는:", result.win)
       //블랙플레이어 승 계산
       const getBPoint = 200  //우승포인트 
-      const existBPoint = blackP.point  //게임전 포인트
+      const existBPoint = blackP.point - getBPoint  //게임전 포인트(게임후 변경포인트 가져옴)
       const totalBPoint = existBPoint + getBPoint  // 게임후 총 포인트
-      const winInfo = {id:blackP.id, usePoint:0, getPoint: + getBPoint, existPoint:existBPoint ,
+      const winInfo = {id:blackP.id, usePoint:0, getPoint:getBPoint, existPoint:existBPoint,
                                           totalPoint:totalBPoint, state:blackP.state };
       winPlayerArray.push(winInfo);    
       console.log("225,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
 
       //화이트플레이어 패 계산
       const getWPoint = 100  //패배 패널티포인트
-      const existWPoint = whiteP.point  //게임전 포인트
+      const existWPoint = whiteP.point - getWPoint //게임전 포인트
       const totalWPoint = existWPoint - getWPoint // 게임후 총 포인트
-      const loseInfo = {id:whiteP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint ,
+      const loseInfo = {id:whiteP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint,
                                         totalPoint:totalWPoint, state:whiteP.state };
       losePlayerArray.push(loseInfo);
       console.log("232,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
@@ -242,9 +242,9 @@ const gameFinishShow = async (req, res) => {
           const usePoint = blackO[i].teachingCnt * 10;  //쓴포인트 
           const addPoint = 20; //추가포인트
           const getPoint = usePoint * 1 + addPoint; //얻은포인트
-          const existPoint = blackO[i].point  //기존포인트
+          const existPoint = blackO[i].point - usePoint - getPoint //기존포인트
           const totalPoint = blackO[i].point + usePoint + getPoint;  //총포인트
-          const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: +getPoint, 
+          const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                 existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
           winObserverArray1.push(winObserver);
           console.log("246,show,win,blackO[i]",blackO[i])  
@@ -261,9 +261,9 @@ const gameFinishShow = async (req, res) => {
           const usePoint = whiteO[i].teachingCnt * 10;  //쓴포인트
           const penalty = 20; //진팀 패널티
           const getPoint = usePoint * 1 - penalty; //얻은포인트
-          const existPoint = whiteO[i].point  //기존포인트
+          const existPoint = whiteO[i].point - usePoint - getPoint //기존포인트
           const totalPoint = whiteO[i].point - usePoint - getPoint;  //총포인트
-          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: -getPoint, 
+          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: - getPoint, 
                                  existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
           loseObserverArray1.push(loseObserver);
           console.log("265,show,lose,whiteO[i]",whiteO[i])  
@@ -279,18 +279,18 @@ const gameFinishShow = async (req, res) => {
       console.log("275,Show,이긴화이트 플레이어는:", result.win)
       //화이트플레이어 승 계산
       const getBPoint = 200  //우승포인트 
-      const existBPoint = whiteP.point  //게임전 포인트
+      const existBPoint = whiteP.point - getBPoint //게임전 포인트
       const totalBPoint = existBPoint + getBPoint  // 게임후 총 포인트
-      const winInfo = {id:whiteP.id, usePoint:0, getPoint: + getBPoint, existPoint:existBPoint ,
+      const winInfo = {id:whiteP.id, usePoint:0, getPoint:getBPoint, existPoint:existBPoint,
                                           totalPoint:totalBPoint, state:whiteP.state };
       winPlayerArray.push(winInfo);    
       console.log("279,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
 
       //블랙플레이어 패 계산
       const getWPoint = 100  //패배 패널티포인트
-      const existWPoint = blackP.point  //게임전 포인트
+      const existWPoint = blackP.point - getWPoint //게임전 포인트
       const totalWPoint = existWPoint - getWPoint // 게임후 총 포인트
-      const loseInfo = {id:blackP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint ,
+      const loseInfo = {id:blackP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint,
                                         totalPoint:totalWPoint, state:blackP.state };
       losePlayerArray.push(loseInfo);
       console.log("285,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
@@ -302,10 +302,10 @@ const gameFinishShow = async (req, res) => {
         const usePoint = whiteO[i].teachingCnt  * 10;  //쓴포인트
         const addPoint = 20; //추가포인트
         const getPoint = usePoint * 1 + addPoint; //얻은포인트
-        const existPoint = whiteO[i].point  //기존포인트
+        const existPoint = whiteO[i].point - usePoint - getPoint //기존포인트
         const totalPoint = whiteO[i].point + usePoint + getPoint;  //총포인트
-        const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: +getPoint, 
-                                      existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
+        const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint, 
+                                existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
         winObserverArray2.push(winObserver);
         console.log("299,show,win,whiteO[i]",whiteO[i])  
         }
@@ -319,12 +319,12 @@ const gameFinishShow = async (req, res) => {
           const usePoint = blackO[i].teachingCnt * 10;  //쓴포인트
           const penalty = 20; //진팀 패널티
           const getPoint = usePoint * 1 - penalty;  //얻은포인트
-          const existPoint = blackO[i].point  //기존포인트
+          const existPoint = blackO[i].point - usePoint - getPoint //기존포인트
           const totalPoint = blackO[i].point - usePoint - getPoint;  //총포인트
-          const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: -getPoint, 
-                                 existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
+          const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: - getPoint, 
+                                   existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
           loseObserverArray2.push(loseObserver);
-          console.log("316,show,lose,blackO[i]",blackO[i])  
+          console.log("316,show,lose,blackO[i]",blackO[i])
         }
       } 
       console.log("319,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
