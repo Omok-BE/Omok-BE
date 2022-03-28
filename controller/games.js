@@ -219,7 +219,7 @@ const gameFinishShow = async (req, res) => {
     let outObserverArray2 = [];
     let leftObserverArray2 = [];
     //기권패 블랙플레이어
-    if(result.win !== id && result.win === whiteP.id) {  
+    if(result.win !== blackP.id && id === blackP.id) {  
       console.log(",show,기권패 블랙플레이어id:", id )
       await Users.updateOne({ id:blackP.id }, { $inc: { 'score.1.lose': 1 } }); //  패 +1
       await Users.updateOne({ id:blackP.id }, { $set: { point: point - 200 } });  //포인트 -200
@@ -278,7 +278,7 @@ const gameFinishShow = async (req, res) => {
     }
     
     //기권패 화이트플레이어
-    if(result.win !== id && result.win === blackP.id) { 
+    if(result.win !== whiteP.id && id === whiteP.id) { 
       console.log(",show,기권패,화이트플레이어id:", id )
       await Users.updateOne({ id:whiteP.id }, { $inc: { 'score.1.lose': 1 } }); //  패 +1
       await Users.updateOne({ id:whiteP.id }, { $set: { point: point - 200 } });  //포인트 -200
