@@ -246,13 +246,11 @@ const gameFinishShow = async (req, res) => {
           const addPoint = 20; //추가포인트
           const getPoint = usePoint + chatPoint + addPoint; //얻은포인트
           const existPoint = blackO[i].point - getPoint //기존포인트
-          const totalPoint = blackO[i].point + getPoint;  //총포인트
+          const totalPoint = blackO[i].point;  //총포인트
           const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
                                 existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
           winObserverArray1.push(winObserver);
           console.log("246,show,win,blackO[i]",blackO[i])  
-
-          // if(isNaN(""))
         }
       }
       console.log("251,show, 이긴블랙옵 winObserverArray1는?", winObserverArray1);
@@ -266,7 +264,7 @@ const gameFinishShow = async (req, res) => {
           const penalty = 20; //진팀 패널티
           const getPoint = usePoint + chatPoint + penalty; //얻은포인트
           const existPoint = whiteO[i].point + getPoint //기존포인트
-          const totalPoint = whiteO[i].point - getPoint;  //총포인트
+          const totalPoint = whiteO[i].point;  //총포인트
           const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: - getPoint, 
                                  existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
           loseObserverArray1.push(loseObserver);
@@ -308,7 +306,7 @@ const gameFinishShow = async (req, res) => {
         const addPoint = 20; //추가포인트
         const getPoint = usePoint + chatPoint + addPoint; //얻은포인트
         const existPoint = whiteO[i].point - getPoint //기존포인트
-        const totalPoint = whiteO[i].point + getPoint;  //총포인트
+        const totalPoint = whiteO[i].point;  //총포인트
         const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint,
                                 existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
         winObserverArray2.push(winObserver);
@@ -326,7 +324,7 @@ const gameFinishShow = async (req, res) => {
           const penalty = 20; //진팀 패널티
           const getPoint = usePoint + chatPoint + penalty;  //얻은포인트
           const existPoint = blackO[i].point + getPoint //기존포인트
-          const totalPoint = blackO[i].point - getPoint;  //총포인트
+          const totalPoint = blackO[i].point;  //총포인트
           const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: - getPoint, 
                                    existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
           loseObserverArray2.push(loseObserver);
