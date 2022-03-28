@@ -387,10 +387,10 @@ waitingRoom.on('connection', (socket) => {
   //퇴장시 대기실 DB 최신화_210319
   socket.on('disconnect', async () => {
     try{
-
+      let roomNum = roomNumber
     await peopleInRoomUpdate({
       id,
-      roomNum: roomNumber
+      roomNum
     });
     // await Users.updateOne({ id }, { set: { connect: "offline"}})
     // const room = await Rooms.findOne({ roomNum }, { _id: 0, blackTeamPlayer:1, whiteTeamPlayer:1, blackTeamObserver:1, whiteTeamObserver:1 });
