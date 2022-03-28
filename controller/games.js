@@ -219,7 +219,7 @@ const gameFinishShow = async (req, res) => {
     let outObserverArray2 = [];
     let leftObserverArray2 = [];
     //기권패 블랙플레이어
-    if(result.win !== blackP.id) {  
+    if(result.win !== id && result.win === whiteP.id) {  
       console.log(",show,기권패 블랙플레이어id:", id )
       await Users.updateOne({ id:blackP.id }, { $inc: { 'score.1.lose': 1 } }); //  패 +1
       await Users.updateOne({ id:blackP.id }, { $set: { point: point - 200 } });  //포인트 -200
@@ -276,7 +276,7 @@ const gameFinishShow = async (req, res) => {
     }
     
     //기권패 화이트플레이어
-    if(result.win !== whiteP.id) { 
+    if(result.win !== id && result.win === blackP.id) { 
       console.log(",show,기권패,화이트플레이어id:", id )
       await Users.updateOne({ id:whiteP.id }, { $inc: { 'score.1.lose': 1 } }); //  패 +1
       await Users.updateOne({ id:whiteP.id }, { $set: { point: point - 200 } });  //포인트 -200
@@ -464,7 +464,7 @@ const gameFinishShow = async (req, res) => {
     console.log("325,show,lose배열 총정보:",lose)
     console.log("326,result",result)
 
-    //teachingCnt 0으로 리셋
+    //Observer의 teachingCnt 0으로 리셋
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
     await Users.updateOne({ id:id }, { $set: { teachingCnt: 0 }});
