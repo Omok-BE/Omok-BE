@@ -2,6 +2,7 @@ const app = require('../app');
 const Users = require('../models/users');
 const Rooms = require('../models/rooms');
 const Boards = require('../models/boards');
+const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
@@ -342,45 +343,6 @@ waitingRoom.on('connection', (socket) => {
 function waitingRoomCount(roomNum) {
   return waitingRoom.adapter.rooms.get(roomNum)?.size;
 }
-
-//방 내부 유저 최신정보 가져오기_210316
-async function findUserInfos(roomNum) {
-  const userInfos = await Rooms.aggregate([
-    {
-      $match: { roomNum: Number(roomNum) },
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'blackTeamPlayer',
-        foreignField: 'id',
-        as: 'blackPlayerInfo',
-      },
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'whiteTeamPlayer',
-        foreignField: 'id',
-        as: 'whitePlayerInfo',
-      },
-    },
-    {
-      $project: {
-        blackPlayerInfo: { id: 1, score: 1, point: 1, state: 1, profileImage: 1 },
-        whitePlayerInfo: { id: 1, score: 1, point: 1, state: 1, profileImage: 1 },
-        blackTeamObserver: 1,
-        whiteTeamObserver: 1,
-        _id: 0,
-      },
-    },
-  ]);
-  return userInfos;
-}
-
-
-
-
 
 //게임방 socket
 const gameRoom = io.of('/game');

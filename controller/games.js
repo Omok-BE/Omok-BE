@@ -28,9 +28,8 @@ const gameCreate = async (req, res) => {
     const board = new Array(Math.pow(19, 2)).fill(-1);
     await Boards.create({
       gameNum: roomNum,
-      board:board
+      board
     });
-
     res.status(201).json({ ok: true });
   } catch (error) {
     console.log(error);
