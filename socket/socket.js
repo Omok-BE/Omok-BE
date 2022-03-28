@@ -63,7 +63,7 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const playerCnt = waitingRoomCount(role);
-    console.log(state)
+    console.log("state", state)
     await enterRoomPlayer({
       id: socket.nickname,
       roomNum,
