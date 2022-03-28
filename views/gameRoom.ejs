@@ -65,7 +65,6 @@ function getGameRooms() {
         data: {},
         success: function (response) {
             let gameRooms = response.gameRooms;
-            console.log(gameRooms)
             for (let gameRoom of gameRooms) {
                 let gameNum = gameRoom.gameNum;
                 let gameName = gameRoom.gameName;
