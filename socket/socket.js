@@ -617,26 +617,26 @@ gameRoom.on('connect', async (socket) => {
     //game방 퇴장 메시지
     try {
       //게임방에서 플레이어가 나갔을 경우
-      // const inGameIds = await Games.findOne({ gameNum:gameNum },  
-      //                                           ({_id:false, blackTeamPlayer:true, blackTeamObserver:true,
-      //                                                          whiteTeamPlayer:true, whiteTeamObserver:true }));
-      // const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
-      // if (outPlayer.id === inGameIds.blackTeamPlayer){
-      //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50
-      // } else if (outPlayer.state === 'whitePlayer'){
-      //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
-      // }
-      // if (outPlayer.id === inGameIds.whiteTeamPlayer){
-      //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50  
-      // } else if (outPlayer.state === 'blackPlayer'){
-      //   await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
-      // }
-      // console.log("661,겜방소켓,inGameIds:",inGameIds)
-      // console.log("662,겜방소켓,outPlayer:",outPlayer)
+      const inGameIds = await Games.findOne({ gameNum:gameNum },  
+                                                ({_id:false, blackTeamPlayer:true, blackTeamObserver:true,
+                                                               whiteTeamPlayer:true, whiteTeamObserver:true }));
+      const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
+      if (outPlayer.id === inGameIds.blackTeamPlayer){
+        await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
+        await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50
+      } else if (outPlayer.state === 'whitePlayer'){
+        await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
+        await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
+      }
+      if (outPlayer.id === inGameIds.whiteTeamPlayer){
+        await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
+        await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50  
+      } else if (outPlayer.state === 'blackPlayer'){
+        await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
+        await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
+      }
+      console.log("661,겜방소켓,inGameIds:",inGameIds)
+      console.log("662,겜방소켓,outPlayer:",outPlayer)
 
 
       gameRoom.to(thisGameNum).emit('bye', socket.id);
