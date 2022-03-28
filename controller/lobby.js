@@ -103,6 +103,29 @@ const postJoinRoom = async (req, res) => {
   const { roomNum, id, state } = req.body;
 
   try {
+    // res의 body값 확인(비정상적 접근막아주기)
+    if( !roomNum || !id || !state ){
+      res.status(400).send({
+        message: '비정상적인 접근 입니다.'
+      })
+      return
+    }
+
+    // 입력시 플레이어 겹치지 않게 검사
+    if(state === 'blackPlayer' || state === 'whitePlayer'){
+      let findplayer = await Room.findOne({ roomNum })  // 
+      if(findplayer.blackTeamPlayer && state === 'blackPlayer'){
+        res.status(400).send({
+          message: '앗 블랙플레이어가 이미 있네요. 누군가 자리이동을 했나봐요!'
+        })
+        return
+      }else if(findplayer.whiteTeamPlayer && state === 'whitePlayer'){
+        res.status(400).send({
+          message: '앗 화이트플레이어가 이미 있네요. 누군가 자리이동을 했나봐요!'
+        })
+        return
+      }
+    }
 
     const roomState = await Room.findOne({ roomNum }, { state: true })
     if(roomState.state === 'ingame'){
