@@ -7,7 +7,7 @@ const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
 const { peopleInRoomUpdate } = require('../lib/roomSocket/roomOutUpdate')
-const SocketEvent = require('../lib/socket/socket')
+const SocketEvent = require('../controller/roomSocket')
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
