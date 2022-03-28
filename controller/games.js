@@ -317,7 +317,7 @@ const gameFinishShow = async (req, res) => {
 
       //블랙옵저버 패 계산
       for(let i=0; i<blackO.length; i++){
-        if (blackO.state === 'blackObserver') {
+        if (blackO[i].state === 'blackObserver') {
           //진팀 포인트 업데이트
           const usePoint = blackO[i].teachingCnt * 10;  //쓴포인트
           const chatPoint = usePoint * 1  //채팅포인트
