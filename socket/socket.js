@@ -634,29 +634,8 @@ gameRoom.on('connect', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum) => {
     try{
-      console.log("637,소켓,state",state)
-      console.log("638,소켓,gameNum",gameNum)
-      //게임방에서 플레이어가 나갔을 경우
-      const inGameIds = await Games.findOne({ gameNum:gameNum }, ({_id:false, 
-                                                  blackTeamPlayer:true, blackTeamObserver:true, 
-                                                  whiteTeamPlayer:true, whiteTeamObserver:true }));
-      const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
-      if (state === 'blackPlayer' === outPlayer.state){
-      await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-      await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50
-      } else if (outPlayer.state === 'whitePlayer'){
-      await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
-      await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
-      }
-      if (state === 'whitePlayer' === outPlayer.state){
-      await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-      await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50  
-      } else if (outPlayer.state === 'blackPlayer'){
-      await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
-      await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
-      }
-      console.log("661,겜방소켓,inGameIds:",inGameIds)
-      console.log("662,겜방소켓,outPlayer:",outPlayer)
+      console.log("637,소켓,state:",state)
+      console.log("638,소켓,gameNum:",gameNum)
 
       gameRoom.to(gameNum).emit("byebye",state);
       console.log("겜방소켓 byebye이벤트 성공");
