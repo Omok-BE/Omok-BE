@@ -19,6 +19,25 @@ instrument(io, {
   auth: false,
 });
 
+// 로비
+const lobby = io.of('/lobby');
+let lobbyid;
+
+lobby.on('connection', (socket) => {
+  console.log('connect lobby socket', socket.id);
+
+  socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
+
+  socket.on('lobby', async (id) => {
+    await Users.updateOne({id}, {$set: { connect: 'online'}})
+    lobbyid = id;
+  })
+
+  socket.on('disconnect', async () => {
+    await Users.updateOne({id: lobbyid}, {$set: { connect: 'offline'}})
+  })
+});
+
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting');
 let roomNumber;
