@@ -4,7 +4,7 @@ const Rooms = require('../models/rooms');
 const Games = require('../models/games');
 const Boards = require('../models/boards');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
-const { enterRoomPlayer, enterRoomObserver } = require('../lib/roomSocket/roomInUpdate')
+const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
 const { peopleInRoomUpdate } = require('../lib/roomSocket/roomOutUpdate')
 const SocketEvent = require('../lib/socket/socket')
@@ -54,27 +54,27 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //socket nickname 설정
-  // socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
   SocketEvent.nicknameEvent(socket);
 
   //플레이어로 입장시 정보 업데이트
-  socket.on('enterRoomPlayer', async (data) => {
-    const { roomNum, state } = data;
-    roomNumber = roomNum;
-    const role = `${roomNum}player`;
-    socket.join(roomNum);
-    socket.join(role);
-    const playerCnt = waitingRoomCount(role);
-    console.log("state", state)
-    await enterRoomPlayer({
-      id: socket.nickname,
-      roomNum,
-      playerCnt,
-      state
-    });
-    const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
-  });
+  SocketEvent.enterRoomPlayer(socket);
+  // socket.on('enterRoomPlayer', async (data) => {
+  //   const { roomNum, state } = data;
+  //   roomNumber = roomNum;
+  //   const role = `${roomNum}player`;
+  //   socket.join(roomNum);
+  //   socket.join(role);
+  //   const playerCnt = waitingRoomCount(role);
+  //   console.log("state", state)
+  //   await enterRoomByPlayer({
+  //     id: socket.nickname,
+  //     roomNum,
+  //     playerCnt,
+  //     state
+  //   });
+  //   const userInfos = await findUserInfos(roomNum);
+  //   waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
+  // });
 
   //관전자로 입장시 정보 업데이트
   socket.on('enterRoomObserver', async (data) => {
@@ -84,7 +84,7 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const observerCnt = waitingRoomCount(role);
-    await enterRoomObserver({
+    await enterRoomByObserver({
       id: socket.nickname,
       roomNum,
       observerCnt,
