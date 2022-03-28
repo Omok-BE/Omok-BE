@@ -56,7 +56,7 @@ const leaderBoard = async (req, res) => {
 // 방만들기
 const createRoom = async (req, res) => {
   try {
-    const { roomName, id } = req.body;
+    const { roomName, id, timer } = req.body;
 
     await User.updateOne({ id: id }, { $set: { state: 'blackPlayer' } });
     const myInfo = await User.findOne({ id: id });
@@ -73,6 +73,7 @@ const createRoom = async (req, res) => {
       observerCnt: 0,
       state: 'wait',
       blackPlayer: id,
+      timer: timer
     });
     await newRoom.save();
 
