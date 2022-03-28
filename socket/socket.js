@@ -1,6 +1,7 @@
 const app = require('../app');
 const Users = require('../models/users');
 const Rooms = require('../models/rooms');
+const Games = require('../models/games');
 const Boards = require('../models/boards');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 
@@ -616,28 +617,6 @@ gameRoom.on('connect', async (socket) => {
     nickname = socket.nickname
     //game방 퇴장 메시지
     try {
-      //게임방에서 플레이어가 나갔을 경우
-      // const inGameIds = await Games.findOne({ gameNum:thisgameNum },  
-      //                                           ({_id:false, blackTeamPlayer:true, whiteTeamPlayer:true }));
-      // const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
-      // if (outPlayer.id === inGameIds.blackTeamPlayer){
-      //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50
-      // } else if (outPlayer.state === 'whitePlayer'){
-      //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
-      // }
-      // if (outPlayer.id === inGameIds.whiteTeamPlayer){
-      //   await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
-      // } else if (outPlayer.state === 'blackPlayer'){
-      //   await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
-      //   await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50
-      // }
-      // console.log("661,겜방소켓,inGameIds:",inGameIds)
-      // console.log("662,겜방소켓,outPlayer:",outPlayer)
-
-
       gameRoom.to(thisGameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(thisGameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
@@ -655,6 +634,28 @@ gameRoom.on('connect', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum) => {
     try{
+      //게임방에서 플레이어가 나갔을 경우
+      const inGameIds = await Games.findOne({ gameNum:gameNum }, ({_id:false, 
+                                                  blackTeamPlayer:true, blackTeamObserver:true, 
+                                                  whiteTeamPlayer:true, whiteTeamObserver:true }));
+      const outPlayer = await Users.findOne({ id:socket.nickname }, { _id:false, id:true, point:true, state:true });
+      if (state === 'blackPlayer' === outPlayer.state){
+      await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
+      await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50
+      } else if (outPlayer.state === 'whitePlayer'){
+      await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.0.win':1 } });  //승 +1
+      await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
+      }
+      if (state === 'whitePlayer' === outPlayer.state){
+      await Users.updateOne({ id:socket.nickname }, { $inc: { 'score.1.lose':1 } });  //패 +1
+      await Users.updateOne({ id:socket.nickname }, { $set: { point: - 50 } });  //포인트 -50  
+      } else if (outPlayer.state === 'blackPlayer'){
+      await Users.updateOne({ id:socket.nickname }, {  inc: { 'score.0.win':1 } });  //승 +1
+      await Users.updateOne({ id:socket.nickname }, { $set: { point: + 100 } });  //포인트 +100
+      }
+      console.log("661,겜방소켓,inGameIds:",inGameIds)
+      console.log("662,겜방소켓,outPlayer:",outPlayer)
+
       gameRoom.to(gameNum).emit("byebye",state);
       console.log("겜방소켓 byebye이벤트 성공");
     } catch(err) {
@@ -663,19 +664,6 @@ gameRoom.on('connect', async (socket) => {
   });
 
     
-    // //게임결과 후 게임방, 대기방 삭제
-    // const existGame = await Games.findOne({ gameNum:thisgameNum });
-    // if (existGame){
-    //   console.log("$$$$$$$$$$")
-    //   const deleteRoomNum = await Rooms.deleteOne({ roomNum:thisgameNum });
-    //   const deleteGameNum = await Games.deleteOne({ gameNum:thisgameNum });
-    //   console.log("690,소켓 게임결과창,deleteRoomNum",deleteRoomNum)
-    //   console.log("691,소켓 게임결과창,deleteGameNum",deleteGameNum)
-    // }
-    
-    // //게임결과 후 결과창 '나가기'버튼 클릭 유저 state 'online'변경
-    // const afterGameUserState = await Users.updateOne({ id:socket.id }, { $set: { state: 'online' }}); 
-    // console.log("400,afterGameUserState:", afterGameUserState)
 });
 
 module.exports = { httpServer };
