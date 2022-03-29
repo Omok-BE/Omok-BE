@@ -164,7 +164,7 @@ const gameFinish = async (req, res) => {
     if (winPlayer.state === 'blackPlayer') {
       console.log("블랙옵 이긴포인트계산-blackPlayer 이김")
       //blackObserver 이김
-      if (blackObserverState === 'blackObserver') {
+      if (state === 'blackObserver') {
         console.log("163,블랙옵 이긴포인트계산 blackPlayer이겼을때")
         //포인트 업데이트
         for(let i=0; i<blackO.length; i++){
@@ -175,7 +175,7 @@ const gameFinish = async (req, res) => {
         console.log("166,블랙옵 이긴thisTeachingCnt업뎃후리셋전:", thisTeachingCnt)
         console.log("167,블랙옵 이긴thisTeachingCnt리셋000:", thisTeachingCnt)
       //whiteObserver 짐
-      } else if (whiteObserverState === 'whiteObserver') {
+      } else if (state === 'whiteObserver') {
         console.log("170,화이트옵 진포인트계산 blackPlayer이겼을때")
         //포인트 업데이트
         for(let i=0; i<whiteO.length; i++){
