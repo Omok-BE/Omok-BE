@@ -34,7 +34,7 @@ const userList = async (req, res) => {
 // 로비에서 포인트기준 리더리스트
 const leaderList = async (req, res) => {
   try {
-    const leaderList = await User.find({}).sort({ point: -1 }).limit(5);
+    const leaderList = await User.find({}, {_id:0, pass:0, state:0, teachingCnt:0, connect:0}).sort({ point: -1 }).limit(5);
 
     res.send(leaderList);
   } catch (err) {
@@ -47,7 +47,7 @@ const leaderList = async (req, res) => {
 // 리더보드
 const leaderBoard = async (req, res) => {
   try {
-    const leaderList = await User.find({}).sort({ point: -1 }).limit(50);
+    const leaderList = await User.find({}, {_id:0, pass:0, state:0, teachingCnt:0, connect:0}).sort({ point: -1 }).limit(50);
 
     res.send(leaderList);
   } catch (err) {
@@ -60,7 +60,7 @@ const leaderBoard = async (req, res) => {
 // 방만들기
 const createRoom = async (req, res) => {
   try {
-    const { roomName, id, timer } = req.body;
+    const { roomName, id, timer, boardColor } = req.body;
 
     await User.updateOne({ id: id }, { $set: { state: 'blackPlayer' } });
     const myInfo = await User.findOne({ id: id });
@@ -77,7 +77,8 @@ const createRoom = async (req, res) => {
       observerCnt: 0,
       state: 'wait',
       blackPlayer: id,
-      timer: timer
+      timer: timer,
+      boardColor: boardColor
     });
     await newRoom.save();
 
