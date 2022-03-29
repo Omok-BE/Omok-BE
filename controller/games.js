@@ -3,6 +3,7 @@ const Games = require('../models/games');
 const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
+const { gameUserInfo } = require('../lib/games/gameUserInfo')
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
@@ -37,7 +38,6 @@ const gameCreate = async (req, res) => {
     res.status(400).json({ ok: false });
   }
 };
-
 
 //게임방 입장해서 정보가져오기
 const gameStart = async (req, res) => {
@@ -177,13 +177,12 @@ const gameFinish = async (req, res) => {
 const gameFinishShow = async (req, res) => {
   try { 
     const { id, gameNum, result } = req.body;
-    console.log('180,결과창show진입:');
-    console.log('181,결과창show,req.body:', req.body);
+    console.log('181,결과창show진입:');
+    console.log('182,결과창show,req.body:', req.body);
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
-    console.log("185,show,gameInfo[0]:",gameInfo[0]); 
-    const findGameName = await Games.findOne({gameNum}); 
+    console.log("186,show,gameInfo[0]:",gameInfo[0]); 
 
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const blackO = gameInfo[0].blackTeamObserver
@@ -327,7 +326,6 @@ const gameFinishShow = async (req, res) => {
     await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
 
     res.status(200).json({
-      gameName:findGameName.gameName,
       win,
       lose,
       result,
@@ -373,56 +371,6 @@ const gameDelete = async (req, res) => {
 };
 
 
-//게임방내 유저 state별 정보
-async function gameUserInfo(gameNum) {
-  return await Games.aggregate([
-    {
-      $match: { gameNum: Number(gameNum) },
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'blackTeamPlayer',
-        foreignField: 'id',
-        as: 'blackTeamPlayer',
-      },
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'blackTeamObserver',
-        foreignField: 'id',
-        as: 'blackTeamObserver',
-      },
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'whiteTeamPlayer',
-        foreignField: 'id',
-        as: 'whiteTeamPlayer',
-      },
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'whiteTeamObserver',
-        foreignField: 'id',
-        as: 'whiteTeamObserver',
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
-        blackTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt:1, profileImage:1 },
-        whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
-        whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt:1, profileImage:1 },
-        timer: 1
-      },
-    },
-  ]);
-}
 
 
 
