@@ -114,7 +114,7 @@ const gameFinish = async (req, res) => {
       winGetTeachingPoint = 300
     }
     const winTotalPoint = point + winGetTeachingPoint;  //게임후 총 포인트(기존 + 얻은)
-
+    console.log("117", winTotalPoint)
     //진팀 point
     const penalty = 20  //패널티
     let loseGetTeachingPoint = useTeachingPoint + chatPoint + penalty;
@@ -123,7 +123,7 @@ const gameFinish = async (req, res) => {
       loseGetTeachingPoint = 300
     } 
     const loseTotalPoint = point - loseGetTeachingPoint;  //게임후 총 포인트(기존 - 얻은)
-
+    console.log("126",loseTotalPoint)
     //whitePlayer 이김
     if (winPlayer.state === 'whitePlayer') {
       if (state === 'whiteObserver') {
@@ -151,7 +151,6 @@ const gameFinish = async (req, res) => {
         }
       //whiteObserver 짐
       } else if (state === 'whiteObserver') {
-        console.log("170,화이트옵 진포인트계산 blackPlayer이겼을때")
         //포인트 업데이트
         for(let i=0; i<whiteO.length; i++){
           findWhiteOId = whiteO[i]
