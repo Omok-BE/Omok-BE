@@ -73,7 +73,7 @@ const gameStart = async (req, res) => {
 const gameFinish = async (req, res) => {
   try {
     const { userInfo, gameNum, result } = req.body;
-    console.log("74,게임피니쉬req.body:", req.body)
+    console.log("76,gameFinish,req.body:", req.body)
     const id = userInfo.id;
     const point = userInfo.point;
     const state = userInfo.state;

@@ -201,7 +201,9 @@ function waitingRoomCount(roomNum) {
   return waitingRoom.adapter.rooms.get(roomNum)?.size;
 }
 
-//게임방 socket
+
+//게임방 socket 
+//네임스페이스 ('/game') 
 const gameRoom = io.of('/game');
 let thisGameNum;
 
@@ -329,59 +331,63 @@ function gameRoomCount(gameNum) {
   return gameRoom.adapter.rooms.get(gameNum)?.size;
 }
 
-//game방 연결
+//game방 연결--수정중
 gameRoom.on('connect', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
-    console.log('겜방연결후socket.id', socket.id);
+  console.log('겜방연결후socket.id', socket.id);
 
-  socket.onAny((event) => {
-    console.log(`게임방 이벤트: ${event}`);
-  });
-
-  // 유저 id를 닉네임 설정
+  //유저 id를 닉네임 설정
   socket.on('nickname', (nickname) => {
     socket['nickname'] = nickname;
     console.log('게임방 닉네임은?', nickname);
     console.log('소켓닉네임은???', socket.nickname);
   });
+  
+  //게임방 입장시 유저 connect변경
+  await Users.updateOne({ id:socket.nickname }, { $set: { connect:'ingame'} })
+
+  socket.onAny((event) => {
+    console.log(`게임방 이벤트: ${event}`);
+  });
+
 
   //game방 Join
   socket.on('joinGame', async (gameNum) => {
     thisGameNum=gameNum
-    console.log(`조인게임방번호:${gameNum}`);
+    console.log(`조인게임방번호:${gameNum }`);
     socket.join(gameNum);
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('504,game방소켓Join_observerCnt:', observerCnt);
+    console.log('359,game방소켓JoinGame_observerCnt:', observerCnt);
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
   //game방 채팅
   socket.on('chat', (chat, gameNum) => {
-    const data = { name: socket.nickname, chat };
+    const data = { name:socket.nickname, chat };
     console.log('게임방 채팅data:', data);
     gameRoom.to(gameNum).emit('chat', data, chat.state);
   });
 
   //game방 훈수채팅W
   socket.on('teachingW', async (chat, gameNum) => {
-    const data = { name: socket.nickname, chat };
+    const data = { name:socket.nickname, chat };
     console.log('훈수쳇W소켓닉네임:', socket.nickname);
     console.log('훈수쳇W data:', data);
     
     //teachingCnt 업데이트
     gameRoom.to(gameNum).emit('teachingW', data);
     
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
+    await Users.updateOne({ id:socket.nickname }, { $inc: { teachingCnt: 1 }}, { upsert:true });
   });
   //game방 훈수채팅B
   socket.on('teachingB', async (chat, gameNum) => {
-    const data = { name: socket.nickname, chat };
+    const data = { name:socket.nickname, chat };
     console.log('훈수쳇B소켓닉네임:', socket.nickname);
     console.log('훈수쳇B data:', data);
 
     //teachingCnt 업데이트
     gameRoom.to(gameNum).emit('teachingB', data);
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
+    await Users.updateOne({ id:socket.nickname }, { $inc: { teachingCnt: 1 }}, { upsert:true});
   });
   //game방 훈수채팅- 플라잉
   socket.on('flyingWord', async (chat, gameNum) => {
@@ -391,10 +397,8 @@ gameRoom.on('connect', async (socket) => {
     
     //teachingCnt 업데이트
     gameRoom.to(gameNum).emit('flyingWord', data);
-    await Users.updateOne({ id: socket.nickname }, { $inc: { teachingCnt: 1 }}, {upsert:true});
+    await Users.updateOne({ id:socket.nickname }, { $inc: { teachingCnt: 1 }}, { upsert:true });
   });
-
-  
 
   //game방 채팅으로 받는부분
   socket.on("Pointer", (chat, gameNum) =>{
@@ -444,7 +448,7 @@ gameRoom.on('connect', async (socket) => {
   });
   //Pointer 훈수 실질적으로 오목두는 부분
   socket.on("pointerOmog", async (data, gameNum) => {
-    const findBoard = await Boards.findOne({gameNum});
+    const findBoard = await Boards.findOne({ gameNum });
     let bboard = findBoard.board;
     let count = findBoard.count;
 
@@ -467,12 +471,14 @@ gameRoom.on('connect', async (socket) => {
   socket.on('disconnecting', async () => {
     gameNum = thisGameNum
     nickname = socket.nickname
-    //game방 퇴장 메시지
     try {
-      gameRoom.to(thisGameNum).emit('bye', socket.id);
-      const observerCnt = gameRoomCount(thisGameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
+      //게임방 퇴장시 유저 connect변경
+      await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
+
+      gameRoom.to(gameNum).emit('bye', socket.id);
+      const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-      await Rooms.updateOne({ roomNum:thisGameNum }, { $set: { observerCnt } });
+      await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
       console.log('게임방 퇴장 소켓 id', socket.id);
       console.log('게임방 퇴장 소켓.nickname', socket.nickname);
@@ -486,9 +492,9 @@ gameRoom.on('connect', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum, id ) => {
     try{
-      console.log("639,소켓,state:",state)
-      console.log("640,소켓,gameNum:",gameNum)
-      console.log("641,소켓,id:",id)
+      console.log("494,소켓,state:",state)
+      console.log("495,소켓,gameNum:",gameNum)
+      console.log("496,소켓,id:",id)
 
       gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
