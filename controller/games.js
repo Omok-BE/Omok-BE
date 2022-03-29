@@ -128,15 +128,15 @@ const gameFinish = async (req, res) => {
     if (winPlayer.state === 'whitePlayer') {
       if (state === 'whiteObserver') {
         //포인트 업데이트
-        for(let i=0; i<whiteO.length; i++){
-          findWhiteOId = whiteO[i]
-          await Users.updateOne({ id: whiteO[i] }, { $set: { point: winTotalPoint } });
-        }
+        // for(let i=0; i<whiteO.length; i++){
+        //   findWhiteOId = whiteO[i]
+          await Users.updateOne({ id }, { $set: { point: winTotalPoint } });
+        // }
       } else if (state === 'blackObserver') {
-        for(let i=0; i<blackO.length; i++){
-          findBlackOId = blackO[i]
-          await Users.updateOne({ id: blackO[i] }, { $set: { point: loseTotalPoint } });
-        }
+        // for(let i=0; i<blackO.length; i++){
+        //   findBlackOId = blackO[i]
+          await Users.updateOne({ id }, { $set: { point: loseTotalPoint } });
+        // }
       }
     }
     
