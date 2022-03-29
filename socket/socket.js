@@ -452,8 +452,9 @@ gameRoom.on('connection', async (socket) => {
     try {
       //게임방 퇴장시 유저 connect변경
       await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
-      
+
       const gameId = await Games.findOne({gameNum}, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      console.log("457,gameId",gameId)
       if(gameId.blackTeamObserver === nickname){
         await Games.updateOne({ gameNum }, {$pull: {blackTeamObserver: nickname}})
       }

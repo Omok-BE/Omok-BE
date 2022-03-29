@@ -90,14 +90,8 @@ const gameFinish = async (req, res) => {
         await Users.updateOne({ id:id }, { $set: { teachingCnt: 0 }}); 
       }
     }
-    //Observer
-    //게임방내 유저 state별 정보
-    const gameInfo = await Games.findOne({gameNum});
-    console.log(",gameFinish,gameInfo:",gameInfo)
-    const blackO = gameInfo.blackTeamObserver
-    const whiteO = gameInfo.whiteTeamObserver
     
-
+    //Observer
     //훈수채팅 수 
     const observerTeachingCnt = await Users.findOne({ id:id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
