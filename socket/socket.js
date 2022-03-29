@@ -31,7 +31,7 @@ lobby.on('connection', (socket) => {
 
   socket.on('nickname', (nickname) => (
     socket['nickname'] = nickname, 
-    console.log('nicknameEvent' , socket.nickname)
+    console.log('nicknameEvent' , socket)
     )
   );
 
