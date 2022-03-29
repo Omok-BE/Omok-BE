@@ -346,7 +346,7 @@ function gameRoomCount(gameNum) {
 }
 
 //game방 연결--수정중
-gameRoom.on('connect', async (socket) => {
+gameRoom.on('connection', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
   console.log('겜방연결후socket.id', socket.id);
 
