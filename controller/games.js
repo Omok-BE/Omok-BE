@@ -138,11 +138,11 @@ const gameFinish = async (req, res) => {
       //blackObserver 이김
       if (state === 'blackObserver') {
         //포인트 업데이트
-          await Users.updateOne({ id: blackO[i] }, { $set: { point: winTotalPoint } });
+          await Users.updateOne({ id }, { $set: { point: winTotalPoint } });
       //whiteObserver 짐
       } else if (state === 'whiteObserver') {
         //포인트 업데이트
-          await Users.updateOne({ id: whiteO[i] }, { $set: { point: loseTotalPoint } });
+          await Users.updateOne({ id }, { $set: { point: loseTotalPoint } });
       }
     }
     const myId = await Users.findOne({id})
