@@ -160,11 +160,9 @@ waitingRoom.on('connection', (socket) => {
 
   //대기실 내 채팅
   socket.on('chat', (data) => {
-    console.time('chat')
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname.id, chat };
     waitingRoom.to(roomNum).emit('chat', chatData);
-    console.timeEnd('chat')
   });
 
   //게임 시작
@@ -192,7 +190,7 @@ waitingRoom.on('connection', (socket) => {
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit('bye', id, userInfos);
     } catch (error) {
-      console.log('퇴장 errorMessage', error);
+      console.error('퇴장 errorMessage', error);
     }
     console.timeEnd('disconnecting')
   });
