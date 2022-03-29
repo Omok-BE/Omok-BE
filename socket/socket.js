@@ -333,46 +333,37 @@ function gameRoomCount(gameNum) {
 //game방 연결--수정중
 gameRoom.on('connection', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
-  console.log('겜방연결후socket.id', socket.id);
 
   //유저 id를 닉네임 설정
   socket.on('nickname', (nickname) => {
     socket['nickname'] = nickname;
-    console.log('게임방 닉네임은?', nickname);
-    console.log('소켓닉네임은???', socket.nickname);
   });
   
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
   });
 
-
   //game방 Join
   socket.on('joinGame', async (gameNum, id) => {
     thisGameNum=gameNum
-    console.log(`조인게임방번호:${gameNum }`);
     socket.join(gameNum);
     //게임방 입장시 유저 connect변경
     await Users.updateOne({ id }, { $set: { connect:'ingame'} })
 
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('360,게임방소켓JoinGame_observerCnt:', observerCnt);
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
   //game방 채팅
   socket.on('chat', (chat, gameNum) => {
     const data = { name:socket.nickname, chat };
-    console.log('게임방 채팅data:', data);
     gameRoom.to(gameNum).emit('chat', data, chat.state);
   });
 
   //game방 훈수채팅W
   socket.on('teachingW', async (chat, gameNum) => {
     const data = { name:socket.nickname, chat };
-    console.log('훈수쳇W소켓닉네임:', socket.nickname);
-    console.log('훈수쳇W data:', data);
-    
+
     //teachingCnt 업데이트
     gameRoom.to(gameNum).emit('teachingW', data);
     
@@ -381,8 +372,6 @@ gameRoom.on('connection', async (socket) => {
   //game방 훈수채팅B
   socket.on('teachingB', async (chat, gameNum) => {
     const data = { name:socket.nickname, chat };
-    console.log('훈수쳇B소켓닉네임:', socket.nickname);
-    console.log('훈수쳇B data:', data);
 
     //teachingCnt 업데이트
     gameRoom.to(gameNum).emit('teachingB', data);
@@ -391,8 +380,6 @@ gameRoom.on('connection', async (socket) => {
   //game방 훈수채팅- 플라잉
   socket.on('flyingWord', async (chat, gameNum) => {
     const data = { name: socket.nickname, chat };
-    console.log('플라잉채팅 닉네임♬♪:', socket.nickname);
-    console.log('플라잉채팅 data♬♪:', data);
     
     //teachingCnt 업데이트
     gameRoom.to(gameNum).emit('flyingWord', data);
@@ -403,8 +390,6 @@ gameRoom.on('connection', async (socket) => {
   socket.on("Pointer", (chat, gameNum) =>{
     pointer = true;
     const data = {name:socket.nickname, pointer:pointer};
-    console.log("Pointer♬♪:",socket.nickname);
-    console.log("Pointer data♬♪:",data);
     gameRoom.to(gameNum).emit("Pointer", data,chat);
   }); 
   
@@ -415,35 +400,27 @@ gameRoom.on('connection', async (socket) => {
     let count = findBoard.count;
 
     if(count % 2 == 0) {
-      console.time('board_check')
       if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
-        console.timeEnd('board_check')
         let checkSamsam=0 //삼삼확인
-        console.log("걸렸구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
         gameRoom.to(gameNum).emit("omog", data,checkSamsam,state);
         return;
       }
-      console.log("삼삼하구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
     } 
 
     if (bboard[xyToIndex(data.x, data.y)] != -1 &&
         bboard[xyToIndex(data.x, data.y)] != 3) {
-      console.log('돌아가', bboard);
     } else if (
       (state == 'whitePlayer' && count % 2 == 0) ||
       (state == 'blackPlayer' && count % 2 !== 0)
     ) {
-      console.log('너의 순서가 아니다 돌아가');
     } else {
       count % 2 == 0
         ? (bboard[xyToIndex(data.x, data.y)] = 1)
         : (bboard[xyToIndex(data.x, data.y)] = 2);
       data.board = bboard;
-      // data.order
       count++;
       data.count = count;
       await Boards.updateMany({gameNum},{$set: {count, board:bboard}});
-      console.log('오목게임', count, state);
       gameRoom.to(gameNum).emit('omog', data);
     }
   });
@@ -455,14 +432,12 @@ gameRoom.on('connection', async (socket) => {
 
     if (pointer){
       if (bboard[xyToIndex(data.x, data.y)] != -1) {
-        console.log("Pointer돌아가");
         return;
       }
       (bboard[xyToIndex(data.x, data.y)] = 3)
         data.board = bboard;
         // data.order
         let pointer = false;
-        console.log("Pointer 훈수", pointer);
 
         gameRoom.to(gameNum).emit("pointerOmog", data, count, pointer);
     }
@@ -479,11 +454,6 @@ gameRoom.on('connection', async (socket) => {
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
-      console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-      console.log('게임방 퇴장 소켓 id', socket.id);
-      console.log('게임방 퇴장 소켓.nickname', socket.nickname);
-      console.log('게임방 퇴장 소켓 room ', socket.rooms);
-      console.log('게임방 퇴장 네임스페이스 전체 소켓', gameRoom.adapter.rooms);
     } catch (error) {
       console.log(error);
     }
@@ -492,12 +462,7 @@ gameRoom.on('connection', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum, id ) => {
     try{
-      console.log("494,소켓,state:",state)
-      console.log("495,소켓,gameNum:",gameNum)
-      console.log("496,소켓,id:",id)
-
       gameRoom.to(gameNum).emit("byebye",state, id);
-      console.log("겜방소켓 byebye이벤트 성공");
     } catch(err) {
       console.log("겜방소켓 byebye이벤트 에러:",err);
     }

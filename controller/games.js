@@ -41,13 +41,10 @@ const gameCreate = async (req, res) => {
 //게임방 입장해서 정보가져오기
 const gameStart = async (req, res) => {
   try {
-    console.log("~~~~~~API- gameStart 진입~~~~")
     const { gameNum } = req.params;
-    console.log("46,gameStart의 gameNum:", gameNum);
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
-    console.log("~~~~~~API- gameStart 나가기나가기");
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     res.status(200).json({
       gameInfo,
@@ -402,15 +399,11 @@ const gameFinishShow = async (req, res) => {
 const gameDelete = async (req, res) => {
   try {
     const { gameNum } = req.params;
-    console.log("API,gameDelete,req.params:",req.params)
 
     const existGame = await Games.findOne({ gameNum:gameNum });
-    console.log("399,delete,existGame:",existGame)
     if (existGame){
       const deleteRoomNum = await Rooms.deleteOne({ roomNum: Number(gameNum) });
       const deleteGameNum = await Games.deleteOne({ gameNum: Number(gameNum) });
-      console.log("403,deleteRoomNum",deleteRoomNum)
-      console.log("404,deleteGameNum",deleteGameNum)
     }
 
     res.status(200).json({
