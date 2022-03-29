@@ -371,8 +371,8 @@ const gameDelete = async (req, res) => {
 
 
 //게임방내 유저 state별 정보
-module.exports.gameUserInfo = async(gameNum) => {
-  await Games.aggregate([
+async function gameUserInfo(gameNum) {
+  return await Games.aggregate([
    {
      $match: { gameNum: Number(gameNum) },
    },
