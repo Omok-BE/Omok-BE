@@ -336,6 +336,13 @@ gameRoom.on('connect', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
   console.log('겜방연결후socket.id', socket.id);
 
+  //유저 id를 닉네임 설정
+  socket.on('nickname', (nickname) => {
+    socket['nickname'] = nickname;
+    console.log('게임방 닉네임은?', nickname);
+    console.log('소켓닉네임은???', socket.nickname);
+  });
+  
   //게임방 입장시 유저 connect변경
   await Users.updateOne({ id:socket.nickname }, { $set: { connect:'ingame'} })
 
@@ -343,12 +350,6 @@ gameRoom.on('connect', async (socket) => {
     console.log(`게임방 이벤트: ${event}`);
   });
 
-  //유저 id를 닉네임 설정
-  socket.on('nickname', (nickname) => {
-    socket['nickname'] = nickname;
-    console.log('게임방 닉네임은?', nickname);
-    console.log('소켓닉네임은???', socket.nickname);
-  });
 
   //game방 Join
   socket.on('joinGame', async (gameNum) => {
