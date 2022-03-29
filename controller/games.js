@@ -104,25 +104,33 @@ const gameFinish = async (req, res) => {
     const observerTeachingCnt = await Users.findOne({ id:id }, { _id: false, teachingCnt: true });
     const thisTeachingCnt = observerTeachingCnt.teachingCnt;  
     //이긴팀 point
-    const useTeachingPoint = thisTeachingCnt * 10; //쓴 포인트
-    const chatPoint = useTeachingPoint * 1 //훈수채팅포인트
+    const useTeachingPoint = thisTeachingCnt * 10;  //쓴 포인트
+    const chatPoint = useTeachingPoint * 1  //훈수채팅포인트
     const addPoint = 20  //승리팀 추가 포인트
-    const winGetTeachingPoint = useTeachingPoint + chatPoint + addPoint; //얻은 포인트
+    let winGetTeachingPoint = useTeachingPoint + chatPoint + addPoint;  //얻은 포인트
+    console.log("111,gameFinish,이긴옵저버 최대포인트:",winGetTeachingPoint)
     // // 포인트제한두기- 최대포인트 300
     // if(winGetTeachingPoint >= 300){
     //   winGetTeachingPoint = 300
     // }
-    // console.log("116,gameFinish,이긴옵저버 최대포인트:",winGetTeachingPoint)
-    const winTotalPoint = point + winGetTeachingPoint; //게임후 총 포인트(기존 + 얻은)
+    
+    const winTotalPoint = point + winGetTeachingPoint;  //게임후 총 포인트(기존 + 얻은)
+    console.log("118,gameFinish,이긴옵저버 winTotalPoint:",winTotalPoint)
+
     //진팀 point
     const penalty = 20  //패널티
-    const loseGetTeachingPoint = useTeachingPoint + chatPoint + penalty; //얻은 포인트
-    // // 포인트제한두기- 최소포인트 300
+    let loseGetTeachingPoint = useTeachingPoint + chatPoint + penalty;
+    console.log("123,gameFinish,이긴옵저버 최소포인트:",loseGetTeachingPoint) //얻은 포인트
+    // 포인트제한두기- 최소포인트 300
     // if(loseGetTeachingPoint >= 300){
     //   loseGetTeachingPoint = 300
+    // } else if(loseGetTeachingPoint < 300){
+    //   loseGetTeachingPoint = useTeachingPoint + chatPoint + penalty;
+    //   console.log("116,gameFinish,이긴옵저버 최소포인트:",loseGetTeachingPoint)
     // }
-    // console.log("125,gameFinish,진옵저버 최소포인트:",loseGetTeachingPoint)
-    const loseTotalPoint = point - loseGetTeachingPoint; //게임후 총 포인트
+    const loseTotalPoint = point - loseGetTeachingPoint;  //게임후 총 포인트(기존 + 얻은)
+    console.log("132,gameFinish,이긴옵저버 loseTotalPoint:",loseTotalPoint)
+
     //whitePlayer 이김
     if (winPlayer.state === 'whitePlayer') {
       console.log("옵저버포인트계산- whitePlayer 이김")
