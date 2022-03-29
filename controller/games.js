@@ -108,20 +108,20 @@ const gameFinish = async (req, res) => {
     const chatPoint = useTeachingPoint * 1 //훈수채팅포인트
     const addPoint = 20  //승리팀 추가 포인트
     const winGetTeachingPoint = useTeachingPoint + chatPoint + addPoint; //얻은 포인트
-    // 포인트제한두기- 최대포인트 300
-    if(winGetTeachingPoint >= 300){
-      winGetTeachingPoint = 300
-    }
-    console.log("116,gameFinish,이긴옵저버 최대포인트:",winGetTeachingPoint)
+    // // 포인트제한두기- 최대포인트 300
+    // if(winGetTeachingPoint >= 300){
+    //   winGetTeachingPoint = 300
+    // }
+    // console.log("116,gameFinish,이긴옵저버 최대포인트:",winGetTeachingPoint)
     const winTotalPoint = point + winGetTeachingPoint; //게임후 총 포인트(기존 + 얻은)
     //진팀 point
     const penalty = 20  //패널티
     const loseGetTeachingPoint = useTeachingPoint + chatPoint + penalty; //얻은 포인트
-    // 포인트제한두기- 최소포인트 300
-    if(loseGetTeachingPoint >= 300){
-      loseGetTeachingPoint = 300
-    }
-    console.log("125,gameFinish,진옵저버 최소포인트:",loseGetTeachingPoint)
+    // // 포인트제한두기- 최소포인트 300
+    // if(loseGetTeachingPoint >= 300){
+    //   loseGetTeachingPoint = 300
+    // }
+    // console.log("125,gameFinish,진옵저버 최소포인트:",loseGetTeachingPoint)
     const loseTotalPoint = point - loseGetTeachingPoint; //게임후 총 포인트
     //whitePlayer 이김
     if (winPlayer.state === 'whitePlayer') {
