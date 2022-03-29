@@ -1,7 +1,6 @@
 const app = require('../app');
 const Users = require('../models/users');
 const Rooms = require('../models/rooms');
-const Games = require('../models/games');
 const Boards = require('../models/boards');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
@@ -33,6 +32,7 @@ lobby.on('connection', (socket) => {
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   socket.on('lobby', async (id) => {
+    // console.log('check Event lobby', id)
     await Users.updateOne({id}, {$set: { connect: 'online'}})
     lobbyid = id;
   })
@@ -63,7 +63,6 @@ waitingRoom.on('connection', (socket) => {
     socket.join(roomNum);
     socket.join(role);
     const playerCnt = waitingRoomCount(role);
-    console.log("state", state)
     await enterRoomByPlayer({
       id: socket.nickname.id,
       roomNum,
@@ -157,11 +156,9 @@ waitingRoom.on('connection', (socket) => {
 
   //대기실 내 채팅
   socket.on('chat', (data) => {
-    console.time('chat')
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname.id, chat };
     waitingRoom.to(roomNum).emit('chat', chatData);
-    console.timeEnd('chat')
   });
 
   //게임 시작
@@ -189,7 +186,7 @@ waitingRoom.on('connection', (socket) => {
       const userInfos = await findUserInfos(roomNum);
       waitingRoom.to(roomNum).emit('bye', id, userInfos);
     } catch (error) {
-      console.log('퇴장 errorMessage', error);
+      console.error('퇴장 errorMessage', error);
     }
     console.timeEnd('disconnecting')
   });
@@ -359,7 +356,7 @@ gameRoom.on('connection', async (socket) => {
     await Users.updateOne({ id }, { $set: { connect:'ingame'} })
 
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('377,게임방소켓JoinGame_observerCnt:', observerCnt);
+    console.log('360,게임방소켓JoinGame_observerCnt:', observerCnt);
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
@@ -493,9 +490,9 @@ gameRoom.on('connection', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum, id ) => {
     try{
-      console.log("511,소켓,state:",state)
-      console.log("512,소켓,gameNum:",gameNum)
-      console.log("513,소켓,id:",id)
+      console.log("494,소켓,state:",state)
+      console.log("495,소켓,gameNum:",gameNum)
+      console.log("496,소켓,id:",id)
 
       gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
@@ -503,8 +500,6 @@ gameRoom.on('connection', async (socket) => {
       console.log("겜방소켓 byebye이벤트 에러:",err);
     }
   });
-
-    
 });
-
-module.exports = { httpServer };
+  
+  module.exports = { httpServer };

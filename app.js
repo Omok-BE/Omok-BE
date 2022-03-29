@@ -10,26 +10,12 @@ const lobbyRouter = require('./routes/lobby');
 const gameRouter = require('./routes/games');
 const adminRouter = require('./routes/admin')
 
-const requestMiddleware = (req, res, next) => {
-  console.log(
-    'Request URL:',
-    req.originalUrl,
-    ' - ',
-    new Date(+new Date() + 3240 * 10000)
-      .toISOString()
-      .replace('T', ' ')
-      .replace(/\..*/, '')
-  );
-  next();
-};
-
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.static('./views'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(requestMiddleware);
 app.use(
   cors({
     origin: true,
