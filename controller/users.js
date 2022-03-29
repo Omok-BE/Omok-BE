@@ -77,7 +77,7 @@ const login = async (req, res) => {
     }
     // check login
     else if(user.connect === 'online'){
-      res.status(401).sned({
+      res.status(401).send({
         errorMessage: '비정상적 로그아웃을 하였거나 이미 접속중인 id입니다.'
       });
       return
