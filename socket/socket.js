@@ -32,6 +32,7 @@ lobby.on('connection', (socket) => {
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   socket.on('lobby', async (id) => {
+    console.log('check Event lobby', id)
     await Users.updateOne({id}, {$set: { connect: 'online'}})
     lobbyid = id;
   })
