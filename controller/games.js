@@ -127,16 +127,9 @@ const gameFinish = async (req, res) => {
     //whitePlayer 이김
     if (winPlayer.state === 'whitePlayer') {
       if (state === 'whiteObserver') {
-        //포인트 업데이트
-        // for(let i=0; i<whiteO.length; i++){
-        //   findWhiteOId = whiteO[i]
           await Users.updateOne({ id }, { $set: { point: winTotalPoint } });
-        // }
       } else if (state === 'blackObserver') {
-        // for(let i=0; i<blackO.length; i++){
-        //   findBlackOId = blackO[i]
           await Users.updateOne({ id }, { $set: { point: loseTotalPoint } });
-        // }
       }
     }
     
@@ -145,17 +138,11 @@ const gameFinish = async (req, res) => {
       //blackObserver 이김
       if (state === 'blackObserver') {
         //포인트 업데이트
-        for(let i=0; i<blackO.length; i++){
-          findBlackOId = blackO[i]
           await Users.updateOne({ id: blackO[i] }, { $set: { point: winTotalPoint } });
-        }
       //whiteObserver 짐
       } else if (state === 'whiteObserver') {
         //포인트 업데이트
-        for(let i=0; i<whiteO.length; i++){
-          findWhiteOId = whiteO[i]
           await Users.updateOne({ id: whiteO[i] }, { $set: { point: loseTotalPoint } });
-        }
       }
     }
     const myId = await Users.findOne({id})
