@@ -212,6 +212,7 @@ let xyToIndex = (x, y) => {
   return x + y * 19;
 };
 
+//오목 33
 function check_33(x,  y, board){
 	let count3 = 0;
 	// 가로체크.
@@ -253,7 +254,8 @@ function check_33(x,  y, board){
 	if (count3 > 1) return 1;
 	else return 0;
 }
- 
+
+//오목 44
 function check_44( x,  y,board)
 {
 	let count4 = 0;
@@ -343,21 +345,21 @@ gameRoom.on('connection', async (socket) => {
     console.log('소켓닉네임은???', socket.nickname);
   });
   
-  //게임방 입장시 유저 connect변경
-  const ingameUser = await Users.updateOne({ id:socket.nickname }, { $set: { connect:'ingame'} })
-  console.log("348,ingameUser:",ingameUser)
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
   });
 
 
   //game방 Join
-  socket.on('joinGame', async (gameNum) => {
+  socket.on('joinGame', async (gameNum, id) => {
     thisGameNum=gameNum
     console.log(`조인게임방번호:${gameNum }`);
     socket.join(gameNum);
+    //게임방 입장시 유저 connect변경
+    await Users.updateOne({ id }, { $set: { connect:'ingame'} })
+
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('359,game방소켓JoinGame_observerCnt:', observerCnt);
+    console.log('377,게임방소켓JoinGame_observerCnt:', observerCnt);
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
@@ -473,8 +475,7 @@ gameRoom.on('connection', async (socket) => {
     nickname = socket.nickname
     try {
       //게임방 퇴장시 유저 connect변경
-      const inGameUserOut = await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
-      console.log("477,inGameUserOut",inGameUserOut)
+      await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
       gameRoom.to(gameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
@@ -492,9 +493,9 @@ gameRoom.on('connection', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum, id ) => {
     try{
-      console.log("494,소켓,state:",state)
-      console.log("495,소켓,gameNum:",gameNum)
-      console.log("496,소켓,id:",id)
+      console.log("511,소켓,state:",state)
+      console.log("512,소켓,gameNum:",gameNum)
+      console.log("513,소켓,id:",id)
 
       gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
