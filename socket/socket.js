@@ -2,6 +2,7 @@ const app = require('../app');
 const Users = require('../models/users');
 const Rooms = require('../models/rooms');
 const Boards = require('../models/boards');
+const Games = require('../models/games');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
@@ -11,6 +12,7 @@ const SocketEvent = require('../controller/roomSocket')
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
 const { instrument } = require('@socket.io/admin-ui');
+const games = require('../models/games');
 const io = new Server(httpServer, {
   cors: {
     origin: true,
@@ -450,10 +452,20 @@ gameRoom.on('connection', async (socket) => {
     try {
       //게임방 퇴장시 유저 connect변경
       await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
+      
+      const gameId = await Games.findOne({gameNum}, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      if(gameId.blackTeamObserver === nickname){
+        await Games.updateOne({ gameNum }, {$pull: {blackTeamObserver: nickname}})
+      }
+      if(gameId.whiteTeamObserver === nickname){
+        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: nickname}})
+      }  
+        
       gameRoom.to(gameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
+
     } catch (error) {
       console.log(error);
     }

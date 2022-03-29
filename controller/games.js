@@ -96,9 +96,6 @@ const gameFinish = async (req, res) => {
     console.log(",gameFinish,gameInfo:",gameInfo)
     const blackO = gameInfo.blackTeamObserver
     const whiteO = gameInfo.whiteTeamObserver
-    let findBlackOId;
-    let findWhiteOId;
-    
     
 
     //훈수채팅 수 
