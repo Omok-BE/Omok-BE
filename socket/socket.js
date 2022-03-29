@@ -29,9 +29,14 @@ let lobbyid;
 lobby.on('connection', (socket) => {
   console.log('connect lobby socket', socket.id);
 
-  socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
+  socket.on('nickname', (nickname) => (
+    socket['nickname'] = nickname, 
+    console.log('nicknameEvent' , socket.nickname)
+    )
+  );
 
   socket.on('lobby', async (id) => {
+    console.log('check Event lobby', id)
     await Users.updateOne({id}, {$set: { connect: 'online'}})
     lobbyid = id;
   })
@@ -357,7 +362,7 @@ gameRoom.on('connection', async (socket) => {
     await Users.updateOne({ id }, { $set: { connect:'ingame'} })
 
     const observerCnt = gameRoomCount(gameNum) - 2;
-    console.log('377,게임방소켓JoinGame_observerCnt:', observerCnt);
+    console.log('360,게임방소켓JoinGame_observerCnt:', observerCnt);
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
 
@@ -491,9 +496,9 @@ gameRoom.on('connection', async (socket) => {
   //게임방 나갈떄
   socket.on('byebye', async (state, gameNum, id ) => {
     try{
-      console.log("511,소켓,state:",state)
-      console.log("512,소켓,gameNum:",gameNum)
-      console.log("513,소켓,id:",id)
+      console.log("494,소켓,state:",state)
+      console.log("495,소켓,gameNum:",gameNum)
+      console.log("496,소켓,id:",id)
 
       gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
