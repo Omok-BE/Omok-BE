@@ -1,7 +1,6 @@
 const app = require('../app');
 const Users = require('../models/users');
 const Rooms = require('../models/rooms');
-const Games = require('../models/games');
 const Boards = require('../models/boards');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
@@ -503,8 +502,6 @@ gameRoom.on('connection', async (socket) => {
       console.log("겜방소켓 byebye이벤트 에러:",err);
     }
   });
-
-    
 });
-
-module.exports = { httpServer };
+  
+  module.exports = { httpServer };
