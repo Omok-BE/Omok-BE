@@ -11,6 +11,7 @@ const roomsSchema = new mongoose.Schema({
   whiteTeamPlayer: String,
   whiteTeamObserver: Array,
   timer: String,
+  boardColor: Number,
 });
 
 roomsSchema.plugin(AutoIncrement, { inc_field: 'roomNum' });
