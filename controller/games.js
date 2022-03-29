@@ -187,6 +187,9 @@ const gameFinish = async (req, res) => {
         console.log("1,화이트옵 진thisTeachingCnt리셋000:", thisTeachingCnt)
       }
     }
+    const myId = await Users.findOne({id})
+    console.log("191,myId",myId)
+
     res.status(200).json({
       ok: true,
       message: '결과창gameFinish 성공!',
