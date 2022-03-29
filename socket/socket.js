@@ -419,7 +419,9 @@ gameRoom.on('connection', async (socket) => {
     let count = findBoard.count;
 
     if(count % 2 == 0) {
+      console.time('board_check')
       if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
+        console.timeEnd('board_check')
         let checkSamsam=0 //삼삼확인
         console.log("걸렸구만",check_33(data.x,data.y,bboard),check_44(data.x,data.y,bboard)) ;
         gameRoom.to(gameNum).emit("omog", data,checkSamsam,state);
