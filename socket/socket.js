@@ -44,8 +44,6 @@ lobby.on('connection', (socket) => {
 
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting');
-let roomNumber;
-let id;
 
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
@@ -67,13 +65,13 @@ waitingRoom.on('connection', (socket) => {
     const playerCnt = waitingRoomCount(role);
     console.log("state", state)
     await enterRoomByPlayer({
-      id: socket.nickname,
+      id: socket.nickname.id,
       roomNum,
       playerCnt,
       state
     });
     const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
+    waitingRoom.to(roomNum).emit('welcome', socket.nickname.id, userInfos);
     console.timeEnd('enterRoomPlayer')
   });
 
@@ -87,13 +85,13 @@ waitingRoom.on('connection', (socket) => {
     socket.join(role);
     const observerCnt = waitingRoomCount(role);
     await enterRoomByObserver({
-      id: socket.nickname,
+      id: socket.nickname.id,
       roomNum,
       observerCnt,
       state
     });
     const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
+    waitingRoom.to(roomNum).emit('welcome', socket.nickname.id, userInfos);
     console.timeEnd('enterRoomObserver')
   });
 
@@ -103,7 +101,7 @@ waitingRoom.on('connection', (socket) => {
     const { roomNum, previousTeam, wantTeam } = data;
     if (previousTeam.includes('Player')) {
       await ToPlayerFromPlayer({
-        id: socket.nickname,
+        id: socket.nickname.id,
         roomNum,
         wantTeam
       });
@@ -113,7 +111,7 @@ waitingRoom.on('connection', (socket) => {
       const playerCnt = waitingRoomCount(`${roomNum}player`);
       const observerCnt = waitingRoomCount(`${roomNum}observer`);
       await ToPlayerFromObserver({
-        id: socket.nickname,
+        id: socket.nickname.id,
         roomNum,
         playerCnt,
         observerCnt,
@@ -122,7 +120,7 @@ waitingRoom.on('connection', (socket) => {
       });
     };
     const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
+    waitingRoom.to(roomNum).emit('changeComplete', socket.nickname.id, userInfos);
     console.timeEnd('changeToPlayer')
   });
 
@@ -137,7 +135,7 @@ waitingRoom.on('connection', (socket) => {
       const playerCnt = waitingRoomCount(`${roomNum}player`);
       const observerCnt = waitingRoomCount(`${roomNum}observer`);
       await ToObserverFromPlayer({
-        id: socket.nickname,
+        id: socket.nickname.id,
         roomNum,
         playerCnt,
         observerCnt,
@@ -146,14 +144,14 @@ waitingRoom.on('connection', (socket) => {
       })
     } else {
       await ToObserverFromObserver({
-        id: socket.nickname,
+        id: socket.nickname.id,
         roomNum,
         previousTeam,
         wantTeam
       })
     };
     const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
+    waitingRoom.to(roomNum).emit('changeComplete', socket.nickname.id, userInfos);
     console.timeEnd('changeToObserver')
   });
 
@@ -161,7 +159,7 @@ waitingRoom.on('connection', (socket) => {
   socket.on('chat', (data) => {
     console.time('chat')
     const { roomNum, chat } = data;
-    const chatData = { nickname: socket.nickname, chat };
+    const chatData = { nickname: socket.nickname.id, chat };
     waitingRoom.to(roomNum).emit('chat', chatData);
     console.timeEnd('chat')
   });
@@ -174,8 +172,7 @@ waitingRoom.on('connection', (socket) => {
   //퇴장시 방 인원 숫자 최신화
   socket.on('disconnecting', async () => {
     console.time('disconnecting')
-    let roomNum = roomNumber
-    id = socket.nickname
+    const { id, roomNum } = socket.nickname
     try {
       if (socket.rooms.has(`${roomNum}player`)) {
         const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
@@ -196,18 +193,6 @@ waitingRoom.on('connection', (socket) => {
     }
     console.timeEnd('disconnecting')
   });
-
-  //퇴장시 방 인원 정보 최신화
-  // socket.on('disconnect', async () => {
-  //   console.time('disconnect')
-  //   try{
-  //     let roomNum = roomNumber
-
-  // } catch(error) {
-  //   console.log(error)
-  // }
-  //   console.timeEnd('disconnect')
-  // });
 
 });
 
