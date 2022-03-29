@@ -358,8 +358,8 @@ gameRoom.on('connection', async (socket) => {
   });
   
   //게임방 입장시 유저 connect변경
-  await Users.updateOne({ id:socket.nickname }, { $set: { connect:'ingame'} })
-
+  const ingameUser = await Users.updateOne({ id:socket.nickname }, { $set: { connect:'ingame'} })
+  console.log("348,ingameUser:",ingameUser)
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
   });
@@ -487,8 +487,8 @@ gameRoom.on('connection', async (socket) => {
     nickname = socket.nickname
     try {
       //게임방 퇴장시 유저 connect변경
-      await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
-
+      const inGameUserOut = await Users.updateOne({ id:socket.nickname }, { $set: {connect:'offline'} });
+      console.log("477,inGameUserOut",inGameUserOut)
       gameRoom.to(gameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
