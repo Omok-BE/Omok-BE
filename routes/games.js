@@ -5,7 +5,6 @@ const {
   gameCreate,
   gameStart,
   gameFinish,
-  thisGameOut,
   gameFinishShow,
   gameDelete,
 } = require('../controller/games');
@@ -18,9 +17,6 @@ router.get('/game/start/:gameNum', gameStart);
 
 //[결과창]:게임이 끝나면 바로 보내는 내용
 router.post('/gameFinish', gameFinish);
-
-//[결과창]기권패: 게임중간에 player가 나갔을때
-router.post('thisGameOut', thisGameOut);
 
 //[결과창]:페이지로 들어가자마자
 router.post('/gameFinish/show', gameFinishShow);
