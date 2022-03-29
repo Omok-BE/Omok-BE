@@ -29,7 +29,11 @@ let lobbyid;
 lobby.on('connection', (socket) => {
   console.log('connect lobby socket', socket.id);
 
-  socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
+  socket.on('nickname', (nickname) => (
+    socket['nickname'] = nickname, 
+    console.log('nicknameEvent' , socket.nickname)
+    )
+  );
 
   socket.on('lobby', async (id) => {
     console.log('check Event lobby', id)
