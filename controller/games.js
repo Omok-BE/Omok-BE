@@ -48,11 +48,14 @@ const gameStart = async (req, res) => {
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
-
-    console.log('52번gameInfo[0]:', gameInfo[0]);
+    console.log('51번gameInfo[0]:', gameInfo[0]);
     console.log("~~~~~~API- gameStart 나가기나가기");
+
+    const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
+
     res.status(200).json({
       gameInfo,
+      gameName,
       ok: true,
       message: '게임방 입장해서 정보가져오기 성공!',
     });
@@ -160,179 +163,6 @@ const gameFinish = async (req, res) => {
     });
   }
 };
-
-
-
-//[결과창]페이지로 들어가자마자
-const thisGameOutShow = async (req, res) => {
-  try { 
-    const { id, gameNum, result } = req.body;
-    console.log('268,결과창show진입:');
-    console.log('269,결과창show,req.body:', req.body);
-
-    //게임방내 유저 state별 정보
-    const gameInfo = await gameUserInfo(gameNum);
-    console.log("273,show,gameInfo[0]:",gameInfo[0]); 
-    const findGameName = await Games.findOne({gameNum}); 
-
-    const blackP = gameInfo[0].blackTeamPlayer[0]
-    const blackO = gameInfo[0].blackTeamObserver
-    const whiteP = gameInfo[0].whiteTeamPlayer[0]
-    const whiteO = gameInfo[0].whiteTeamObserver
-
-
-    //게임승리 player- black
-    let winPlayerArray = [];
-    let losePlayerArray = [];
-    let winObserverArray1 = [];
-    let loseObserverArray1 = [];
-    if (result.win === blackP.id) {
-      console.log("288,Show,이긴블랙 플레이어는:", result.win)
-      //블랙플레이어 승 계산
-      const getBPoint = 200  //우승포인트 
-      const existBPoint = blackP.point - getBPoint  //게임전 포인트(게임후 변경된 포인트 가져옴)
-      const totalBPoint = existBPoint + getBPoint  // 게임후 총 포인트
-      const winInfo = {id:blackP.id, usePoint:0, getPoint:getBPoint, existPoint:existBPoint,
-                                          totalPoint:totalBPoint, state:blackP.state };
-      winPlayerArray.push(winInfo);    
-      console.log("296,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
-
-      //화이트플레이어 패 계산
-      const getWPoint = 100  //패배 패널티포인트
-      const existWPoint = whiteP.point + getWPoint //게임전 포인트(게임후 변경된 포인트 가져옴)
-      const totalWPoint = existWPoint - getWPoint // 게임후 총 포인트
-      const loseInfo = {id:whiteP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint,
-                                        totalPoint:totalWPoint, state:whiteP.state };
-      losePlayerArray.push(loseInfo);
-      console.log("305,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
-      
-      //블랙옵저버 승 계산
-      for(let i=0; i<blackO.length; i++){
-          if (blackO[i].state === 'blackObserver') {
-          //이긴팀 포인트 업데이트
-          const usePoint = blackO[i].teachingCnt * 10;  //쓴포인트 
-          const chatPoint = usePoint * 1  //채팅포인트
-          const addPoint = 20; //추가포인트
-          const getPoint = usePoint + chatPoint + addPoint; //얻은포인트
-          const existPoint = blackO[i].point - getPoint //기존포인트
-          const totalPoint = blackO[i].point;  //총포인트
-          const winObserver = { id:blackO[i].id, usePoint:usePoint, getPoint:getPoint, 
-                                existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
-          winObserverArray1.push(winObserver);
-          console.log("320,show,win,blackO[i]",blackO[i])  
-        }
-      }
-      console.log("323,show, 이긴블랙옵 winObserverArray1는?", winObserverArray1);
-      
-      //화이트옵저버 패 계산
-      for(let i=0; i<whiteO.length; i++){
-        if (whiteO[i].state === 'whiteObserver') {
-          //진팀 포인트 업데이트
-          const usePoint = whiteO[i].teachingCnt * 10;  //쓴포인트
-          const chatPoint = usePoint * 1  //채팅포인트
-          const penalty = 20; //진팀 패널티
-          const getPoint = usePoint + chatPoint + penalty; //얻은포인트
-          const existPoint = whiteO[i].point + getPoint //기존포인트
-          const totalPoint = whiteO[i].point;  //총포인트
-          const loseObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint: - getPoint, 
-                                 existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
-          loseObserverArray1.push(loseObserver);
-          console.log("338,show,lose,whiteO[i]",whiteO[i])  
-        }
-      } 
-      console.log("341,show, 진화이트옵 loseObserverArray1는?", loseObserverArray1);
-    } 
-
-    //게임승리 player- white 
-    let winObserverArray2 = [];
-    let loseObserverArray2 = [];
-    if (result.win === whiteP.id) {
-      console.log("348,Show,이긴화이트 플레이어는:", result.win)
-      //화이트플레이어 승 계산
-      const getBPoint = 200  //우승포인트 
-      const existBPoint = whiteP.point - getBPoint //게임전 포인트
-      const totalBPoint = existBPoint + getBPoint  // 게임후 총 포인트
-      const winInfo = {id:whiteP.id, usePoint:0, getPoint:getBPoint, existPoint:existBPoint,
-                                          totalPoint:totalBPoint, state:whiteP.state };
-      winPlayerArray.push(winInfo);    
-      console.log("356,gameFinishShow --> 이겼다~~!!winPlayerArray:",winPlayerArray);
-
-      //블랙플레이어 패 계산
-      const getWPoint = 100  //패배 패널티포인트
-      const existWPoint = blackP.point + getWPoint //게임전 포인트
-      const totalWPoint = existWPoint - getWPoint // 게임후 총 포인트
-      const loseInfo = {id:blackP.id, usePoint:0, getPoint: - getWPoint, existPoint:existWPoint,
-                                        totalPoint:totalWPoint, state:blackP.state };
-      losePlayerArray.push(loseInfo);
-      console.log("365,gameFinishShow --> 졌어요.....losePlayerArray:",losePlayerArray);
-      
-      //화이트옵저버 승 계산
-      for(let i=0; i<whiteO.length; i++){
-        if (whiteO[i].state === 'whiteObserver') {
-        //이긴팀 포인트 업데이트
-        const usePoint = whiteO[i].teachingCnt  * 10;  //쓴포인트
-        const chatPoint = usePoint * 1  //채팅포인트
-        const addPoint = 20; //추가포인트
-        const getPoint = usePoint + chatPoint + addPoint; //얻은포인트
-        const existPoint = whiteO[i].point - getPoint //기존포인트
-        const totalPoint = whiteO[i].point;  //총포인트
-        const winObserver = { id:whiteO[i].id, usePoint:usePoint, getPoint:getPoint,
-                                existPoint:existPoint, totalPoint:totalPoint, state:whiteO[i].state };
-        winObserverArray2.push(winObserver);
-        console.log("380,show,win,whiteO[i]",whiteO[i])
-        }
-      }  
-      console.log("383,show, 이긴블랙옵 winObserverArray2는?", winObserverArray2);
-
-      //블랙옵저버 패 계산
-      for(let i=0; i<blackO.length; i++){
-        if (blackO[i].state === 'blackObserver') {
-          //진팀 포인트 업데이트
-          const usePoint = blackO[i].teachingCnt * 10;  //쓴포인트
-          const chatPoint = usePoint * 1  //채팅포인트
-          const penalty = 20; //진팀 패널티
-          const getPoint = usePoint + chatPoint + penalty;  //얻은포인트
-          const existPoint = blackO[i].point + getPoint //기존포인트
-          const totalPoint = blackO[i].point;  //총포인트
-          const loseObserver = { id:blackO[i].id, usePoint:usePoint, getPoint: - getPoint, 
-                                   existPoint:existPoint, totalPoint:totalPoint, state:blackO[i].state };
-          loseObserverArray2.push(loseObserver);
-          console.log("398,show,lose,blackO[i]",blackO[i])
-        }
-      } 
-      console.log("401,show, 진화이트옵 loseObserverArray2는?", loseObserverArray2);
-    }  
-
-    const win = [...winPlayerArray, ...winObserverArray1, ...winObserverArray2];
-    const lose = [...losePlayerArray, ...loseObserverArray1, ...loseObserverArray2];
-    console.log("406,show,win배열 총정보:",win)
-    console.log("407,show,lose배열 총정보:",lose)
-    console.log("408,result",result)
-
-    //Observer의 teachingCnt 0으로 리셋
-    const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true});
-    if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
-    await Users.updateOne({ id:id }, { $set: { teachingCnt: 0 }});
-    //게임결과 후 유저 state 'online'변경
-    await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
-
-    res.status(200).json({
-      win,
-      lose,
-      result,
-      ok: true,
-      message: 'gameFinishShow 성공!',
-    });
-  } catch (err) {
-    console.log(`API_결과창gameFinish 에러: ${err}`);
-    res.status(400).json({
-      ok: false,
-      errorMessage: 'gameFinishShow 실패',
-    });
-  }
-};
-
-
 
 //[결과창]페이지로 들어가자마자
 const gameFinishShow = async (req, res) => {
@@ -504,7 +334,6 @@ const gameFinishShow = async (req, res) => {
   }
 };
 
-
 //결과창에서 나가기버튼 클릭시 게임방 삭제
 const gameDelete = async (req, res) => {
   
@@ -533,6 +362,7 @@ const gameDelete = async (req, res) => {
     });
   }
 };
+
 
 //게임방내 유저 state별 정보
 async function gameUserInfo(gameNum) {
