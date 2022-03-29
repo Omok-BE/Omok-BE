@@ -33,7 +33,7 @@ const gameCreate = async (req, res) => {
     });
     res.status(201).json({ ok: true });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).json({ ok: false });
   }
 };
