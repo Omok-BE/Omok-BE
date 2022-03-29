@@ -185,6 +185,12 @@ waitingRoom.on('connection', (socket) => {
         const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
         await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
       }
+      await peopleInRoomUpdate({
+        id,
+        roomNum
+      });
+      const userInfos = await findUserInfos(roomNum);
+      waitingRoom.to(roomNum).emit('bye', id, userInfos);
     } catch (error) {
       console.log('퇴장 errorMessage', error);
     }
@@ -192,21 +198,16 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //퇴장시 방 인원 정보 최신화
-  socket.on('disconnect', async () => {
-    console.time('disconnect')
-    try{
-      let roomNum = roomNumber
-    await peopleInRoomUpdate({
-      id,
-      roomNum
-    });
-    const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('bye', id, userInfos);
-  } catch(error) {
-    console.log(error)
-  }
-    console.timeEnd('disconnect')
-  });
+  // socket.on('disconnect', async () => {
+  //   console.time('disconnect')
+  //   try{
+  //     let roomNum = roomNumber
+
+  // } catch(error) {
+  //   console.log(error)
+  // }
+  //   console.timeEnd('disconnect')
+  // });
 
 });
 
