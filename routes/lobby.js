@@ -19,7 +19,7 @@ const {
 router.get('/lobby', lobby);
 
 //로비 유저리스트
-router.get('/lobby/userList', userList);
+router.get('/lobby/userList/:id', userList);
 
 // 로비 간이 리더리스트
 router.get('/lobby/leaderList', leaderList);

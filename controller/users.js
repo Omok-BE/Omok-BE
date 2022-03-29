@@ -75,6 +75,13 @@ const login = async (req, res) => {
       });
       return;
     }
+    // check login
+    else if(user.connect === 'online'){
+      res.status(401).send({
+        errorMessage: '비정상적 로그아웃을 하였거나 이미 접속중인 id입니다.'
+      });
+      return
+    }
     const token = jwt.sign({ id: user.id }, process.env.TOKENKEY);
     //user state값 online으로 만들어주는거
     if (token) {

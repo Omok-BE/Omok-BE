@@ -18,6 +18,9 @@ const lobby = async (req, res) => {
 // 로비에서 offline제외 유저리스트
 const userList = async (req, res) => {
   try {
+    // 내 상태 최신화
+    let id = req.params.id
+    await User.updateOne({id}, {$set : { connect: 'online' }})
     const allUser = await User.find({ connect: { $ne: 'offline' } });
 
     res.send(allUser);

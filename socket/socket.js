@@ -58,6 +58,7 @@ waitingRoom.on('connection', (socket) => {
 
   //플레이어로 입장시 정보 업데이트
   socket.on('enterRoomPlayer', async (data) => {
+    console.time('enterRoomPlayer')
     const { roomNum, state } = data;
     roomNumber = roomNum;
     const role = `${roomNum}player`;
@@ -73,10 +74,12 @@ waitingRoom.on('connection', (socket) => {
     });
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
+    console.timeEnd('enterRoomPlayer')
   });
 
   //관전자로 입장시 정보 업데이트
   socket.on('enterRoomObserver', async (data) => {
+    console.time('enterRoomObserver')
     const { roomNum, state } = data;
     roomNumber = roomNum;
     const role = `${roomNum}observer`;
@@ -91,10 +94,12 @@ waitingRoom.on('connection', (socket) => {
     });
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
+    console.timeEnd('enterRoomObserver')
   });
 
   // 플레이어로 변경시 정보 업데이트
   socket.on('changeToPlayer', async (data) => {
+    console.time('changeToPlayer')
     const { roomNum, previousTeam, wantTeam } = data;
     if (previousTeam.includes('Player')) {
       await ToPlayerFromPlayer({
@@ -118,10 +123,12 @@ waitingRoom.on('connection', (socket) => {
     };
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
+    console.timeEnd('changeToPlayer')
   });
 
   // 관전자로 변경시 정보 업데이트
   socket.on('changeToObserver', async (data) => {
+    console.time('changeToObserver')
     const { roomNum, previousTeam, wantTeam } = data;
 
     if(previousTeam.includes('Player')){
@@ -147,13 +154,16 @@ waitingRoom.on('connection', (socket) => {
     };
     const userInfos = await findUserInfos(roomNum);
     waitingRoom.to(roomNum).emit('changeComplete', socket.nickname, userInfos);
+    console.timeEnd('changeToObserver')
   });
 
   //대기실 내 채팅
   socket.on('chat', (data) => {
+    console.time('chat')
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname, chat };
     waitingRoom.to(roomNum).emit('chat', chatData);
+    console.timeEnd('chat')
   });
 
   //게임 시작
@@ -163,6 +173,7 @@ waitingRoom.on('connection', (socket) => {
 
   //퇴장시 방 인원 숫자 최신화
   socket.on('disconnecting', async () => {
+    console.time('disconnecting')
     let roomNum = roomNumber
     id = socket.nickname
     try {
@@ -177,10 +188,12 @@ waitingRoom.on('connection', (socket) => {
     } catch (error) {
       console.log('퇴장 errorMessage', error);
     }
+    console.timeEnd('disconnecting')
   });
 
   //퇴장시 방 인원 정보 최신화
   socket.on('disconnect', async () => {
+    console.time('disconnect')
     try{
       let roomNum = roomNumber
     await peopleInRoomUpdate({
@@ -192,6 +205,7 @@ waitingRoom.on('connection', (socket) => {
   } catch(error) {
     console.log(error)
   }
+    console.timeEnd('disconnect')
   });
 
 });
@@ -332,7 +346,7 @@ function gameRoomCount(gameNum) {
 }
 
 //game방 연결--수정중
-gameRoom.on('connect', async (socket) => {
+gameRoom.on('connection', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
   console.log('겜방연결후socket.id', socket.id);
 
