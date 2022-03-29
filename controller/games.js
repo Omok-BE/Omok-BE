@@ -98,8 +98,9 @@ const gameFinish = async (req, res) => {
     //Observer
     //게임방내 유저 state별 정보
     const gameInfo = await Games.findOne({gameNum});
-    const blackO = gameInfo[0].blackTeamObserver
-    const whiteO = gameInfo[0].whiteTeamObserver
+    console.log(",gameInfo:",gameInfo)
+    const blackO = gameInfo.blackTeamObserver
+    const whiteO = gameInfo.whiteTeamObserver
     let blackObserverState;
     for(let i=0; i<blackO.length; i++){
       blackObserverState = blackO[i].state 
