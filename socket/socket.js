@@ -458,13 +458,13 @@ gameRoom.on('connection', async (socket) => {
       const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
       console.log("457,gameId",gameId)
       if(gameId.blackTeamObserver === id){
-        await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {blackTeamObserver: socket.nickname.id}})
+        await Games.updateOne({ gameNum }, { $pull: {blackTeamObserver: id }})
       }
       if(gameId.whiteTeamObserver === id){
-        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: id}})
+        await Games.updateOne({ gameNum }, { $pull: {whiteTeamObserver: id }})
       }  
         
-      gameRoom.to(gameNum).emit('bye', socket.id);
+      gameRoom.to(gameNum).emit('bye', id);
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
@@ -482,7 +482,7 @@ gameRoom.on('connection', async (socket) => {
   
 
   //게임방 나갈떄
-  socket.on('byebye', async (state, gameNum, id ) => {
+  socket.on('byebye', (state, gameNum, id ) => {
     try{
       console.log("639,겜방소켓,byebye,state:",state)
       console.log("640,겜방소켓,byebye,gameNum:",gameNum)
