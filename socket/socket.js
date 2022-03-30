@@ -447,7 +447,7 @@ gameRoom.on('connection', async (socket) => {
     }
   });
 
-  / game방 퇴장
+  // game방 퇴장
   socket.on('disconnecting', async () => {
     try {
       const {id, gameNum} = socket.nickname
