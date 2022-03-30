@@ -474,12 +474,8 @@ gameRoom.on('connection', async (socket) => {
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       if (observerCnt) await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-      // console.log('게임방 퇴장 소켓 id:', socket.id);
-      // console.log('게임방 퇴장 소켓.id,gameNum:', socket.nickname);
+      console.log('게임방 퇴장 소켓,gameNum:', socket.gameNum);
       console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
-      // console.log('게임방 퇴장 소켓.socket.nickname.gameNum:', socket.nickname.gameNum);
-      // console.log('게임방 퇴장 소켓 room:', socket.rooms);
-      // console.log('게임방 퇴장 네임스페이스 전체 소켓:', gameRoom.adapter.rooms);
     } catch (error) {
       console.log(error);
     }
@@ -487,11 +483,11 @@ gameRoom.on('connection', async (socket) => {
   
 
   //게임방 나갈떄
-  socket.on('byebye', async (state, gameNum, id ) => {
+  socket.on('byebye', async ( state, gameNum, id ) => {
     try{
-      console.log("639,겜방소켓,byebye,state:",state)
-      console.log("640,겜방소켓,byebye,gameNum:",gameNum)
-      console.log("641,겜방소켓byebye,id:",id)
+      console.log("486,겜방소켓,byebye,state:",state)
+      console.log("487,겜방소켓,byebye,gameNum:",gameNum)
+      console.log("488,겜방소켓byebye,id:",id)
       
       gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
