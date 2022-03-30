@@ -48,7 +48,8 @@ const gameStart = async (req, res) => {
     let gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum}, {_id:0, boardColor:1}); 
     gameName.boardColor = findBoardColor
-    console.log("51,gameStart,gameName:",gameName)
+    console.log("51,gameStart,findBoardColor:",findBoardColor)
+    console.log("52,gameStart,gameName:",gameName)
     res.status(200).json({
       gameInfo,
       gameName,
