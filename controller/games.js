@@ -44,12 +44,12 @@ const gameStart = async (req, res) => {
     const { gameNum } = req.params;
     console.log("45,gameStart,req.params:", req.params)
     //게임방내 유저 state별 정보
-    const gameInfo = await gameUserInfo(gameNum);
+    let gameInfo = await gameUserInfo(gameNum);
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
     gameInfo.push(findBoardColor)
     // console.log("51,gameStart,findBoardColor:",findBoardColor)
-    // console.log("52,gameStart,gameName:",gameName)
+    console.log("52,gameStart,gameInfo:",gameInfo)
     res.status(200).json({
       gameInfo,
       gameName,
