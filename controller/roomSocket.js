@@ -1,4 +1,5 @@
 const app = require('../app');
+const Rooms = require('../models/rooms');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
