@@ -203,57 +203,6 @@ function emitToRoom(eventMessage, roomNum, id, userInfos) {
   waitingRoom.to(roomNum).emit(eventMessage, id, userInfos);
 }
 
-
-  //대기실 내 채팅
-  socket.on('chat', (data) => {
-    const { roomNum, chat } = data;
-    const chatData = { nickname: socket.nickname.id, chat };
-    waitingRoom.to(roomNum).emit('chat', chatData);
-  });
-
-  //게임 시작
-  socket.on('gameStart', (roomNum) => {
-    waitingRoom.to(roomNum).emit('game', roomNum);
-  });
-
-  //퇴장시 방 인원 숫자 최신화
-  socket.on('disconnecting', async () => {
-    console.time('disconnecting')
-    const { id, roomNum } = socket.nickname
-    try {
-      if (socket.rooms.has(`${roomNum}player`)) {
-        const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
-        await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
-      }
-      if (socket.rooms.has(`${roomNum}observer`)) {
-        const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
-        await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
-      }
-      await peopleInRoomUpdate({
-        id,
-        roomNum
-      });
-      const userInfos = await findUserInfos(roomNum);
-      waitingRoom.to(roomNum).emit('bye', id, userInfos);
-    } catch (error) {
-      console.error('퇴장 errorMessage', error);
-    }
-    console.timeEnd('disconnecting')
-  });
-
-
-
-// 해당 소켓 방 인원 카운트 메소드
-function waitingRoomCount(roomNum) {
-  return waitingRoom.adapter.rooms.get(roomNum)?.size;
-};
-
-// 해당 소켓 방 인원들에게 메시지 보내기 
-function emitToRoom(eventMessage, roomNum, id, userInfos) {
-  waitingRoom.to(roomNum).emit(eventMessage, id, userInfos);
-}
-
-
 //게임방 socket 
 //네임스페이스 ('/game') 
 const gameRoom = io.of('/game');
