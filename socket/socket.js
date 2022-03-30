@@ -345,9 +345,7 @@ gameRoom.on('connection', async (socket) => {
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   console.log("341,",socket.nickname)
-  console.log("342,",socket.nickname.id)
-  console.log("343,",socket.nickname.gameNum)
-
+  
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
   });
