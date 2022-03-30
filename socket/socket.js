@@ -338,7 +338,10 @@ gameRoom.on('connection', async (socket) => {
   socket.on('nickname', (nickname) => {
     socket['nickname'] = nickname;
   });
-  
+  console.log("341,",socket.nickname)
+  console.log("342,",socket.nickname.id)
+  console.log("343,",socket.nickname.gameNum)
+
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
   });
@@ -445,17 +448,16 @@ gameRoom.on('connection', async (socket) => {
   // game방 퇴장
   socket.on('disconnecting', async () => {
     try {
-      const { id, gameNum } = socket.nickname
       //게임방 퇴장시 유저 connect변경   
-      await Users.updateOne({ id }, { $set: {connect:'offline'} });
+      await Users.updateOne({ id:socket.nickname.id }, { $set: {connect:'offline'} });
 
-      const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      const gameId = await Games.findOne({ gameNum:socket.nickname.gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
       console.log("457,gameId",gameId)
-      if(gameId.blackTeamObserver === id){
-        await Games.updateOne({ gameNum }, {$pull: {blackTeamObserver: id}})
+      if(gameId.blackTeamObserver === socket.nickname.id){
+        await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {blackTeamObserver: socket.nickname.id}})
       }
-      if(gameId.whiteTeamObserver === id){
-        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: id}})
+      if(gameId.whiteTeamObserver === socket.nickname.id){
+        await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {whiteTeamObserver: socket.nickname.id}})
       }  
         
       gameRoom.to(gameNum).emit('bye', socket.id);
