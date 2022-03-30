@@ -24,7 +24,7 @@ instrument(io, {
   auth: false,
 });
 
-// app.get('io', io);
+app.set('io', io);
 
 // 로비
 const lobby = io.of('/lobby');
@@ -158,12 +158,12 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //대기실 내 채팅
-  // SocketEvent.chatEvent(socket);
-  socket.on('chat', (data) => {
-    const { roomNum, chat } = data;
-    const chatData = { nickname: socket.nickname.id, chat };
-    waitingRoom.to(roomNum).emit('chat', chatData);
-  });
+  SocketEvent.chatEvent(socket);
+  // socket.on('chat', (data) => {
+  //   const { roomNum, chat } = data;
+  //   const chatData = { nickname: socket.nickname.id, chat };
+  //   waitingRoom.to(roomNum).emit('chat', chatData);
+  // });
 
   //게임 시작
   socket.on('gameStart', (roomNum) => {
