@@ -45,7 +45,9 @@ const gameStart = async (req, res) => {
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
-    const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
+    let gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
+    const findBoardColor = await Rooms.findOne({ roomNum:gameNum}, {_id:0, boardColor:1}); 
+    gameName.boardColor = findBoardColor
     res.status(200).json({
       gameInfo,
       gameName,
