@@ -10,7 +10,7 @@ exports.chatEvent = function(socket){
     socket.on('chat', (data) => {
         const { roomNum, chat } = data;
         const chatData = { nickname: socket.nickname.id, chat };
-        app.get("io").of('/waiting').to(roomNum).emit('chat', chatData);
+        app.get("waitingRoom").to(roomNum).emit('chat', chatData);
       }
     );
 };
