@@ -63,6 +63,7 @@ waitingRoom.on('connection', (socket) => {
   SocketEvent.nicknameEvent(socket);
 
   //플레이어로 입장시 정보 업데이트
+  SocketEvent.enterRoomPlayer(socket);
   // socket.on('enterRoomPlayer', async (data) => {
   //   console.time('enterRoomPlayer')
   //   const { roomNum, state } = data;
