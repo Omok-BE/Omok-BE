@@ -204,6 +204,57 @@ function emitToRoom(eventMessage, roomNum, id, userInfos) {
 }
 
 
+  //대기실 내 채팅
+  SocketEvent.chatEvent(socket);
+  // socket.on('chat', (data) => {
+  //   const { roomNum, chat } = data;
+  //   const chatData = { nickname: socket.nickname.id, chat };
+  //   waitingRoom.to(roomNum).emit('chat', chatData);
+  // });
+
+  //게임 시작
+  socket.on('gameStart', (roomNum) => {
+    waitingRoom.to(roomNum).emit('game', roomNum);
+  });
+
+  //퇴장시 방 인원 숫자 최신화
+  socket.on('disconnecting', async () => {
+    console.time('disconnecting')
+    const { id, roomNum } = socket.nickname
+    try {
+      if (socket.rooms.has(`${roomNum}player`)) {
+        const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
+        await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
+      }
+      if (socket.rooms.has(`${roomNum}observer`)) {
+        const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
+        await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
+      }
+      await peopleInRoomUpdate({
+        id,
+        roomNum
+      });
+      const userInfos = await findUserInfos(roomNum);
+      waitingRoom.to(roomNum).emit('bye', id, userInfos);
+    } catch (error) {
+      console.error('퇴장 errorMessage', error);
+    }
+    console.timeEnd('disconnecting')
+  });
+
+
+
+// 해당 소켓 방 인원 카운트 메소드
+function waitingRoomCount(roomNum) {
+  return waitingRoom.adapter.rooms.get(roomNum)?.size;
+};
+
+// 해당 소켓 방 인원들에게 메시지 보내기 
+function emitToRoom(eventMessage, roomNum, id, userInfos) {
+  waitingRoom.to(roomNum).emit(eventMessage, id, userInfos);
+}
+
+
 //게임방 socket 
 //네임스페이스 ('/game') 
 const gameRoom = io.of('/game');
@@ -344,8 +395,8 @@ gameRoom.on('connection', async (socket) => {
     socket['nickname'] = nickname;
   });
   console.log("341,",socket.nickname)
-  console.log("342,",socket.id)
-  console.log("343,",socket.gameNum)
+  console.log("342,",socket.nickname.id)
+  console.log("343,",socket.nickname.gameNum)
 
   socket.onAny((event) => {
     console.log(`게임방 이벤트: ${event}`);
@@ -363,6 +414,7 @@ gameRoom.on('connection', async (socket) => {
 
   //game방 채팅
   socket.on('chat', (chat, gameNum) => {
+    console.log("367,겜방소켓,채팅,chat:",chat)
     const data = { name:socket.nickname.id, chat };
     gameRoom.to(gameNum).emit('chat', data, chat.state);
   });
@@ -397,7 +449,7 @@ gameRoom.on('connection', async (socket) => {
   socket.on("Pointer", (chat, gameNum) =>{
     pointer = true;
     const data = {name:socket.nickname.id, pointer:pointer};
-    gameRoom.to(gameNum).emit("Pointer", data,chat);
+    gameRoom.to(gameNum).emit("Pointer", data, chat);
   }); 
   
   //오목 게임 좌표값을 받아 좌표값에 해당하는 값을
@@ -453,17 +505,18 @@ gameRoom.on('connection', async (socket) => {
   // game방 퇴장
   socket.on('disconnecting', async () => {
     try {
+      const {id, gameNum} = socket.nickname
       //게임방 퇴장시 유저 connect변경   
-      await Users.updateOne({ id:socket.nickname.id }, { $set: {connect:'offline'} });
+      await Users.updateOne({ id }, { $set: {connect:'offline'} });
 
-      // const gameId = await Games.findOne({ gameNum:socket.nickname.gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
-      // console.log("457,gameId",gameId)
-      // if(gameId.blackTeamObserver === socket.nickname.id){
-      //   await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {blackTeamObserver: socket.nickname.id}})
-      // }
-      // if(gameId.whiteTeamObserver === socket.nickname.id){
-      //   await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {whiteTeamObserver: socket.nickname.id}})
-      // }  
+      const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      console.log("457,gameId",gameId)
+      if(gameId.blackTeamObserver === id){
+        await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {blackTeamObserver: socket.nickname.id}})
+      }
+      if(gameId.whiteTeamObserver === id){
+        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: id}})
+      }  
         
       gameRoom.to(gameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
