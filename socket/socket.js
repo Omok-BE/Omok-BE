@@ -473,6 +473,8 @@ gameRoom.on('connection', async (socket) => {
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
       console.log('게임방 퇴장 소켓 id:', socket.id);
       console.log('게임방 퇴장 소켓.id,gameNum:', socket.nickname);
+      console.log('게임방 퇴장 소켓.id,gameNum:', socket.nickname.id);
+      console.log('게임방 퇴장 소켓.id,gameNum:', socket.nickname.gameNum);
       console.log('게임방 퇴장 소켓 room:', socket.rooms);
       console.log('게임방 퇴장 네임스페이스 전체 소켓:', gameRoom.adapter.rooms);
     } catch (error) {
