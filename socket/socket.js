@@ -447,7 +447,7 @@ gameRoom.on('connection', async (socket) => {
     }
   });
 
-  / game방 퇴장
+  // game방 퇴장
   socket.on('disconnecting', async () => {
     try {
       const {id, gameNum} = socket.nickname
@@ -455,17 +455,17 @@ gameRoom.on('connection', async (socket) => {
       await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }}); 
 
       //게임방에서 옵저버가 나갈때
-      const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 })
+      const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 })
       // console.log("457,gameId",gameId)
-      if(gameId.blackTeamObserver === id){
-        await Games.updateOne({ gameNum }, {$pull: {blackTeamObserver: id}})
+      if(gameId.blackTeamObserver === id && outObTeachingCnt.id === id){
+        await Games.updateOne({ gameNum }, { $pull: {blackTeamObserver: id}})
         await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
       }
-      if(gameId.whiteTeamObserver === id){
-        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: id}})
+      if(gameId.whiteTeamObserver === id && outObTeachingCnt.id === id){
+        await Games.updateOne({ gameNum }, { $pull: {whiteTeamObserver: id}})
         await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
       }
-      
       
       gameRoom.to(gameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
