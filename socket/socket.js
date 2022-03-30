@@ -344,7 +344,7 @@ gameRoom.on('connection', async (socket) => {
   });
 
   //유저 id를 닉네임 설정 
-  // nickname = {id, gameName}
+  // nickname = {id, gameNum}
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   //game방 Join
@@ -450,17 +450,17 @@ gameRoom.on('connection', async (socket) => {
   // game방 퇴장
   socket.on('disconnecting', async () => {
     try {
-      // const {id, gameNum} = socket.nickname
+      const {id, gameNum} = socket.nickname
       //게임방 퇴장시 유저 state변경, connect변경  
-      await Users.updateMany({ id:socket.nickname.id }, { $set: { state: 'online', connect: 'endGame' }}); 
+      await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }}); 
 
-      const gameId = await Games.findOne({ gameNum: socket.nickname.gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
       // console.log("457,gameId",gameId)
-      if(gameId.blackTeamObserver === socket.nickname.id){
-        await Games.updateOne({ gameNum: socket.nickname.gameNum }, {$pull: {blackTeamObserver: socket.nickname.id}})
+      if(gameId.blackTeamObserver === id){
+        await Games.updateOne({ gameNum }, {$pull: {blackTeamObserver: id}})
       }
-      if(gameId.whiteTeamObserver === socket.nickname.id){
-        await Games.updateOne({ gameNum: socket.nickname.gameNum }, {$pull: {whiteTeamObserver: socket.nickname.id}})
+      if(gameId.whiteTeamObserver === id){
+        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: id}})
       }
         
       gameRoom.to(gameNum).emit('bye', socket.id);
@@ -468,12 +468,12 @@ gameRoom.on('connection', async (socket) => {
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
       console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-      console.log('게임방 퇴장 소켓 id:', socket.id);
-      console.log('게임방 퇴장 소켓.id,gameNum:', socket.nickname);
+      // console.log('게임방 퇴장 소켓 id:', socket.id);
+      // console.log('게임방 퇴장 소켓.id,gameNum:', socket.nickname);
       console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
-      console.log('게임방 퇴장 소켓.socket.nickname.gameNum:', socket.nickname.gameNum);
-      console.log('게임방 퇴장 소켓 room:', socket.rooms);
-      console.log('게임방 퇴장 네임스페이스 전체 소켓:', gameRoom.adapter.rooms);
+      // console.log('게임방 퇴장 소켓.socket.nickname.gameNum:', socket.nickname.gameNum);
+      // console.log('게임방 퇴장 소켓 room:', socket.rooms);
+      // console.log('게임방 퇴장 네임스페이스 전체 소켓:', gameRoom.adapter.rooms);
     } catch (error) {
       console.log(error);
     }
