@@ -24,7 +24,7 @@ instrument(io, {
   auth: false,
 });
 
-app.set('io', io);
+// app.set('io', io);
 
 // 로비
 const lobby = io.of('/lobby');
@@ -48,7 +48,7 @@ lobby.on('connection', (socket) => {
 
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting');
-// app.set('waitingRoom', waitingRoom);
+app.set('waitingRoom', waitingRoom);
 
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
