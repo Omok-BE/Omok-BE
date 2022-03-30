@@ -332,7 +332,6 @@ function check_44( x,  y,board)
 
 
 //접속자 수  
-// nickname = {id, gameN
 function gameRoomCount(gameNum) {
   return gameRoom.adapter.rooms.get(gameNum)?.size;
 }
@@ -344,7 +343,8 @@ gameRoom.on('connection', async (socket) => {
     console.log(`게임방 이벤트: ${event}`);
   });
 
-  //유저 id를 닉네임 설정
+  //유저 id를 닉네임 설정 
+  // nickname = {id, gameName}
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   //game방 Join
@@ -455,16 +455,16 @@ gameRoom.on('connection', async (socket) => {
       //게임방 퇴장시 유저 connect변경   
       await Users.updateOne({ id }, { $set: {connect:'offline'} });
 
-      const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
+      const gameId = await Games.findOne({ gameNum:socket.nickname.gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
       console.log("457,gameId",gameId)
       if(gameId.blackTeamObserver === id){
-        await Games.updateOne({ gameNum }, { $pull: {blackTeamObserver: id }})
+        await Games.updateOne({ gameNum:socket.nickname.gameNum }, {$pull: {blackTeamObserver: socket.nickname.id}})
       }
       if(gameId.whiteTeamObserver === id){
-        await Games.updateOne({ gameNum }, { $pull: {whiteTeamObserver: id }})
+        await Games.updateOne({ gameNum }, {$pull: {whiteTeamObserver: id}})
       }  
         
-      gameRoom.to(gameNum).emit('bye', id);
+      gameRoom.to(gameNum).emit('bye', socket.id);
       const observerCnt = gameRoomCount(gameNum) - 3; //(-2 플레이어)+(-1 나가는 옵저버)
       // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
       await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
@@ -482,11 +482,12 @@ gameRoom.on('connection', async (socket) => {
   
 
   //게임방 나갈떄
-  socket.on('byebye', (state, gameNum, id ) => {
+  socket.on('byebye', async (state, gameNum, id ) => {
     try{
       console.log("639,겜방소켓,byebye,state:",state)
       console.log("640,겜방소켓,byebye,gameNum:",gameNum)
       console.log("641,겜방소켓byebye,id:",id)
+      
       gameRoom.to(gameNum).emit("byebye",state, id);
       console.log("겜방소켓 byebye이벤트 성공");
     } catch(err) {
