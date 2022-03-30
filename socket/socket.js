@@ -203,6 +203,9 @@ function emitToRoom(eventMessage, roomNum, id, userInfos) {
   waitingRoom.to(roomNum).emit(eventMessage, id, userInfos);
 }
 
+
+
+
 //게임방 socket 
 //네임스페이스 ('/game') 
 const gameRoom = io.of('/game');
@@ -329,7 +332,7 @@ function check_44( x,  y,board)
 
 
 //접속자 수  
-// nickname = {id, gameNum}
+// nickname = {id, gameN
 function gameRoomCount(gameNum) {
   return gameRoom.adapter.rooms.get(gameNum)?.size;
 }
