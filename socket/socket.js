@@ -52,31 +52,34 @@ app.set('waitingRoom', waitingRoom);
 
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
-  socket.onAny((event) => {
-    console.log(`Socket Event: ${event}`);
-  });
+
+  // socket evnet 메시지
+  SocketEvent.onAny(socket);
+  // socket.onAny((event) => {
+  //   console.log(`Socket Event: ${event}`);
+  // });
 
   //socket nickname 설정
   SocketEvent.nicknameEvent(socket);
 
   //플레이어로 입장시 정보 업데이트
-  socket.on('enterRoomPlayer', async (data) => {
-    console.time('enterRoomPlayer')
-    const { roomNum, state } = data;
-    const role = `${roomNum}player`;
-    socket.join(roomNum);
-    socket.join(role);
-    const playerCnt = waitingRoomCount(role);
-    await enterRoomByPlayer({
-      id: socket.nickname.id,
-      roomNum,
-      playerCnt,
-      state
-    });
-    const userInfos = await findUserInfos(roomNum);
-    waitingRoom.to(roomNum).emit('welcome', socket.nickname.id, userInfos);
-    console.timeEnd('enterRoomPlayer')
-  });
+  // socket.on('enterRoomPlayer', async (data) => {
+  //   console.time('enterRoomPlayer')
+  //   const { roomNum, state } = data;
+  //   const role = `${roomNum}player`;
+  //   socket.join(roomNum);
+  //   socket.join(role);
+  //   const playerCnt = waitingRoomCount(role);
+  //   await enterRoomByPlayer({
+  //     id: socket.nickname.id,
+  //     roomNum,
+  //     playerCnt,
+  //     state
+  //   });
+  //   const userInfos = await findUserInfos(roomNum);
+  //   waitingRoom.to(roomNum).emit('welcome', socket.nickname.id, userInfos);
+  //   console.timeEnd('enterRoomPlayer')
+  // });
 
   //관전자로 입장시 정보 업데이트
   socket.on('enterRoomObserver', async (data) => {
@@ -159,11 +162,6 @@ waitingRoom.on('connection', (socket) => {
 
   //대기실 내 채팅
   SocketEvent.chatEvent(socket);
-  // socket.on('chat', (data) => {
-  //   const { roomNum, chat } = data;
-  //   const chatData = { nickname: socket.nickname.id, chat };
-  //   waitingRoom.to(roomNum).emit('chat', chatData);
-  // });
 
   //게임 시작
   socket.on('gameStart', (roomNum) => {
