@@ -343,6 +343,7 @@ gameRoom.on('connection', async (socket) => {
 
   //유저 id를 닉네임 설정
   socket.on('nickname', (nickname) => {
+    console.log(nickname)
     socket['nickname'] = nickname;
   });
   console.log("341,",socket.nickname)
