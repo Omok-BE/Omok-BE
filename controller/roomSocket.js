@@ -1,5 +1,5 @@
-const app = require('../app');
-const io = req.app.get('io');
+// const app = require('../app');
+// const io = req.app.get('io');
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 // const { waitingRoomCount, emitToRoom } = require('../socket/socket');
 
