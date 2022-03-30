@@ -452,6 +452,8 @@ gameRoom.on('connection', async (socket) => {
   socket.on('disconnecting', async () => {
     try {
       const {id, gameNum} = socket.nickname
+      //게임방 퇴장시 유저 state변경   
+      await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
       //게임방 퇴장시 유저 connect변경   
       await Users.updateOne({ id:socket.nickname.id }, { $set: {connect:'offline'} });
 
