@@ -5,8 +5,6 @@ const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/ro
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
 const { participantUpdate } = require('../lib/roomSocket/roomOutUpdate')
 
-const waitingRoom = app.get("waitingRoom")
-
 // socket evnet 메시지
 exports.onAny = function(socket){
     socket.onAny((event) => {
@@ -126,7 +124,7 @@ exports.chat = function(socket){
     socket.on('chat', (data) => {
         const { roomNum, chat } = data;
         const chatData = { nickname: socket.nickname.id, chat };
-        waitingRoom.to(roomNum).emit('chat', chatData);
+        app.get("waitingRoom").to(roomNum).emit('chat', chatData);
       }
     );
 };
