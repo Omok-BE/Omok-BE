@@ -351,6 +351,7 @@ gameRoom.on('connection', async (socket) => {
   socket.on('joinGame', async (gameNum, id) => {
     socket.join(gameNum);
     //게임방 입장시 유저 connect변경
+    await Users.updateOne({ id }, { $set: {connect:'inGame'} });
     const observerCnt = gameRoomCount(gameNum) - 2;
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
