@@ -24,7 +24,7 @@ instrument(io, {
   auth: false,
 });
 
-// app.get('io', io);
+app.set('io', io);
 
 // 로비
 const lobby = io.of('/lobby');
