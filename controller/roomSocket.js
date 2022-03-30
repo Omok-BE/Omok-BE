@@ -3,8 +3,7 @@ const Rooms = require('../models/rooms');
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
-const { peopleInRoomUpdate } = require('../lib/roomSocket/roomOutUpdate')
-
+const { participantUpdate } = require('../lib/roomSocket/roomOutUpdate')
 
 // socket evnet 메시지
 exports.onAny = function(socket){
@@ -18,57 +17,54 @@ exports.nicknameEvent = function(socket){
     socket.on('nickname', (nickname) => (socket['nickname'] = nickname))
 };
 
-
 // 플레이어로 입장시 정보 업데이트
 exports.enterRoomPlayer = function(socket){
     socket.on('enterRoomPlayer', async (data) => {
-        console.time('enterRoomPlayer')
+        const { id } = socket.nickname
         const { roomNum, state } = data;
         const role = `${roomNum}player`;
         socket.join(roomNum);
         socket.join(role);
         const playerCnt = waitingRoomCount(role);
         await enterRoomByPlayer({
-            id: socket.nickname.id,
+            id,
             roomNum,
             playerCnt,
             state
         });
         const userInfos = await findUserInfos(roomNum);
-        app.get("waitingRoom").to(roomNum).emit('welcome', socket.nickname.id, userInfos);
-        console.timeEnd('enterRoomPlayer')
+        app.get("waitingRoom").to(roomNum).emit('welcome', id, userInfos);
     });
 };
 
 // 관전자로 입장시 정보 업데이트
 exports.enterRoomObserver = function(socket){
     socket.on('enterRoomObserver', async (data) => {
-        console.time('enterRoomObserver')
+        const { id } = socket.nickname
         const { roomNum, state } = data;
         const role = `${roomNum}observer`;
         socket.join(roomNum);
         socket.join(role);
         const observerCnt = waitingRoomCount(role);
         await enterRoomByObserver({
-          id: socket.nickname.id,
+          id,
           roomNum,
           observerCnt,
           state
         });
         const userInfos = await findUserInfos(roomNum);
-        app.get("waitingRoom").to(roomNum).emit('welcome', socket.nickname.id, userInfos);
-        console.timeEnd('enterRoomObserver')
+        app.get("waitingRoom").to(roomNum).emit('welcome', id, userInfos);
       });
 };
 
 // 플레이어로 변경시 정보 업데이트
 exports.changeToPlayer = function(socket){
     socket.on('changeToPlayer', async (data) => {
-        console.time('changeToPlayer')
+        const { id } = socket.nickname
         const { roomNum, previousTeam, wantTeam } = data;
         if (previousTeam.includes('Player')) {
           await ToPlayerFromPlayer({
-            id: socket.nickname.id,
+            id,
             roomNum,
             wantTeam
           });
@@ -78,7 +74,7 @@ exports.changeToPlayer = function(socket){
           const playerCnt = waitingRoomCount(`${roomNum}player`);
           const observerCnt = waitingRoomCount(`${roomNum}observer`);
           await ToPlayerFromObserver({
-            id: socket.nickname.id,
+            id,
             roomNum,
             playerCnt,
             observerCnt,
@@ -87,15 +83,14 @@ exports.changeToPlayer = function(socket){
           });
         };
         const userInfos = await findUserInfos(roomNum);
-        app.get("waitingRoom").to(roomNum).emit('changeComplete', socket.nickname.id, userInfos);
-        console.timeEnd('changeToPlayer')
+        app.get("waitingRoom").to(roomNum).emit('changeComplete', id, userInfos);
       });
 };
 
 // 관전자로 변경시 정보 업데이트
 exports.changeToObserver = function(socket){
     socket.on('changeToObserver', async (data) => {
-        console.time('changeToObserver')
+        const { id } = socket.nickname
         const { roomNum, previousTeam, wantTeam } = data;
     
         if(previousTeam.includes('Player')){
@@ -104,7 +99,7 @@ exports.changeToObserver = function(socket){
           const playerCnt = waitingRoomCount(`${roomNum}player`);
           const observerCnt = waitingRoomCount(`${roomNum}observer`);
           await ToObserverFromPlayer({
-            id: socket.nickname.id,
+            id,
             roomNum,
             playerCnt,
             observerCnt,
@@ -113,17 +108,17 @@ exports.changeToObserver = function(socket){
           })
         } else {
           await ToObserverFromObserver({
-            id: socket.nickname.id,
+            id,
             roomNum,
             previousTeam,
             wantTeam
           })
         };
         const userInfos = await findUserInfos(roomNum);
-        app.get("waitingRoom").to(roomNum).emit('changeComplete', socket.nickname.id, userInfos);
-        console.timeEnd('changeToObserver')
+        app.get("waitingRoom").to(roomNum).emit('changeComplete', id, userInfos);
       });
 };
+
 
 // 대기실 내 채팅
 exports.chat = function(socket){
@@ -146,8 +141,8 @@ exports.gameStart = function(socket){
 exports.disconnecting = function(socket){
     socket.on('disconnecting', async () => {
         console.time('disconnecting')
-        const { id, roomNum } = socket.nickname
         try {
+          const { id, roomNum } = socket.nickname
           if (socket.rooms.has(`${roomNum}player`)) {
             const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
             await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
@@ -156,7 +151,7 @@ exports.disconnecting = function(socket){
             const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
             await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
           }
-          await peopleInRoomUpdate({
+          await participantUpdate({
             id,
             roomNum
           });

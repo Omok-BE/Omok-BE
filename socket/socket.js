@@ -3,11 +3,7 @@ const Users = require('../models/users');
 const Rooms = require('../models/rooms');
 const Boards = require('../models/boards');
 const Games = require('../models/games');
-const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
-const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
-const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
-const { peopleInRoomUpdate } = require('../lib/roomSocket/roomOutUpdate')
-const SocketEvent = require('../controller/roomSocket')
+const RoomSocketEvent = require('../controller/roomSocket')
 
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
@@ -23,8 +19,6 @@ const io = new Server(httpServer, {
 instrument(io, {
   auth: false,
 });
-
-// app.set('io', io);
 
 // 로비
 const lobby = io.of('/lobby');
@@ -54,145 +48,33 @@ waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
 
   // socket evnet 메시지
-  SocketEvent.onAny(socket);
+  RoomSocketEvent.onAny(socket);
 
   // socket nickname 설정
-  SocketEvent.nicknameEvent(socket);
+  RoomSocketEvent.nicknameEvent(socket);
 
   // 플레이어로 입장시 정보 업데이트
-  SocketEvent.enterRoomPlayer(socket);
+  RoomSocketEvent.enterRoomPlayer(socket);
 
   // 관전자로 입장시 정보 업데이트
-  SocketEvent.enterRoomObserver(socket);
-  // socket.on('enterRoomObserver', async (data) => {
-  //   console.time('enterRoomObserver')
-  //   const { roomNum, state } = data;
-  //   const role = `${roomNum}observer`;
-  //   socket.join(roomNum);
-  //   socket.join(role);
-  //   const observerCnt = waitingRoomCount(role);
-  //   await enterRoomByObserver({
-  //     id: socket.nickname.id,
-  //     roomNum,
-  //     observerCnt,
-  //     state
-  //   });
-  //   const userInfos = await findUserInfos(roomNum);
-  //   waitingRoom.to(roomNum).emit('welcome', socket.nickname.id, userInfos);
-  //   console.timeEnd('enterRoomObserver')
-  // });
+  RoomSocketEvent.enterRoomObserver(socket);
 
   // 플레이어로 변경시 정보 업데이트
-  SocketEvent.changeToPlayer(socket);
-  // socket.on('changeToPlayer', async (data) => {
-  //   console.time('changeToPlayer')
-  //   const { roomNum, previousTeam, wantTeam } = data;
-  //   if (previousTeam.includes('Player')) {
-  //     await ToPlayerFromPlayer({
-  //       id: socket.nickname.id,
-  //       roomNum,
-  //       wantTeam
-  //     });
-  //   } else {
-  //     socket.leave(`${roomNum}observer`);
-  //     socket.join(`${roomNum}player`);
-  //     const playerCnt = waitingRoomCount(`${roomNum}player`);
-  //     const observerCnt = waitingRoomCount(`${roomNum}observer`);
-  //     await ToPlayerFromObserver({
-  //       id: socket.nickname.id,
-  //       roomNum,
-  //       playerCnt,
-  //       observerCnt,
-  //       previousTeam,
-  //       wantTeam,
-  //     });
-  //   };
-  //   const userInfos = await findUserInfos(roomNum);
-  //   waitingRoom.to(roomNum).emit('changeComplete', socket.nickname.id, userInfos);
-  //   console.timeEnd('changeToPlayer')
-  // });
+  RoomSocketEvent.changeToPlayer(socket);
 
   // 관전자로 변경시 정보 업데이트
-  SocketEvent.changeToObserver(socket);
-  // socket.on('changeToObserver', async (data) => {
-  //   console.time('changeToObserver')
-  //   const { roomNum, previousTeam, wantTeam } = data;
-
-  //   if(previousTeam.includes('Player')){
-  //     socket.leave(`${roomNum}player`);
-  //     socket.join(`${roomNum}observer`);
-  //     const playerCnt = waitingRoomCount(`${roomNum}player`);
-  //     const observerCnt = waitingRoomCount(`${roomNum}observer`);
-  //     await ToObserverFromPlayer({
-  //       id: socket.nickname.id,
-  //       roomNum,
-  //       playerCnt,
-  //       observerCnt,
-  //       previousTeam,
-  //       wantTeam
-  //     })
-  //   } else {
-  //     await ToObserverFromObserver({
-  //       id: socket.nickname.id,
-  //       roomNum,
-  //       previousTeam,
-  //       wantTeam
-  //     })
-  //   };
-  //   const userInfos = await findUserInfos(roomNum);
-  //   waitingRoom.to(roomNum).emit('changeComplete', socket.nickname.id, userInfos);
-  //   console.timeEnd('changeToObserver')
-  // });
+  RoomSocketEvent.changeToObserver(socket);
 
   // 대기실 내 채팅
-  SocketEvent.chat(socket);
+  RoomSocketEvent.chat(socket);
 
   // 게임 시작
-  SocketEvent.gameStart(socket);
-  // socket.on('gameStart', (roomNum) => {
-  //   waitingRoom.to(roomNum).emit('game', roomNum);
-  // });
+  RoomSocketEvent.gameStart(socket);
 
   //퇴장시 방 인원 숫자 최신화
-  SocketEvent.disconnecting(socket);
-  // socket.on('disconnecting', async () => {
-  //   console.time('disconnecting')
-  //   const { id, roomNum } = socket.nickname
-  //   try {
-  //     if (socket.rooms.has(`${roomNum}player`)) {
-  //       const playerCnt = waitingRoomCount(`${roomNum}player`) - 1;
-  //       await Rooms.updateOne({ roomNum }, { $set: { playerCnt } });
-  //     }
-  //     if (socket.rooms.has(`${roomNum}observer`)) {
-  //       const observerCnt = waitingRoomCount(`${roomNum}observer`) - 1;
-  //       await Rooms.updateOne({ roomNum }, { $set: { observerCnt } });
-  //     }
-  //     await peopleInRoomUpdate({
-  //       id,
-  //       roomNum
-  //     });
-  //     const userInfos = await findUserInfos(roomNum);
-  //     waitingRoom.to(roomNum).emit('bye', id, userInfos);
-  //   } catch (error) {
-  //     console.error('퇴장 errorMessage', error);
-  //   }
-  //   console.timeEnd('disconnecting')
-  // });
+  RoomSocketEvent.disconnecting(socket);
 
 });
-
-// 해당 소켓 방 인원 카운트 메소드
-function waitingRoomCount(roomNum) {
-  return waitingRoom.adapter.rooms.get(roomNum)?.size;
-};
-
-// 해당 소켓 방 인원들에게 메시지 보내기 
-function emitToRoom(eventMessage, roomNum, id, userInfos) {
-  waitingRoom.to(roomNum).emit(eventMessage, id, userInfos);
-}
-
-
-
 
 //게임방 socket 
 //네임스페이스 ('/game') 
