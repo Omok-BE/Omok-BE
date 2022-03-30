@@ -46,6 +46,7 @@ lobby.on('connection', (socket) => {
 
 // 대기실 socketIO
 const waitingRoom = io.of('/waiting');
+app.set('waitingRoom', waitingRoom);
 
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
@@ -155,11 +156,12 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //대기실 내 채팅
-  socket.on('chat', (data) => {
-    const { roomNum, chat } = data;
-    const chatData = { nickname: socket.nickname.id, chat };
-    waitingRoom.to(roomNum).emit('chat', chatData);
-  });
+  SocketEvent.chatEvent(socket);
+  // socket.on('chat', (data) => {
+  //   const { roomNum, chat } = data;
+  //   const chatData = { nickname: socket.nickname.id, chat };
+  //   waitingRoom.to(roomNum).emit('chat', chatData);
+  // });
 
   //게임 시작
   socket.on('gameStart', (roomNum) => {
