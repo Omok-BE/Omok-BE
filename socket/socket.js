@@ -451,10 +451,8 @@ gameRoom.on('connection', async (socket) => {
   socket.on('disconnecting', async () => {
     try {
       const {id, gameNum} = socket.nickname
-      //게임방 퇴장시 유저 state변경  
-      await Users.updateOne({ id }, { $set: { state: 'online' }}); 
-      //게임방 퇴장시 유저 connect변경   
-      await Users.updateOne({ id }, { $set: {connect:'endGame'} });
+      //게임방 퇴장시 유저 state변경, connect변경  
+      await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }}); 
 
       const gameId = await Games.findOne({ gameNum }, {_id:0, blackTeamObserver:1, whiteTeamObserver:1})
       console.log("457,gameId",gameId)
