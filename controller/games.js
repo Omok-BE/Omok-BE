@@ -42,7 +42,7 @@ const gameCreate = async (req, res) => {
 const gameStart = async (req, res) => {
   try {
     const { gameNum } = req.params;
-
+    console.log("45,gameStart,req.params:", req.params)
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
     let gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
