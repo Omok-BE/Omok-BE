@@ -1,3 +1,4 @@
+const waiting = req.app.get('waiting')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 // const { waitingRoomCount, emitToRoom } = require('../socket/socket');
 
@@ -11,7 +12,7 @@ exports.chatEvent = function(socket){
     socket.on('chat', (data) => {
         const { roomNum, chat } = data;
         const chatData = { nickname: socket.nickname.id, chat };
-        emitToRoom('chat', roomNum, chatData);
+        waitingRoom.to(roomNum).emit('chat', chatData);
       }
     );
 };
