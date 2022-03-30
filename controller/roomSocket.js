@@ -1,27 +1,17 @@
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
+const { waitingRoomCount, emitToRoom } = require('../socket/socket');
 
 //socket nickname 설정
 exports.nicknameEvent = function(socket){
     socket.on('nickname', (nickname) => (socket['nickname'] = nickname))
 };
 
-// //플레이어로 입장시 정보 업데이트
-// exports.enterRoomPlayer = function(socket){
-//   socket.on('enterRoomPlayer', async (data) => {
-//     const { roomNum, state } = data;
-//     roomNumber = roomNum;
-//     const role = `${roomNum}player`;
-//     socket.join(roomNum);
-//     socket.join(role);
-//     const playerCnt = waitingRoomCount(role);
-//     console.log("state", state)
-//     await enterRoomByPlayer({
-//       id: socket.nickname,
-//       roomNum,
-//       playerCnt,
-//       state
-//     });
-//     const userInfos = await findUserInfos(roomNum);
-//     waitingRoom.to(roomNum).emit('welcome', socket.nickname, userInfos);
-//   });
-// };
+//대기실 내 채팅
+exports.chatEvent = function(socket){
+    socket.on('chat', (data) => {
+        const { roomNum, chat } = data;
+        const chatData = { nickname: socket.nickname.id, chat };
+        emitToRoom('chat', roomNum, chatData);
+      }
+    );
+};
