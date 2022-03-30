@@ -155,11 +155,12 @@ waitingRoom.on('connection', (socket) => {
   });
 
   //대기실 내 채팅
-  socket.on('chat', (data) => {
-    const { roomNum, chat } = data;
-    const chatData = { nickname: socket.nickname.id, chat };
-    waitingRoom.to(roomNum).emit('chat', chatData);
-  });
+    SocketEvent.chatEvent(socket);
+  // socket.on('chat', (data) => {
+  //   const { roomNum, chat } = data;
+  //   const chatData = { nickname: socket.nickname.id, chat };
+  //   waitingRoom.to(roomNum).emit('chat', chatData);
+  // });
 
   //게임 시작
   socket.on('gameStart', (roomNum) => {
@@ -193,9 +194,14 @@ waitingRoom.on('connection', (socket) => {
 
 });
 
-//방 인원 카운트 메소드
+// 해당 소켓 방 인원 카운트 메소드
 function waitingRoomCount(roomNum) {
   return waitingRoom.adapter.rooms.get(roomNum)?.size;
+};
+
+// 해당 소켓 방 인원들에게 메시지 보내기 
+function emitToRoom(eventMessage, roomNum, id, userInfos) {
+  waitingRoom.to(roomNum).emit(eventMessage, id, userInfos);
 }
 
 
@@ -487,4 +493,4 @@ gameRoom.on('connection', async (socket) => {
   });
 });
   
-  module.exports = { httpServer };
+  module.exports = { httpServer, waitingRoomCount, emitToRoom };
