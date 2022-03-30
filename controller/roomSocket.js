@@ -1,5 +1,5 @@
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
-const { waitingRoomCount, emitToRoom } = require('../socket/socket');
+// const { waitingRoomCount, emitToRoom } = require('../socket/socket');
 
 //socket nickname 설정
 exports.nicknameEvent = function(socket){
