@@ -323,7 +323,7 @@ const gameFinishShow = async (req, res) => {
     //게임결과 후 유저 state 'online'변경
     //디비point가 existpoint와 같으면 online
     
-    await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
+    // await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
     
     // if (blackO[i].state === 'blackObserver' || whiteO[i].state === 'whiteObserver') {
     //   await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
