@@ -158,7 +158,7 @@ waitingRoom.on('connection', (socket) => {
   socket.on('chat', (data) => {
     const { roomNum, chat } = data;
     const chatData = { nickname: socket.nickname.id, chat };
-    socket.to(roomNum).emit('chat', chatData);
+    waitingRoom.to(roomNum).emit('chat', chatData);
   });
 
   //게임 시작
