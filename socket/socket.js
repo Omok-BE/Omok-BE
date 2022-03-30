@@ -205,12 +205,11 @@ function emitToRoom(eventMessage, roomNum, id, userInfos) {
 
 
   //대기실 내 채팅
-  SocketEvent.chatEvent(socket);
-  // socket.on('chat', (data) => {
-  //   const { roomNum, chat } = data;
-  //   const chatData = { nickname: socket.nickname.id, chat };
-  //   waitingRoom.to(roomNum).emit('chat', chatData);
-  // });
+  socket.on('chat', (data) => {
+    const { roomNum, chat } = data;
+    const chatData = { nickname: socket.nickname.id, chat };
+    waitingRoom.to(roomNum).emit('chat', chatData);
+  });
 
   //게임 시작
   socket.on('gameStart', (roomNum) => {
