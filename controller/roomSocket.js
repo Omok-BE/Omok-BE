@@ -1,4 +1,3 @@
-const app = require('../app');
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 
 //socket nickname 설정
