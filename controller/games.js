@@ -74,7 +74,7 @@ const gameFinish = async (req, res) => {
     const resultId = result.win;
     const winPlayer = await Users.findOne({ id:resultId },
                                             { _id:false, id:true, score:true, point:true, state:true });
-    console.log("80,winPlayer", winPlayer) 
+    // console.log("80,winPlayer", winPlayer) 
                                             
     //Player
     if (state === 'blackPlayer' || state === 'whitePlayer') {
@@ -161,7 +161,7 @@ const gameFinishShow = async (req, res) => {
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
-    console.log("207,show,gameInfo[0]:",gameInfo[0]); 
+    console.log("207,show,게임디비서찾은,gameInfo[0]:",gameInfo[0]); 
 
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const blackO = gameInfo[0].blackTeamObserver
@@ -312,11 +312,19 @@ const gameFinishShow = async (req, res) => {
     //Observer의 teachingCnt 0으로 리셋
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true, teachingCnt:true});
     console.log("369,show,delTeachingCnt.id:",delTeachingCnt.id)
+    console.log("369,show,delTeachingCnt.state:",delTeachingCnt.state)
     console.log("370,show,delTeachingCnt.teachingCnt:",delTeachingCnt.teachingCnt)
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
     await Users.updateOne({ id:id }, { $set: { teachingCnt: 0 }});
     //게임결과 후 유저 state 'online'변경
-    await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
+    //디비point가 existpoint와 같으면 online
+    
+    // await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
+    
+    // if (blackO[i].state === 'blackObserver' || whiteO[i].state === 'whiteObserver') {
+    //   await Users.updateOne({ id:id }, { $set: { state: 'online' }}); 
+      
+    // }
 
     res.status(200).json({
       win,
@@ -341,10 +349,9 @@ const gameDelete = async (req, res) => {
 
     const existGame = await Games.findOne({ gameNum:gameNum });
     if (existGame){
-      const deleteRoomNum = await Rooms.deleteOne({ roomNum: Number(gameNum) });
-      const deleteGameNum = await Games.deleteOne({ gameNum: Number(gameNum) });
+      await Rooms.deleteOne({ roomNum: Number(gameNum) });
+      await Games.deleteOne({ gameNum: Number(gameNum) });
     }
-
     res.status(200).json({
         ok: true,
         message: '대기방, 게임방 삭제 성공!',
