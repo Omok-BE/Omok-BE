@@ -340,15 +340,14 @@ function gameRoomCount(gameNum) {
 //game방 연결--수정중
 gameRoom.on('connection', async (socket) => {
   console.log('★★game 소켓 연결됨★★');
+  socket.onAny((event) => {
+    console.log(`게임방 이벤트: ${event}`);
+  });
 
   //유저 id를 닉네임 설정
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   console.log("341,",socket.nickname)
-  
-  socket.onAny((event) => {
-    console.log(`게임방 이벤트: ${event}`);
-  });
 
   //game방 Join
   socket.on('joinGame', async (gameNum, id) => {
