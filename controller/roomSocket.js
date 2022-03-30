@@ -5,6 +5,7 @@ exports.nicknameEvent = function(socket){
     socket.on('nickname', (nickname) => (socket['nickname'] = nickname))
 };
 
+
 //대기실 내 채팅
 exports.chatEvent = function(socket){
     socket.on('chat', (data) => {
