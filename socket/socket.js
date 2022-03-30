@@ -451,8 +451,8 @@ gameRoom.on('connection', async (socket) => {
     }
   });
 
- // game방 퇴장
- socket.on('disconnecting', async () => {
+// game방 퇴장
+socket.on('disconnecting', async () => {
   try {
     const {id, gameNum} = socket.nickname
     //게임방 퇴장시 유저 state변경, connect변경
@@ -461,34 +461,38 @@ gameRoom.on('connection', async (socket) => {
     //게임방에서 옵저버가 나갈때
     const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
     const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 });
-    console.log("457,gameId",gameId)
+    // console.log("457,gameId",gameId) // 457,gameId { blackTeamObserver: [], whiteTeamObserver: [] }
     
-    // //blackTeamObserver
-    // let findBObserver = [];
-    // for(let i=0; i<gameId.length; i++){
-    //   if(gameId[i].blackTeamObserver !== [] ) {
-    //     findBObserver = gameId[i].blackTeamObserver;
-    //   }
-    // }
-    // for(let i=0; i<findBObserver.length; i++){
-    //   if(findBObserver[i] === id && outObTeachingCnt.id === id){
-    //     await Games.updateOne({ gameNum }, { $pull: {blackTeamObserver: id}});
-    //     await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
-    //   }
-    // }
-    // // whiteTeamObserver
-    // let findWObserver = [];
-    // for(let i=0; i<gameId.length; i++){
-    //   if(gameId[i].findWObserver !== [] ) {
-    //     findWObserver = gameId[i].findWObserver;
-    //   }
-    // }
-    // for(let i=0; i<findWObserver.lenght; i++){
-    //   if(findWObserver[i] === id && outObTeachingCnt.id === id){
-    //     await Games.updateOne({ gameNum }, { $pull: {whiteTeamObserver: id}});
-    //     await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
-    //   }
-    // }
+    //blackTeamObserver
+    const gameIdB = gameId.blackTeamObserver
+    let findBObserver = [];
+    for(let i=0; i<gameIdB.length; i++){
+      if(gameIdB[i] !== [] ) {
+        findBObserver = gameIdB[i];
+      }
+    }
+    console.log("게임소켓,findBBBObserver배열안:",findBObserver)
+    for(let i=0; i<findBObserver.length; i++){
+      if(findBObserver[i] === id && outObTeachingCnt.id === id){
+        await Games.updateOne({ gameNum }, { $pull: {blackTeamObserver: id}});
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+      }
+    }
+    // whiteTeamObserver
+    const gameIdW = gameId.blackTeamObserver
+    let findWObserver = [];
+    for(let i=0; i<gameIdW.length; i++){
+      if(gameIdW[i] !== [] ) {
+        findWObserver = gameIdW[i];
+      }
+    }
+    console.log("게임소켓,findWWWObserver배열안:",findWObserver)
+    for(let i=0; i<findWObserver.length; i++){
+      if(findWObserver[i] === id && outObTeachingCnt.id === id){
+        await Games.updateOne({ gameNum }, { $pull: {whiteTeamObserver: id}});
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+      }
+    }
     
     gameRoom.to(gameNum).emit('bye', socket.id);
     const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
