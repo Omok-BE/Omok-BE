@@ -362,9 +362,9 @@ socket.on('disconnecting', async () => {
 //게임방 나갈떄
 socket.on('byebye', async ( state, gameNum, id ) => {
   try{
-    console.log("486,겜방소켓,byebye,state:",state)
-    console.log("487,겜방소켓,byebye,gameNum:",gameNum)
-    console.log("488,겜방소켓byebye,id:",id)
+    console.log("365,겜방소켓,byebye,state:",state)
+    console.log("366,겜방소켓,byebye,gameNum:",gameNum)
+    console.log("367,겜방소켓byebye,id:",id)
     
     gameRoom.to(gameNum).emit("byebye",state, id);
     console.log("겜방소켓 byebye이벤트 성공");
