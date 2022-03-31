@@ -104,7 +104,7 @@ const gameFinish = async (req, res) => {
         //승Player
         await Users.updateOne({ id:resultId }, { $inc: { 'score.0.win': 1 } });  //승 +1
         await Users.updateOne({ id:resultId }, { $set: { point: point + 200 } });  //포인트 +200
-        await Users.updateOne({ id:resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇을 해도 포인트 계산이 안됨.
+        await Users.updateOne({ id:resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇 계산 안됨.
       } else if(resultId !== id) {
         //패Player
         await Users.updateOne({ id:id }, { $inc: { 'score.1.lose': 1 } });  //패 +1
@@ -320,21 +320,15 @@ const gameFinishShow = async (req, res) => {
     console.log("301,show,win배열 총정보:",win)
     console.log("302,show,lose배열 총정보:",lose)
 
-    //Observer의 teachingCnt 0으로 리셋
+    //게임방 퇴장시 Observer의 teachingCnt, state, connect변경
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true, teachingCnt:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
-    await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+    await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
-    // //게임방 퇴장시 유저 state변경, connect변경
+    //게임방 퇴장시 player의 state, connect변경
     let thisGameIds = [];
     thisGameIds.push(blackP.id);
-    for(let i=0; i<blackO.length; i++){
-      thisGameIds.push(blackO[i].id); 
-    }
     thisGameIds.push(whiteP.id);
-    for(let i=0; i<whiteO.length; i++){
-      thisGameIds.push(whiteO[i].id); 
-    }
     console.log(",gameStart,thisGameIds:",thisGameIds)
     for(let i=0; i<thisGameIds.length; i++){
       await Users.updateMany({ id:thisGameIds[i] }, { $set: { state: 'online', connect: 'endGame' }});
