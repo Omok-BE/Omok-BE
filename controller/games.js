@@ -48,8 +48,6 @@ const gameStart = async (req, res) => {
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
     gameInfo.push(findBoardColor)
-    // console.log("51,gameStart,findBoardColor:",findBoardColor)
-    // console.log("52,gameStart,gameInfo:",gameInfo)
     res.status(200).json({
       gameInfo,
       gameName,
@@ -310,8 +308,6 @@ const gameFinishShow = async (req, res) => {
     //게임방 결과창 나가기 player의 state, connect변경
     if(id === blackP.id || id === whiteP.id)
       await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
-    
-
     res.status(200).json({
       win,
       lose,

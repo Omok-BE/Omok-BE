@@ -222,14 +222,14 @@ gameRoom.on('connection', async (socket) => {
     //게임방 입장시 유저 connect변경
     const joinGameIds = await Games.findOne({gameNum})
     if(joinGameIds.blackTeamPlayer === id || joinGameIds.whiteTeamPlayer === id)
-    await Users.updateOne({ id }, { $set: {connect:'inGame'} });
+    await Users.updateOne({ id }, { $set: { connect:'inGame' } });
     
     //blackTeamObserver
     const gameIdB = joinGameIds.blackTeamObserver
     const blackOIds = [];
     for(let i=0; i<gameIdB.length; i++){
       if(gameIdB[i] !== blackOIds && gameIdB[i] === id ) {
-        await Users.updateOne({ id }, { $set: {teachingCnt: 0, connect:'inGame'} });
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0, connect:'inGame' } });
       }
     }
     console.log("게임소켓,joinGame,gameIdBBBB배열안:",gameIdB)
@@ -238,7 +238,7 @@ gameRoom.on('connection', async (socket) => {
     const whiteOIds = [];
     for(let i=0; i<gameIdW.length; i++){
       if(gameIdW[i] !== whiteOIds && gameIdW[i] === id) {
-        await Users.updateOne({ id }, { $set: {teachingCnt: 0, connect:'inGame'} });
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0, connect:'inGame' } });
       }
     }
     console.log("게임소켓,joinGame,gameIdWWWW배열안:",gameIdW)
@@ -352,31 +352,7 @@ socket.on('disconnecting', async () => {
     console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
 
     //게임방 퇴장시 (게임 중간에 나감) 옵저버 state변경, connect변경
-    // const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
-    // console.log("457,gameId",gameId) // 457,gameId { blackTeamObserver: [], whiteTeamObserver: [] }
-    
-    //blackTeamObserver
-    // const gameIdB = gameId.blackTeamObserver
-    // const blackOIds = [];
-    // for(let i=0; i<gameIdB.length; i++){
-    //   if(gameIdB[i] !== blackOIds && gameIdB[i] === id ) {
-    //     await Games.updateOne({ gameNum }, { $pull: { blackTeamObserver: id }});
-        await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
-    //   }
-    // }
-    // console.log("게임소켓,gameIdBBBB배열안:",gameIdB)
-   
-    // whiteTeamObserver
-    // const gameIdW = gameId.whiteTeamObserver
-    // const whiteOIds = [];
-    // for(let i=0; i<gameIdW.length; i++){
-    //   if(gameIdW[i] !== whiteOIds && gameIdW[i] === id) {
-    //     await Games.updateOne({ gameNum }, { $pull: { whiteTeamObserver: id }});
-        // await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
-    //   }
-    // }
-    // console.log("게임소켓,gameIdWWWW배열안:",gameIdW)
-    
+    await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
   } catch (error) {
     console.log("게임소켓,disconnecting 에러:",error);
   }
