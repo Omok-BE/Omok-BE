@@ -328,42 +328,42 @@ socket.on('disconnecting', async () => {
     console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
     console.log('게임방 퇴장 소켓,gameNum:', gameNum);
     console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
-    // //게임방 퇴장시 유저 state변경, connect변경
-    //게임방에서 옵저버가 나갈때
+
+    //게임방 퇴장시 (게임 중간에 나감) 옵저버 state변경, connect변경
     const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
     const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 });
     // console.log("457,gameId",gameId) // 457,gameId { blackTeamObserver: [], whiteTeamObserver: [] }
     
     //blackTeamObserver
     const gameIdB = gameId.blackTeamObserver
-    let findBObserver = [];
+    let gameIdBArray = [];
     const blackOIds = [];
     for(let i=0; i<gameIdB.length; i++){
       if(gameIdB[i] !== blackOIds ) {
-        findBObserver.push(gameIdB[i]);
+        gameIdBArray.push(gameIdB[i]);
       }
     }
-    console.log("게임소켓,findBBBObserver배열안:",findBObserver)
-    for(let i=0; i<findBObserver.length; i++){
-      if(findBObserver[i] === id && outObTeachingCnt.id === id){
+    console.log("게임소켓,gameIdBBBBArray배열안:",gameIdBArray)
+    for(let i=0; i<gameIdBArray.length; i++){
+      if(gameIdBArray[i] === id && outObTeachingCnt.id === id){
         await Games.updateOne({ gameNum }, { $pull: { blackTeamObserver: id }});
-        await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online' }});
+        await Users.updateOne({ id:gameIdBArray[i] }, { $set: { teachingCnt: 0, state: 'online' }});
       }
     }
     // whiteTeamObserver
-    const gameIdW = gameId.blackTeamObserver
-    let findWObserver = [];
+    const gameIdW = gameId.whiteTeamObserver
+    let gameIdWArray = [];
     const whiteOIds = [];
     for(let i=0; i<gameIdW.length; i++){
       if(gameIdW[i] !== whiteOIds ) {
-        findWObserver.push(gameIdW[i]);
+        gameIdWArray.push(gameIdW[i]);
       }
     }
-    console.log("게임소켓,findWWWObserver배열안:",findWObserver)
-    for(let i=0; i<findWObserver.length; i++){
-      if(findWObserver[i] === id && outObTeachingCnt.id === id){
+    console.log("게임소켓,gameIdWWWWArray배열안:",gameIdWArray)
+    for(let i=0; i<gameIdWArray.length; i++){
+      if(gameIdWArray[i] === id && outObTeachingCnt.id === id){
         await Games.updateOne({ gameNum }, { $pull: { whiteTeamObserver: id }});
-        await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online' }});
+        await Users.updateOne({ id:gameIdWArray[i] }, { $set: { teachingCnt: 0, state: 'online' }});
       }
     }
   } catch (error) {

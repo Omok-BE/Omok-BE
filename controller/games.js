@@ -50,7 +50,8 @@ const gameStart = async (req, res) => {
     gameInfo.push(findBoardColor)
     // console.log("51,gameStart,findBoardColor:",findBoardColor)
     // console.log("52,gameStart,gameInfo:",gameInfo)
-    //게임방 입장시 유저 connect변경
+
+    //게임방 입장시 유저들 connect변경
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const blackO = gameInfo[0].blackTeamObserver
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
@@ -320,12 +321,12 @@ const gameFinishShow = async (req, res) => {
     console.log("301,show,win배열 총정보:",win)
     console.log("302,show,lose배열 총정보:",lose)
 
-    //게임방 퇴장시 Observer의 teachingCnt, state, connect변경
+    //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true, teachingCnt:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
     await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
-    //게임방 퇴장시 player의 state, connect변경
+    //게임방 결과창 나가기 player의 state, connect변경
     let thisGameIds = [];
     thisGameIds.push(blackP.id);
     thisGameIds.push(whiteP.id);
