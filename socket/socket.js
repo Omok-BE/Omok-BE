@@ -341,7 +341,7 @@ socket.on('disconnecting', async () => {
     for(let i=0; i<findBObserver.length; i++){
       if(findBObserver[i] === id && outObTeachingCnt.id === id){
         await Games.updateOne({ gameNum }, { $pull: { blackTeamObserver: id }});
-        await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online' }});
       }
     }
     // whiteTeamObserver
