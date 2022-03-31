@@ -319,6 +319,8 @@ gameRoom.on('connection', async (socket) => {
 // game방 퇴장
 socket.on('disconnecting', async () => {
   try {
+    const {id, gameNum} = socket.nickname
+    
     gameRoom.to(gameNum).emit('bye', socket.id);
     const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
     // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
@@ -326,10 +328,7 @@ socket.on('disconnecting', async () => {
     console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
     console.log('게임방 퇴장 소켓,gameNum:', gameNum);
     console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
-
-    const {id, gameNum} = socket.nickname
     // //게임방 퇴장시 유저 state변경, connect변경
-
     //게임방에서 옵저버가 나갈때
     const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
     const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 });
