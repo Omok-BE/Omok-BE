@@ -319,11 +319,18 @@ gameRoom.on('connection', async (socket) => {
 // game방 퇴장
 socket.on('disconnecting', async () => {
   try {
+    gameRoom.to(gameNum).emit('bye', socket.id);
+    const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
+    // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
+    if (observerCnt) await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
+    console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
+    console.log('게임방 퇴장 소켓,gameNum:', gameNum);
+    console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
+
     const {id, gameNum} = socket.nickname
     // //게임방 퇴장시 유저 state변경, connect변경
-    // await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
 
-    //게임방에서 옵저버가 나갈때 ----안됨 다시확인하기 + state값으로 비교해서 다시하기 220331-목
+    //게임방에서 옵저버가 나갈때
     const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
     const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 });
     // console.log("457,gameId",gameId) // 457,gameId { blackTeamObserver: [], whiteTeamObserver: [] }
@@ -341,7 +348,7 @@ socket.on('disconnecting', async () => {
     for(let i=0; i<findBObserver.length; i++){
       if(findBObserver[i] === id && outObTeachingCnt.id === id){
         await Games.updateOne({ gameNum }, { $pull: { blackTeamObserver: id }});
-        await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online' }});
       }
     }
     // whiteTeamObserver
@@ -357,17 +364,9 @@ socket.on('disconnecting', async () => {
     for(let i=0; i<findWObserver.length; i++){
       if(findWObserver[i] === id && outObTeachingCnt.id === id){
         await Games.updateOne({ gameNum }, { $pull: { whiteTeamObserver: id }});
-        await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+        await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online' }});
       }
     }
-    
-    gameRoom.to(gameNum).emit('bye', socket.id);
-    const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
-    // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-    if (observerCnt) await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
-    console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
-    console.log('게임방 퇴장 소켓,gameNum:', gameNum);
-    console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
   } catch (error) {
     console.log("게임소켓,disconnecting 에러:",error);
   }
@@ -389,4 +388,4 @@ socket.on('byebye', async ( state, gameNum, id ) => {
 });
 });
 
-module.exports = { httpServer, waitingRoomCount, emitToRoom };
+module.exports = { httpServer };

@@ -51,7 +51,6 @@ const gameStart = async (req, res) => {
     // console.log("51,gameStart,findBoardColor:",findBoardColor)
     // console.log("52,gameStart,gameInfo:",gameInfo)
     //게임방 입장시 유저 connect변경
-    //for문돌려서 유저들 id찾기---블로그에 정리하기 + 테스트하기 0331-목
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const blackO = gameInfo[0].blackTeamObserver
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
@@ -67,7 +66,7 @@ const gameStart = async (req, res) => {
     }
     console.log(",gameStart,thisGameIds:",thisGameIds)
     for(let i=0; i<thisGameIds.length; i++){
-      await Users.updateOne({ id }, { $set: {connect:'inGame'} });
+      await Users.updateOne({ id:thisGameIds[i] }, { $set: {connect:'inGame'} });
     }
 
     res.status(200).json({
@@ -105,7 +104,7 @@ const gameFinish = async (req, res) => {
         //승Player
         await Users.updateOne({ id:resultId }, { $inc: { 'score.0.win': 1 } });  //승 +1
         await Users.updateOne({ id:resultId }, { $set: { point: point + 200 } });  //포인트 +200
-        await Users.updateOne({ id:resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇을 해도 포인트 계산이 안됨.
+        await Users.updateOne({ id:resultId }, { $set: { teachingCnt: 0 }});  // 플레이어는 훈수쳇 계산 안됨.
       } else if(resultId !== id) {
         //패Player
         await Users.updateOne({ id:id }, { $inc: { 'score.1.lose': 1 } });  //패 +1
@@ -321,24 +320,18 @@ const gameFinishShow = async (req, res) => {
     console.log("301,show,win배열 총정보:",win)
     console.log("302,show,lose배열 총정보:",lose)
 
-    //Observer의 teachingCnt 0으로 리셋
+    //게임방 퇴장시 Observer의 teachingCnt, state, connect변경
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true, teachingCnt:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
-    await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
+    await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
-    // //게임방 퇴장시 유저 state변경, connect변경
+    //게임방 퇴장시 player의 state, connect변경
     let thisGameIds = [];
     thisGameIds.push(blackP.id);
-    for(let i=0; i<blackO.length; i++){
-      thisGameIds.push(blackO[i].id); 
-    }
     thisGameIds.push(whiteP.id);
-    for(let i=0; i<whiteO.length; i++){
-      thisGameIds.push(whiteO[i].id); 
-    }
     console.log(",gameStart,thisGameIds:",thisGameIds)
     for(let i=0; i<thisGameIds.length; i++){
-      await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
+      await Users.updateMany({ id:thisGameIds[i] }, { $set: { state: 'online', connect: 'endGame' }});
     }
 
     res.status(200).json({
