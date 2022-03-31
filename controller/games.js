@@ -302,15 +302,14 @@ const gameFinishShow = async (req, res) => {
     console.log("302,show,lose배열 총정보:",lose);
 
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
-    const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true, teachingCnt:true});
+    const delTeachingCnt = await Users.findOne({ id },{ _id:false, id:true, state:true, teachingCnt:true });
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
       await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
     //게임방 결과창 나가기 player의 state, connect변경
     if(id === blackP.id || id === whiteP.id)
-      await Users.updateMany({ id:thisGameIds[i] }, { $set: { state: 'online', connect: 'endGame' }});
+      await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
     
-    console.log(",gameStart,thisGameIds:",thisGameIds);
 
     res.status(200).json({
       win,
@@ -320,7 +319,7 @@ const gameFinishShow = async (req, res) => {
       message: 'gameFinishShow 성공!',
     });
   } catch (err) {
-    console.log(`API_결과창gameFinish 에러: ${err}`);
+    console.log(`API_결과창gameFinishShow 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: 'gameFinishShow 실패',
