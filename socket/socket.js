@@ -25,7 +25,10 @@ let lobbyid;
 
 lobby.on('connection', (socket) => {
   console.log('connect lobby socket', socket.id);
-
+  socket.onAny((event) => {
+    console.log(`로비 소켓 이벤트: ${event}`);
+  });
+  
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   socket.on('lobby', async (id) => {
@@ -35,6 +38,7 @@ lobby.on('connection', (socket) => {
   })
 
   socket.on('disconnect', async () => {
+    console.log(socket.nickname)
     await Users.updateOne({id: socket.nickname}, {$set: { connect: 'offline'}})
   })
 });
