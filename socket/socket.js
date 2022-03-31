@@ -21,26 +21,18 @@ instrument(io, {
 
 // 로비
 const lobby = io.of('/lobby');
-let lobbyid;
 
 lobby.on('connection', (socket) => {
   console.log('connect lobby socket', socket.id);
-  socket.onAny((event) => {
-    console.log(`로비 소켓 이벤트: ${event}`);
-  });
   
   socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 
   socket.on('lobby', async (id) => {
     // console.log('check Event lobby', id)
     await Users.updateOne({id}, {$set: { connect: 'online'}})
-    lobbyid = id;
   })
 
   socket.on('disconnect', async () => {
-    console.log("로비 소켓닉네임", socket.nickname)
-    console.log(socket)
-    console.log(lobby.adapter)
     await Users.updateOne({id: socket.nickname}, {$set: { connect: 'offline'}})
   })
 });
