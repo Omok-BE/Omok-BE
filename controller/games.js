@@ -51,7 +51,7 @@ const gameStart = async (req, res) => {
     // console.log("51,gameStart,findBoardColor:",findBoardColor)
     // console.log("52,gameStart,gameInfo:",gameInfo)
     //게임방 입장시 유저 connect변경
-    //for문돌려서 유저들 id찾기---블로그에 정리하기 + 테스트하기 0331-목
+    
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const blackO = gameInfo[0].blackTeamObserver
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
