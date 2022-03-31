@@ -351,7 +351,7 @@ socket.on('disconnecting', async () => {
       }
     }
     // whiteTeamObserver
-    const gameIdW = gameId.blackTeamObserver
+    const gameIdW = gameId.whiteTeamObserver
     let gameIdWArray = [];
     const whiteOIds = [];
     for(let i=0; i<gameIdW.length; i++){
