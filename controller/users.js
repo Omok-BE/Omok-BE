@@ -20,6 +20,7 @@ const signup = async (req, res) => {
         ok: 'false',
         errorMessage: '회원가입 실패: 이미 사용된 이메일 입니다.'
       })
+      return;
     }
     // id 존재검사
     const existId = await User.find({ id });
@@ -35,6 +36,7 @@ const signup = async (req, res) => {
             ok: 'false',
             errorMessage: '프로필을 선택하지 않았습니다.'
         });
+        return;
     }else {
         profileUrl = 'https://haksae90.shop/images/'+ profileImage + '.svg'
     }
@@ -137,6 +139,8 @@ const findPass = async (req, res) => {
     });
   }
 }
+
+
 
 // 유저인포
 const userinfo = async (req, res) => {
