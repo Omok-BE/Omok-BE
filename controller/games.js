@@ -51,7 +51,6 @@ const gameStart = async (req, res) => {
     // console.log("51,gameStart,findBoardColor:",findBoardColor)
     // console.log("52,gameStart,gameInfo:",gameInfo)
     //게임방 입장시 유저 connect변경
-    
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const blackO = gameInfo[0].blackTeamObserver
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
@@ -338,7 +337,7 @@ const gameFinishShow = async (req, res) => {
     }
     console.log(",gameStart,thisGameIds:",thisGameIds)
     for(let i=0; i<thisGameIds.length; i++){
-      await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
+      await Users.updateMany({ id:thisGameIds[i] }, { $set: { state: 'online', connect: 'endGame' }});
     }
 
     res.status(200).json({
