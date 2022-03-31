@@ -149,7 +149,7 @@ const newPass = async (req, res) =>{
     .update(newPass + process.env.salt)
     .digest('base64');
 
-    await User.updateOne({ id, email }, { pass: encodedPass})
+    await User.updateOne({ id, email }, { $set: { pass: encodedPass }})
 
     res.status(201).send({
       ok: true,
