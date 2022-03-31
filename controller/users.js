@@ -2,15 +2,24 @@ const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
+// 회원가입
 const signup = async (req, res) => {
   try {
-    const { id, pass, confirmPass, profileImage } = req.body;
+    const { id, email, pass, confirmPass, profileImage } = req.body;
     // 비밀번호, 비밀번호 확인 비교
     if (pass !== confirmPass) {
       res.status(400).send({
         ok: false,
         errorMessage: '회원가입 실패: 비밀번호가 일치하지 않습니다',
       });
+      return;
+    }
+    const existEmail = await User.find({ email });
+    if(existEmail.length){
+      res.status(400).send({
+        ok: 'false',
+        errorMessage: '회원가입 실패: 이미 사용된 이메일 입니다.'
+      })
       return;
     }
     // id 존재검사
@@ -27,6 +36,7 @@ const signup = async (req, res) => {
             ok: 'false',
             errorMessage: '프로필을 선택하지 않았습니다.'
         });
+        return;
     }else {
         profileUrl = 'https://haksae90.shop/images/'+ profileImage + '.svg'
     }
@@ -39,6 +49,7 @@ const signup = async (req, res) => {
 
     const user = new User({
       id: id,
+      email: email,
       pass: encodedPass,
       score: [{ win: 0 }, { lose: 0 }],
       point: 1000,
@@ -60,6 +71,7 @@ const signup = async (req, res) => {
   }
 };
 
+// 로그인
 const login = async (req, res) => {
   try {
     const { id, pass } = req.body;
@@ -101,6 +113,57 @@ const login = async (req, res) => {
   }
 };
 
+// 비밀번호 찾기 가기 [유저 확인]
+const findpass = async (req, res) => {
+  try{
+    const { id, email } = req.body
+
+    const findUser = await User.findOne({ id, email });
+
+    if(!findUser){
+      res.status(401).send({
+        errorMessage: '입력 정보를 확인해 주세요',
+      });
+      return;
+    }
+
+    res.status(201).send({
+      ok: true,
+      message: 'id와 email을 확인 하였습니다.',
+    })
+  }catch(err){
+    console.log(err)
+    res.status(400).send({
+      errorMessage: '입력 정보를 확인해 주세요',
+    });
+  }
+}
+
+// 비밀번호 찾기 [새 비밀번호 입력]
+const newpass = async (req, res) =>{
+  try{
+    const { id, email, newPass } = req.body;
+
+    const encodedPass = crypto
+    .createHash(process.env.Algorithm)
+    .update(newPass + process.env.salt)
+    .digest('base64');
+
+    await User.updateOne({ id, email }, { $set: { pass: encodedPass }})
+
+    res.status(201).send({
+      ok: true,
+      message: '비밀번호 변경완료',
+    });
+  }catch(err){
+    console.log(err)
+    res.status(400).send({
+      errorMessage: '입력 정보를 확인해 주세요',
+    });
+  }
+}
+
+// 유저인포
 const userinfo = async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,5 +188,7 @@ const userinfo = async (req, res) => {
 module.exports = {
   signup,
   login,
+  findpass,
+  newpass,
   userinfo,
 };
