@@ -220,7 +220,29 @@ gameRoom.on('connection', async (socket) => {
   socket.on('joinGame', async (gameNum, id) => {
     socket.join(gameNum);
     //게임방 입장시 유저 connect변경
+    const joinGameIds = await Games.findOne({gameNum})
+    if(joinGameIds.blackTeamPlayer.id === id || joinGameIds.whiteTeamPlayer.id === id)
     await Users.updateOne({ id }, { $set: {connect:'inGame'} });
+    
+    //blackTeamObserver
+    const gameIdB = joinGameIds.blackTeamObserver
+    const blackOIds = [];
+    for(let i=0; i<gameIdB.length; i++){
+      if(gameIdB[i] !== blackOIds && gameIdB[i] === id ) {
+        await Users.updateOne({ id }, { $set: {connect:'inGame'} });
+      }
+    }
+    console.log("게임소켓,joinGame,gameIdBBBB배열안:",gameIdB)
+    // whiteTeamObserver
+    const gameIdW = joinGameIds.whiteTeamObserver
+    const whiteOIds = [];
+    for(let i=0; i<gameIdW.length; i++){
+      if(gameIdW[i] !== whiteOIds && gameIdW[i] === id) {
+        await Users.updateOne({ id }, { $set: {connect:'inGame'} });
+      }
+    }
+    console.log("게임소켓,joinGame,gameIdWWWW배열안:",gameIdW)
+
     const observerCnt = gameRoomCount(gameNum) - 2;
     await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt, playerCnt: 2 } });
   });
@@ -331,7 +353,6 @@ socket.on('disconnecting', async () => {
 
     //게임방 퇴장시 (게임 중간에 나감) 옵저버 state변경, connect변경
     const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
-    // const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 });
     // console.log("457,gameId",gameId) // 457,gameId { blackTeamObserver: [], whiteTeamObserver: [] }
     
     //blackTeamObserver
