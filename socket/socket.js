@@ -8,7 +8,6 @@ const RoomSocketEvent = require('../controller/roomSocket')
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
 const { instrument } = require('@socket.io/admin-ui');
-const games = require('../models/games');
 const io = new Server(httpServer, {
   cors: {
     origin: true,
@@ -47,7 +46,7 @@ app.set('waitingRoom', waitingRoom);
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
 
-  // socket evnet 메시지
+// socket evnet 알림
   RoomSocketEvent.onAny(socket);
 
   // socket nickname 설정
