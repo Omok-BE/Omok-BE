@@ -50,26 +50,6 @@ const gameStart = async (req, res) => {
     gameInfo.push(findBoardColor)
     // console.log("51,gameStart,findBoardColor:",findBoardColor)
     // console.log("52,gameStart,gameInfo:",gameInfo)
-
-    //게임방 입장시 유저들 connect변경
-    const blackP = gameInfo[0].blackTeamPlayer[0]
-    const blackO = gameInfo[0].blackTeamObserver
-    const whiteP = gameInfo[0].whiteTeamPlayer[0]
-    const whiteO = gameInfo[0].whiteTeamObserver
-    let thisGameIds = [];
-    thisGameIds.push(blackP.id);
-    for(let i=0; i<blackO.length; i++){
-      thisGameIds.push(blackO[i].id); 
-    }
-    thisGameIds.push(whiteP.id);
-    for(let i=0; i<whiteO.length; i++){
-      thisGameIds.push(whiteO[i].id); 
-    }
-    console.log(",gameStart,thisGameIds:",thisGameIds)
-    for(let i=0; i<thisGameIds.length; i++){
-      await Users.updateOne({ id:thisGameIds[i] }, { $set: {connect:'inGame'} });
-    }
-
     res.status(200).json({
       gameInfo,
       gameName,
@@ -318,22 +298,19 @@ const gameFinishShow = async (req, res) => {
 
     const win = [...winPlayerArray, ...winObserverArray1, ...winObserverArray2];
     const lose = [...losePlayerArray, ...loseObserverArray1, ...loseObserverArray2];
-    console.log("301,show,win배열 총정보:",win)
-    console.log("302,show,lose배열 총정보:",lose)
+    console.log("301,show,win배열 총정보:",win);
+    console.log("302,show,lose배열 총정보:",lose);
 
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     const delTeachingCnt = await Users.findOne({id},{_id:false, id:true, state:true, teachingCnt:true});
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
-    await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
+      await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
     //게임방 결과창 나가기 player의 state, connect변경
-    let thisGameIds = [];
-    thisGameIds.push(blackP.id);
-    thisGameIds.push(whiteP.id);
-    console.log(",gameStart,thisGameIds:",thisGameIds)
-    for(let i=0; i<thisGameIds.length; i++){
+    if(id === blackP.id || id === whiteP.id)
       await Users.updateMany({ id:thisGameIds[i] }, { $set: { state: 'online', connect: 'endGame' }});
-    }
+    
+    console.log(",gameStart,thisGameIds:",thisGameIds);
 
     res.status(200).json({
       win,
