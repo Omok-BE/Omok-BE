@@ -320,10 +320,10 @@ gameRoom.on('connection', async (socket) => {
 socket.on('disconnecting', async () => {
   try {
     const {id, gameNum} = socket.nickname
-    //게임방 퇴장시 유저 state변경, connect변경
-    await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
+    // //게임방 퇴장시 유저 state변경, connect변경
+    // await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
 
-    //게임방에서 옵저버가 나갈때
+    //게임방에서 옵저버가 나갈때 ----안됨 다시확인하기 + state값으로 비교해서 다시하기 220331-목
     const gameId = await Games.findOne({ gameNum }, { _id: 0, blackTeamObserver: 1, whiteTeamObserver: 1 });
     const outObTeachingCnt = await Users.findOne({ id }, { _id: 0, id: 1, teachingCnt: 1 });
     // console.log("457,gameId",gameId) // 457,gameId { blackTeamObserver: [], whiteTeamObserver: [] }
@@ -331,30 +331,32 @@ socket.on('disconnecting', async () => {
     //blackTeamObserver
     const gameIdB = gameId.blackTeamObserver
     let findBObserver = [];
+    const blackOIds = [];
     for(let i=0; i<gameIdB.length; i++){
-      if(gameIdB[i] !== [] ) {
-        findBObserver = gameIdB[i];
+      if(gameIdB[i] !== blackOIds ) {
+        findBObserver.push(gameIdB[i]);
       }
     }
     console.log("게임소켓,findBBBObserver배열안:",findBObserver)
     for(let i=0; i<findBObserver.length; i++){
       if(findBObserver[i] === id && outObTeachingCnt.id === id){
-        await Games.updateOne({ gameNum }, { $pull: {blackTeamObserver: id}});
+        await Games.updateOne({ gameNum }, { $pull: { blackTeamObserver: id }});
         await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
       }
     }
     // whiteTeamObserver
     const gameIdW = gameId.blackTeamObserver
     let findWObserver = [];
+    const whiteOIds = [];
     for(let i=0; i<gameIdW.length; i++){
-      if(gameIdW[i] !== [] ) {
-        findWObserver = gameIdW[i];
+      if(gameIdW[i] !== whiteOIds ) {
+        findWObserver.push(gameIdW[i]);
       }
     }
     console.log("게임소켓,findWWWObserver배열안:",findWObserver)
     for(let i=0; i<findWObserver.length; i++){
       if(findWObserver[i] === id && outObTeachingCnt.id === id){
-        await Games.updateOne({ gameNum }, { $pull: {whiteTeamObserver: id}});
+        await Games.updateOne({ gameNum }, { $pull: { whiteTeamObserver: id }});
         await Users.updateOne({ id }, { $set: { teachingCnt: 0 }});
       }
     }
@@ -387,4 +389,4 @@ socket.on('byebye', async ( state, gameNum, id ) => {
 });
 });
 
-module.exports = { httpServer };
+module.exports = { httpServer, waitingRoomCount, emitToRoom };
