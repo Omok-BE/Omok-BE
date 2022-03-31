@@ -35,7 +35,7 @@ lobby.on('connection', (socket) => {
   })
 
   socket.on('disconnect', async () => {
-    await Users.updateOne({id: lobbyid}, {$set: { connect: 'offline'}})
+    await Users.updateOne({id: socket.nickname}, {$set: { connect: 'offline'}})
   })
 });
 
