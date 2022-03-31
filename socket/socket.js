@@ -389,4 +389,4 @@ socket.on('byebye', async ( state, gameNum, id ) => {
 });
 });
 
-module.exports = { httpServer, waitingRoomCount, emitToRoom };
+module.exports = { httpServer };
