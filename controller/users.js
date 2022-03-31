@@ -113,24 +113,23 @@ const login = async (req, res) => {
   }
 };
 
+// 비밀번호 찾기 가기 [유저 확인]
 const findPass = async (req, res) => {
   try{
-    const { id, email, newPass } = req.body
+    const { id, email } = req.body
 
     const findUser = await User.findOne({ id, email });
 
-    // if(!findUser.length){
-    //   res.status(401).send({
-    //     errorMessage: '입력 정보를 확인해 주세요',
-    //   });
-    //   return;
-    // }else {
-
-    // }
+    if(!findUser.length){
+      res.status(401).send({
+        errorMessage: '입력 정보를 확인해 주세요',
+      });
+      return;
+    }
 
     res.status(201).send({
       ok: true,
-      message: '비밀번호 변경 성공',
+      message: 'id와 email을 확인 하였습니다.',
     })
   }catch(err){
     console.log(err)
@@ -140,7 +139,29 @@ const findPass = async (req, res) => {
   }
 }
 
+// 비밀번호 찾기 [새 비밀번호 입력]
+const newPass = async (req, res) =>{
+  try{
+    const { id, email, newPass } = req.body;
 
+    const encodedPass = crypto
+    .createHash(process.env.Algorithm)
+    .update(newPass + process.env.salt)
+    .digest('base64');
+
+    await User.updateOne({ id, email }, { pass: encodedPass})
+
+    res.status(201).send({
+      ok: true,
+      message: '비밀번호 변경완료',
+    });
+  }catch(err){
+    console.log(err)
+    res.status(400).send({
+      errorMessage: '입력 정보를 확인해 주세요',
+    });
+  }
+}
 
 // 유저인포
 const userinfo = async (req, res) => {
@@ -168,5 +189,6 @@ module.exports = {
   signup,
   login,
   findPass,
+  newPass,
   userinfo,
 };
