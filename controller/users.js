@@ -2,9 +2,10 @@ const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
+// 회원가입
 const signup = async (req, res) => {
   try {
-    const { id, pass, confirmPass, profileImage } = req.body;
+    const { id, email, pass, confirmPass, profileImage } = req.body;
     // 비밀번호, 비밀번호 확인 비교
     if (pass !== confirmPass) {
       res.status(400).send({
@@ -12,6 +13,13 @@ const signup = async (req, res) => {
         errorMessage: '회원가입 실패: 비밀번호가 일치하지 않습니다',
       });
       return;
+    }
+    const existEmail = await User.find({ email });
+    if(existEmail.length){
+      res.status(400).send({
+        ok: 'false',
+        errorMessage: '회원가입 실패: 이미 사용된 이메일 입니다.'
+      })
     }
     // id 존재검사
     const existId = await User.find({ id });
@@ -39,6 +47,7 @@ const signup = async (req, res) => {
 
     const user = new User({
       id: id,
+      email: email,
       pass: encodedPass,
       score: [{ win: 0 }, { lose: 0 }],
       point: 1000,
@@ -60,6 +69,7 @@ const signup = async (req, res) => {
   }
 };
 
+// 로그인
 const login = async (req, res) => {
   try {
     const { id, pass } = req.body;
@@ -101,6 +111,34 @@ const login = async (req, res) => {
   }
 };
 
+const findPass = async (req, res) => {
+  try{
+    const { id, email, newPass } = req.body
+
+    const findUser = await User.findOne({ id, email });
+
+    // if(!findUser.length){
+    //   res.status(401).send({
+    //     errorMessage: '입력 정보를 확인해 주세요',
+    //   });
+    //   return;
+    // }else {
+
+    // }
+
+    res.status(201).send({
+      ok: true,
+      message: '비밀번호 변경 성공',
+    })
+  }catch(err){
+    console.log(err)
+    res.status(400).send({
+      errorMessage: '입력 정보를 확인해 주세요',
+    });
+  }
+}
+
+// 유저인포
 const userinfo = async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,5 +163,6 @@ const userinfo = async (req, res) => {
 module.exports = {
   signup,
   login,
+  findPass,
   userinfo,
 };
