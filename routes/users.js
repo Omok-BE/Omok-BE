@@ -8,7 +8,7 @@ router.post('/signup', signup);
 // 로그인
 router.post('/login', login);
 // 비밀번호 찾기 가기
-router.get('/findpass', findpass);
+router.post('/findpass', findpass);
 // 비밀번호 변경
 router.post('/newpass', newPass)
 // 로그인 체크
