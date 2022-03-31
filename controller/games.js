@@ -67,7 +67,7 @@ const gameStart = async (req, res) => {
     }
     console.log(",gameStart,thisGameIds:",thisGameIds)
     for(let i=0; i<thisGameIds.length; i++){
-      await Users.updateOne({ id }, { $set: {connect:'inGame'} });
+      await Users.updateOne({ id:thisGameIds[i] }, { $set: {connect:'inGame'} });
     }
 
     res.status(200).json({
