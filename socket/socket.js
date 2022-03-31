@@ -35,6 +35,7 @@ lobby.on('connection', (socket) => {
   })
 
   socket.on('disconnect', async () => {
+    console.log(socket.nickname)
     await Users.updateOne({id: socket.nickname}, {$set: { connect: 'offline'}})
   })
 });
