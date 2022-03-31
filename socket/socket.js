@@ -346,7 +346,9 @@ socket.on('disconnecting', async () => {
     gameRoom.to(gameNum).emit('bye', socket.id);
     const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
     // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-    if (observerCnt) await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
+    if (observerCnt >= 0) 
+    await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
+    
     console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
     console.log('게임방 퇴장 소켓,gameNum:', gameNum);
     console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
