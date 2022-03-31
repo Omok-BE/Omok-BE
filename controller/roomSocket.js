@@ -5,7 +5,7 @@ const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/ro
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
 const { participantUpdate } = require('../lib/roomSocket/roomOutUpdate')
 
-// socket evnet 메시지
+// socket evnet 알림
 exports.onAny = function(socket){
     socket.onAny((event) => {
         console.log(`Socket Event: ${event}`);
