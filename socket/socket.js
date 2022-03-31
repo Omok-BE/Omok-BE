@@ -221,7 +221,7 @@ gameRoom.on('connection', async (socket) => {
     socket.join(gameNum);
     //게임방 입장시 유저 connect변경
     const joinGameIds = await Games.findOne({gameNum})
-    if(joinGameIds.blackTeamPlayer.id === id || joinGameIds.whiteTeamPlayer.id === id)
+    if(joinGameIds.blackTeamPlayer === id || joinGameIds.whiteTeamPlayer === id)
     await Users.updateOne({ id }, { $set: {connect:'inGame'} });
     
     //blackTeamObserver
