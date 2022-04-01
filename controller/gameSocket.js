@@ -115,7 +115,6 @@ exports.omog = function(socket){
         const findBoard = await Boards.findOne({gameNum});
         let bboard = findBoard.board;
         let count = findBoard.count;
-        console.log(data.x, data.y, bboard)
         if(count % 2 == 0) {
             if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
                 let checkSamsam=0 //삼삼확인
