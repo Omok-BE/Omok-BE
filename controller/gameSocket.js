@@ -2,8 +2,8 @@ const app = require('../app');
 const Users = require('../models/users');
 const Rooms = require('../models/rooms');
 const Games = require('../models/games');
-const { check_33 } = require('../lib/gameSocket/check_33')
-const { check_44 } = require('../lib/gameSocket/check_44')
+const { check_33 } = require('../lib/games/check_33')
+const { check_44 } = require('../lib/games/check_44')
 
 
 // x,y 좌표를 배열의 index값으로 변환
