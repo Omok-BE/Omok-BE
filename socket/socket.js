@@ -115,6 +115,7 @@ gameRoom.on('connection', (socket) => {
   
   //게임방 나갈떄
   GameSocketEvent.byebye(socket);
+
   
 });
 
