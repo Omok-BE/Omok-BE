@@ -1,5 +1,6 @@
 const app = require('../app');
 const Users = require('../models/users');
+const Boards = require('../models/boards');
 const Rooms = require('../models/rooms');
 const Games = require('../models/games');
 const { check_33 } = require('../lib/games/check_33')
