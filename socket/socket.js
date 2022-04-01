@@ -341,13 +341,15 @@ socket.on('disconnecting', async () => {
   try {
     const {id, gameNum} = socket.nickname
     
-    gameRoom.to(gameNum).emit('bye', socket.id);
+    gameRoom.to(gameNum).emit('bye', id);
     const observerCnt = gameRoomCount(gameNum) - 2; //(-2 플레이어)+(-1 나가는 옵저버)
     // console.log('게임방 소켓 퇴장observerCnt:', observerCnt);
-    if (observerCnt) await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
+    if (observerCnt >= 0) 
+    await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
+    
     console.log('게임방 퇴장 소켓 disconnecting🖐️🖐️');
     console.log('게임방 퇴장 소켓,gameNum:', gameNum);
-    console.log('게임방 퇴장 소켓,socket.nickname.id:', socket.nickname.id);
+    console.log('게임방 퇴장 소켓,id:', id);
 
     //게임방 퇴장시 (게임 중간에 나감) 옵저버 state변경, connect변경
     await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
