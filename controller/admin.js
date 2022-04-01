@@ -14,7 +14,7 @@ const adminLogin = async (req, res) => {
         .digest('base64');
 
         if (id !== 'admin') {
-            return res.status(400).json({
+            return res.status(403).json({
                 errorMessage: '관리자가 아닙니다.'
             });
         };
@@ -36,8 +36,8 @@ const adminLogin = async (req, res) => {
         })
     } catch(error) {
         console.error(error);
-        res.status(400).json({
-            errorMessage: '요청한 데이터 형식이 올바르지 않습니.'
+        res.status(403).json({
+            errorMessage: '접근 권한이 없습니다'
         })
     }
 };
