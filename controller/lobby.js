@@ -165,25 +165,18 @@ const fastPlayer = async (req, res) => {
     const { id } = req.params;
     const existRooms = await Room.findOne({ playerCnt: { $ne: 2 } });
     // 플레이어가 1명인 방이 없을시
-    if (existRooms.length === 0) {
+    if (existRooms === undefined) {
       res.status(401).send({
         ok: false,
         message: '빈 플레이어 방이 없습니다.',
       });
+      return;
     }
 
-    if (!existRooms.blackTeamPlayer) {
+    if (existRooms.blackTeamPlayer) {
       await User.updateOne({ id }, { $set: { state: 'blackPlayer' } });
-    //   await Room.updateOne(
-    //     { roomNum: existRooms.roomNum },
-    //     { $set: { playerCnt: 2, blackTeamPlayer: id } }
-    //   );
-    } else if (!existRooms.whiteTeamPlayer) {
+    } else if (existRooms.whiteTeamPlayer) {
       await User.updateOne({ id }, { $set: { state: 'whitePlayer' } });
-    //   await Room.updateOne(
-    //     { roomNum: existRooms.roomNum },
-    //     { $set: { playerCnt: 2, whiteTeamPlayer: id } }
-    //   );
     }
 
     const userInfo = await User.findOne(
@@ -213,6 +206,7 @@ const fastObserver = async (req, res) => {
         ok: false,
         message: '대기중인 방이 없습니다.',
       });
+      return
     }
 
     // 블랙옵저버, 화이트옵저버 수가 블랙이 많은 경우만 화이트로 참가
@@ -222,26 +216,10 @@ const fastObserver = async (req, res) => {
       existRooms.blackTeamObserver.length < existRooms.whiteTeamObserver.length
     ) {
       await User.updateOne({ id }, { $set: { state: 'blackObserver' } });
-    //   await Room.updateOne(
-    //     { roomNum: existRooms.roomNum },
-    //     { $addToSet: { blackTeamObserver: id } }
-    //   );
-    //   await Room.updateOne(
-    //     { roomNum: existRooms.roomNum },
-    //     { $inc: { observerCnt: 1 } }
-    //   );
     } else if (
       existRooms.blackTeamObserver.length > existRooms.whiteTeamObserver.length
     ) {
       await User.updateOne({ id }, { $set: { state: 'whiteObserver' } });
-    //   await Room.updateOne(
-    //     { roomNum: existRooms.roomNum },
-    //     { $addToSet: { whiteTeamObserver: id } }
-    //   );
-    //   await Room.updateOne(
-    //     { roomNum: existRooms.roomNum },
-    //     { $inc: { observerCnt: 1 } }
-    //   );
     }
 
     const userInfo = await User.findOne(
