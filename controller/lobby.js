@@ -21,7 +21,8 @@ const userList = async (req, res) => {
     // 내 상태 최신화
     let id = req.params.id
     await User.updateOne({id}, {$set : { connect: 'online' }})
-    const allUser = await User.find({ connect: { $ne: 'offline' }}, {_id:0, pass:0, state:0, teachingCnt:0, connect:0});
+    const allUser = await User.find({ $and: [{connect: { $ne:'offline' }}, { connect: {$ne:'endRoom' }}, {connect: { $ne:'endGame' }}]}, 
+    {_id:0, pass:0, state:0, teachingCnt:0, connect:0});
 
     res.send(allUser);
   } catch (err) {
