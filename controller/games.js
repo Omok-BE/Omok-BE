@@ -2,6 +2,8 @@ const Games = require('../models/games');
 const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
+const Bugreport = require('../models/bugReports');
+const { findOne } = require('../models/users');
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
@@ -61,6 +63,43 @@ const gameStart = async (req, res) => {
     });
   }
 };
+
+// [버그리폿] 
+const bugReport = async (req, res) => {
+  // 유저 인포를 통해 버그 제보한 사람 정보 저정하기
+  // 버그 내용 인풋으로 간략히 받기
+  // 게임넘 으로 제보당시의 게임방 정보를 db에서 꺼내와서 저장하기(게임이 끝나서 최신화되거나 삭제되기전 상태용)
+  // 게임인포를 통해 해당 방에 있는 유저들 가져오기 
+  // 게임 인포에 있는 유저들의 상태 혹은 정보 확인해보기
+  try{
+    const { input, gameNum, gameInfo, userInfo } = req.body;
+
+    const gameData = await findOne({ gameNum }, { _id:0 });
+
+
+    const bug = new Bugreport({
+      reportUser: userInfo,
+      gameData,
+      gameInfo,
+      content: input,
+    });
+    await bug.save();
+    res.status(201).send({
+      ok: true,
+      message: '제보완료',
+    });
+  }catch(err){
+    console.log(err)
+    res.status(401).send({
+      ok: false,
+      errorMessage: '입력받지 못하였습니다'
+    })
+  }
+  
+
+   
+
+}
 
 //[결과창]게임이 끝나면 바로 보내는 내용
 const gameFinish = async (req, res) => {
@@ -389,6 +428,7 @@ async function gameUserInfo(gameNum) {
 module.exports = {
   gameCreate,
   gameStart,
+  bugReport,
   gameFinish,
   gameFinishShow,
   gameDelete,
