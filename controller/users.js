@@ -120,7 +120,7 @@ const findpass = async (req, res) => {
 
     const findUser = await User.findOne({ id, email });
 
-    if(!findUser.length){
+    if(!findUser){
       res.status(401).send({
         errorMessage: '입력 정보를 확인해 주세요',
       });
