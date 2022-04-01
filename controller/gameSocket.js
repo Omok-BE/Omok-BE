@@ -20,7 +20,7 @@ function gameRoomCount(gameNum) {
 exports.nicknameEvent = function(socket){
     socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 }
-
+ 
 // socket event 메시지
 exports.onAny = function(socket) {
     socket.onAny((event) => {
