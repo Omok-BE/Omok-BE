@@ -429,6 +429,7 @@ async function gameUserInfo(gameNum) {
 module.exports = {
   gameCreate,
   gameStart,
+  bugReport,
   gameFinish,
   gameFinishShow,
   gameDelete,
