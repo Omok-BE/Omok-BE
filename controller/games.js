@@ -3,7 +3,6 @@ const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Bugreport = require('../models/bugReports');
-const { findOne } = require('../models/users');
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
@@ -74,8 +73,7 @@ const bugReport = async (req, res) => {
   try{
     const { input, gameNum, gameInfo, userInfo } = req.body;
 
-    const gameData = await findOne({ gameNum }, { _id:0 });
-
+    const gameData = await Games.findOne({ gameNum }, { _id:0 });
 
     const bug = new Bugreport({
       reportUser: userInfo,
@@ -84,6 +82,7 @@ const bugReport = async (req, res) => {
       content: input,
     });
     await bug.save();
+    
     res.status(201).send({
       ok: true,
       message: '제보완료',
