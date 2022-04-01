@@ -57,7 +57,7 @@ const gameStart = async (req, res) => {
       message: '게임방 입장해서 정보가져오기 성공!',
     });
   } catch (err) {
-    console.log(`API_게임방 에러: ${err}`);
+    console.log(`API_gameStart 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '게임방 입장해서 정보를 가져오지 못했어요',
