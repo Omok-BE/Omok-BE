@@ -22,7 +22,7 @@ const requestMiddleware = (req, res, next) => {
   );
   next();
 };
-
+app.use(requestMiddleware);
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
