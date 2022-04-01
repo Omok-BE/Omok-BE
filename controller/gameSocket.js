@@ -5,12 +5,8 @@ const Rooms = require('../models/rooms');
 const Games = require('../models/games');
 const { check_33 } = require('../lib/games/check_33')
 const { check_44 } = require('../lib/games/check_44')
+const { xyToIndex } = require('../lib/games/xyToIndex')
 
-
-// x,y 좌표를 배열의 index값으로 변환
-let xyToIndex = (x, y) => {
-    return x + y * 19;
-};
 
 //게임 소켓 접속자 수  
 function gameRoomCount(gameNum) {
