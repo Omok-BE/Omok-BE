@@ -3,7 +3,7 @@ const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Bugreport = require('../models/bugReports');
-const { gameUserInfo } = require('../lib/gameSocket/gameUserInfo')
+const { gameUserInfo } = require('../lib/games/gameUserInfo')
 
 
 //대기실 => 게임방 입장시 게임방 생성
