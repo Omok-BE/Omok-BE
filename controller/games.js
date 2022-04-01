@@ -2,6 +2,7 @@ const Games = require('../models/games');
 const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
+const Bugreport = require('../models/bugReports');
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
