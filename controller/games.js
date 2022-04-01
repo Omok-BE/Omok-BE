@@ -1,4 +1,3 @@
-const _ = require('mongoose-sequence');
 const Games = require('../models/games');
 const Rooms = require('../models/rooms');
 const Users = require('../models/users');
