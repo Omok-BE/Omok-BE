@@ -114,13 +114,13 @@ const login = async (req, res) => {
 };
 
 // 비밀번호 찾기 가기 [유저 확인]
-const findPass = async (req, res) => {
+const findpass = async (req, res) => {
   try{
     const { id, email } = req.body
 
     const findUser = await User.findOne({ id, email });
 
-    if(!findUser.length){
+    if(!findUser){
       res.status(401).send({
         errorMessage: '입력 정보를 확인해 주세요',
       });
@@ -140,7 +140,7 @@ const findPass = async (req, res) => {
 }
 
 // 비밀번호 찾기 [새 비밀번호 입력]
-const newPass = async (req, res) =>{
+const newpass = async (req, res) =>{
   try{
     const { id, email, newPass } = req.body;
 
@@ -149,7 +149,7 @@ const newPass = async (req, res) =>{
     .update(newPass + process.env.salt)
     .digest('base64');
 
-    await User.updateOne({ id, email }, { pass: encodedPass})
+    await User.updateOne({ id, email }, { $set: { pass: encodedPass }})
 
     res.status(201).send({
       ok: true,
@@ -188,7 +188,7 @@ const userinfo = async (req, res) => {
 module.exports = {
   signup,
   login,
-  findPass,
-  newPass,
+  findpass,
+  newpass,
   userinfo,
 };
