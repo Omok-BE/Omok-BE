@@ -72,7 +72,7 @@ exports.chat = function(socket){
         console.log("겜방소켓,socket.nickname",socket.nickname)
         console.log("겜방소켓,chat:",chat)
         const data = { name:socket.nickname.id, chat };
-        gameRoom.to(gameNum).emit('chat', data, chat.state);
+        app.get("gameRoom").to(gameNum).emit('chat', data, chat.state);
     });
 };
 
@@ -80,7 +80,7 @@ exports.chat = function(socket){
 exports.teachingW = function(socket){
     socket.on('teachingW', async (chat, gameNum) => {
         const data = { name:socket.nickname.id, chat };
-        gameRoom.to(gameNum).emit('teachingW', data);
+        app.get("gameRoom").to(gameNum).emit('teachingW', data);
         await Users.updateOne({ id:socket.nickname.id }, { $inc: { teachingCnt: 1 }}, { upsert:true });
     });
 };
@@ -89,7 +89,7 @@ exports.teachingW = function(socket){
 exports.teachingB = function(socket){
     socket.on('teachingB', async (chat, gameNum) => {
         const data = { name:socket.nickname.id, chat };
-        gameRoom.to(gameNum).emit('teachingB', data);
+        app.get("gameRoom").to(gameNum).emit('teachingB', data);
         await Users.updateOne({ id:socket.nickname.id }, { $inc: { teachingCnt: 1 }}, { upsert:true});
     });
 };
@@ -98,7 +98,7 @@ exports.teachingB = function(socket){
 exports.flyingWord = function(socket){
     socket.on('flyingWord', async (chat, gameNum) => {
         const data = { name: socket.nickname.id, chat };
-        gameRoom.to(gameNum).emit('flyingWord', data);
+        app.get("gameRoom").to(gameNum).emit('flyingWord', data);
         await Users.updateOne({ id:socket.nickname.id }, { $inc: { teachingCnt: 1 }}, { upsert:true });
     });
 };
@@ -108,7 +108,7 @@ exports.Pointer = function(socket){
     socket.on("Pointer", (chat, gameNum) =>{
         pointer = true;
         const data = {name:socket.nickname.id, pointer:pointer};
-        gameRoom.to(gameNum).emit("Pointer", data, chat);
+        app.get("gameRoom").to(gameNum).emit("Pointer", data, chat);
     }); 
 };
 
@@ -122,7 +122,7 @@ exports.omog = function(socket){
         if(count % 2 == 0) {
             if(check_33(data.x,data.y,bboard) || check_44(data.x,data.y,bboard)) {
                 let checkSamsam=0 //삼삼확인
-                gameRoom.to(gameNum).emit("omog", data,checkSamsam,state);
+                app.get("gameRoom").to(gameNum).emit("omog", data,checkSamsam,state);
                 return;
             }
         } 
@@ -141,7 +141,7 @@ exports.omog = function(socket){
             count++;
             data.count = count;
             await Boards.updateMany({gameNum},{$set: {count, board:bboard}});
-            gameRoom.to(gameNum).emit('omog', data);
+            app.get("gameRoom").to(gameNum).emit('omog', data);
         }
     });
 };
@@ -161,8 +161,7 @@ exports.pointerOmog = function(socket){
             data.board = bboard;
             // data.order
             let pointer = false;
-            
-            gameRoom.to(gameNum).emit("pointerOmog", data, count, pointer);
+            app.get("gameRoom").to(gameNum).emit("pointerOmog", data, count, pointer);
         }
     });
 };
@@ -172,7 +171,7 @@ exports.disconnecting = function(socket){
     socket.on('disconnecting', async () => {
         try {
             const {id, gameNum} = socket.nickname
-            gameRoom.to(gameNum).emit('bye', id);
+            app.get("gameRoom").to(gameNum).emit('bye', id);
             const observerCnt = gameRoomCount(gameNum) - 2; 
             if (observerCnt >= 0) 
             await Rooms.updateOne({ roomNum:gameNum }, { $set: { observerCnt } });
@@ -196,7 +195,7 @@ exports.byebye = function(socket){
             console.log("196,겜방소켓,byebye,gameNum:",gameNum)
             console.log("197,겜방소켓byebye,id:",id)
             
-            gameRoom.to(gameNum).emit("byebye",state, id);
+            app.get("gameRoom").to(gameNum).emit("byebye",state, id);
             console.log("겜방소켓 byebye이벤트 성공");
         } catch(err) {
             console.log("겜방소켓 byebye이벤트 에러:",err);
