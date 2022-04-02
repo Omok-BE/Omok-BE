@@ -125,10 +125,12 @@ exports.omog = function(socket){
         
         if (bboard[xyToIndex(data.x, data.y)] != -1 &&
         bboard[xyToIndex(data.x, data.y)] != 3) {
+            console.log("돌아가");
         } else if (
             (state == 'whitePlayer' && count % 2 == 0) ||
             (state == 'blackPlayer' && count % 2 !== 0)
         ) {
+            console.log("너의 순서가 아니다 돌아가");
         } else {
             count % 2 == 0
             ? (bboard[xyToIndex(data.x, data.y)] = 1)
@@ -187,9 +189,9 @@ exports.disconnecting = function(socket){
 exports.byebye = function(socket){
     socket.on('byebye', async ( state, gameNum, id ) => {
         try{
-            console.log("195,겜방소켓,byebye,state:",state)
-            console.log("196,겜방소켓,byebye,gameNum:",gameNum)
-            console.log("197,겜방소켓byebye,id:",id)
+            console.log("겜방소켓,byebye,state:",state)
+            console.log("겜방소켓,byebye,gameNum:",gameNum)
+            console.log("겜방소켓,byebye,id:",id)
             
             app.get("gameRoom").to(gameNum).emit("byebye",state, id);
             console.log("겜방소켓 byebye이벤트 성공");
