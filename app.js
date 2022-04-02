@@ -22,7 +22,7 @@ const adminRouter = require('./routes/admin')
 //   );
 //   next();
 // };
-app.use(requestMiddleware);
+// app.use(requestMiddleware);
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
