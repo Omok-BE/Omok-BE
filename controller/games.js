@@ -3,6 +3,8 @@ const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Bugreport = require('../models/bugReports');
+const { gameUserInfo } = require('../lib/games/gameUserInfo')
+
 
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
@@ -47,6 +49,7 @@ const gameStart = async (req, res) => {
     let gameInfo = await gameUserInfo(gameNum);
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
+    console.log("hi", gameInfo, findBoardColor)
     gameInfo.push(findBoardColor)
     res.status(200).json({
       gameInfo,
@@ -55,13 +58,14 @@ const gameStart = async (req, res) => {
       message: '게임방 입장해서 정보가져오기 성공!',
     });
   } catch (err) {
-    console.log(`API_게임방 에러: ${err}`);
+    console.log(`API_gameStart 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '게임방 입장해서 정보를 가져오지 못했어요',
     });
   }
 };
+
 
 // [버그리폿] 
 const bugReport = async (req, res) => {
@@ -99,7 +103,6 @@ const bugReport = async (req, res) => {
    
 
 }
-
 
 //[결과창]게임이 끝나면 바로 보내는 내용
 const gameFinish = async (req, res) => {
@@ -372,58 +375,6 @@ const gameDelete = async (req, res) => {
     });
   }
 };
-
-//게임방내 유저 state별 정보
-async function gameUserInfo(gameNum) {
-  return await Games.aggregate([
-   {
-     $match: { gameNum: Number(gameNum) },
-   },
-   {
-     $lookup: {
-       from: 'users',
-       localField: 'blackTeamPlayer',
-       foreignField: 'id',
-       as: 'blackTeamPlayer',
-     },
-   },
-   {
-     $lookup: {
-       from: 'users',
-       localField: 'blackTeamObserver',
-       foreignField: 'id',
-       as: 'blackTeamObserver',
-     },
-   },
-   {
-     $lookup: {
-       from: 'users',
-       localField: 'whiteTeamPlayer',
-       foreignField: 'id',
-       as: 'whiteTeamPlayer',
-     },
-   },
-   {
-     $lookup: {
-       from: 'users',
-       localField: 'whiteTeamObserver',
-       foreignField: 'id',
-       as: 'whiteTeamObserver',
-     },
-   },
-   {
-     $project: {
-       _id: 0,
-       blackTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
-       blackTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt:1, profileImage:1 },
-       whiteTeamPlayer: { id: 1, score: 1, point: 1, state: 1, profileImage:1 },
-       whiteTeamObserver: { id: 1, score: 1, point: 1, state: 1, teachingCnt:1, profileImage:1 },
-       timer: 1
-     },
-   },
- ]);
-}
-
 
 
 module.exports = {
