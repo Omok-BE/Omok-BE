@@ -124,7 +124,7 @@ exports.omog = function(socket){
         } 
         
         if (bboard[xyToIndex(data.x, data.y)] != -1 &&
-        bboard[xyToIndex(data.x, data.y)] != 3) {
+            bboard[xyToIndex(data.x, data.y)] != 3) {
             console.log("돌아가");
         } else if (
             (state == 'whitePlayer' && count % 2 == 0) ||
