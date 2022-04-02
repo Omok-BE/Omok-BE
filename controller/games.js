@@ -44,12 +44,12 @@ const gameCreate = async (req, res) => {
 const gameStart = async (req, res) => {
   try {
     const { gameNum } = req.params;
-    console.log("45,gameStart,req.params:", req.params)
+    console.log("47,gameStart,req.params:", req.params)
     //게임방내 유저 state별 정보
     let gameInfo = await gameUserInfo(gameNum);
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
-    console.log("hi", gameInfo, findBoardColor)
+    console.log("gameStart,gameInfo:",gameInfo, "findBoardColor>>", findBoardColor)
     gameInfo.push(findBoardColor)
     res.status(200).json({
       gameInfo,
@@ -108,7 +108,7 @@ const bugReport = async (req, res) => {
 const gameFinish = async (req, res) => {
   try {
     const { userInfo, gameNum, result } = req.body;
-    console.log("70,gameFinish,req.body:", req.body)
+    console.log("111,gameFinish,req.body:", req.body)
     const id = userInfo.id;
     const point = userInfo.point;
     const state = userInfo.state;
@@ -144,7 +144,7 @@ const gameFinish = async (req, res) => {
       winGetTeachingPoint = 300
     }
     const winTotalPoint = point + winGetTeachingPoint;  //게임후 총 포인트(기존 + 얻은)
-    console.log("106:", winTotalPoint)
+    console.log("147:", winTotalPoint)
     //진팀 point
     const penalty = 20  //패널티
     let loseGetTeachingPoint = useTeachingPoint + chatPoint + penalty;
@@ -153,7 +153,7 @@ const gameFinish = async (req, res) => {
       loseGetTeachingPoint = 300
     } 
     const loseTotalPoint = point - loseGetTeachingPoint;  //게임후 총 포인트(기존 - 얻은)
-    console.log("115",loseTotalPoint)
+    console.log("156",loseTotalPoint)
     //whitePlayer 이김
     if (result.state === 'whitePlayer') {
       //whiteObserver 이김
@@ -196,7 +196,7 @@ const gameFinish = async (req, res) => {
 const gameFinishShow = async (req, res) => {
   try { 
     const { id, gameNum, result } = req.body;
-    console.log('158,결과창show,req.body:', req.body);
+    console.log('199,결과창show,req.body:', req.body);
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
@@ -325,12 +325,12 @@ const gameFinishShow = async (req, res) => {
 
     const win = [...winPlayerArray, ...winObserverArray1, ...winObserverArray2];
     const lose = [...losePlayerArray, ...loseObserverArray1, ...loseObserverArray2];
-    console.log("287,show,win배열 총정보:",win);
-    console.log("288,show,lose배열 총정보:",lose);
+    console.log("328,show,win배열 총정보:",win);
+    console.log("329,show,lose배열 총정보:",lose);
 
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     const delTeachingCnt = await Users.findOne({ id },{ _id:false, id:true, state:true, teachingCnt:true });
-    console.log("292,티칭카운트:", delTeachingCnt)
+    console.log("333,티칭카운트:", delTeachingCnt)
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
       await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
