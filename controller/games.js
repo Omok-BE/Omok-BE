@@ -49,7 +49,7 @@ const gameStart = async (req, res) => {
     let gameInfo = await gameUserInfo(gameNum);
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
-    console.log("gameStart,gameInfo:",gameInfo, "findBoardColor>>", findBoardColor)
+    console.log("52,gameStart,gameInfo:",gameInfo, "findBoardColor>>", findBoardColor)
     gameInfo.push(findBoardColor)
     res.status(200).json({
       gameInfo,
@@ -176,7 +176,7 @@ const gameFinish = async (req, res) => {
       }
     }
     const myId = await Users.findOne({id})
-    console.log("138,gameFinish,myId:",myId)
+    console.log("179,gameFinish,myId:",myId)
 
     res.status(200).json({
       ok: true,
@@ -199,7 +199,7 @@ const gameFinishShow = async (req, res) => {
     console.log('199,결과창show,req.body:', req.body);
     
     const myId = await Users.findOne({id})
-    console.log("202,show,gameFinish,myId:",myId)
+    console.log("202,show,gameFinishShow,myId:",myId)
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
@@ -328,12 +328,12 @@ const gameFinishShow = async (req, res) => {
 
     const win = [...winPlayerArray, ...winObserverArray1, ...winObserverArray2];
     const lose = [...losePlayerArray, ...loseObserverArray1, ...loseObserverArray2];
-    console.log("show,win배열 총정보:",win);
-    console.log("show,lose배열 총정보:",lose);
+    console.log("331,show,win배열 총정보:",win);
+    console.log("332,show,lose배열 총정보:",lose);
 
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     const delTeachingCnt = await Users.findOne({ id },{ _id:0, id:1, state:1, teachingCnt:1 });
-    console.log("show,티칭카운트:", delTeachingCnt)
+    console.log("336,show,티칭카운트:", delTeachingCnt)
     if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
       await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
 
@@ -360,7 +360,7 @@ const gameFinishShow = async (req, res) => {
 const gameDelete = async (req, res) => {
   try {
     const { gameNum } = req.params;
-
+    console.log("363,gameDelete:",gameDelete)
     const existGame = await Games.findOne({ gameNum });
     if (existGame){
       await Rooms.deleteOne({ roomNum: Number(gameNum) });
