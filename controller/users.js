@@ -26,7 +26,7 @@ const signup = async (req, res) => {
     }
     // id 존재검사
     const existId = await User.find({ id });
-    if (existId1.length) {
+    if (existId.length) {
       res.status(400).send({
         ok: false,
         errorMessage: '이미 사용중인 ID입니다.',
