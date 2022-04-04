@@ -1,6 +1,8 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const Tracing = require("@sentry/tracing");
+
 
 // 회원가입
 const signup = async (req, res) => {
@@ -24,7 +26,7 @@ const signup = async (req, res) => {
     }
     // id 존재검사
     const existId = await User.find({ id });
-    if (existId.length) {
+    if (existId1.length) {
       res.status(400).send({
         ok: false,
         errorMessage: '이미 사용중인 ID입니다.',
@@ -64,6 +66,7 @@ const signup = async (req, res) => {
       message: '회원가입 성공',
     });
   } catch (err) {
+    Tracing.captureException(e);
     console.log(err);
     res.status(400).send({
       errorMessage: '요청한 데이터 형식이 올바르지 않습니다',

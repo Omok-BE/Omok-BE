@@ -1,6 +1,7 @@
 const express = require('express');
 const connect = require('./models');
 const cors = require('cors');
+const Sentry = require("@sentry/node");
 const app = express();
 require('dotenv').config();
 connect();
@@ -9,6 +10,30 @@ const usersRouter = require('./routes/users');
 const lobbyRouter = require('./routes/lobby');
 const gameRouter = require('./routes/games');
 const adminRouter = require('./routes/admin')
+
+const Tracing = require("@sentry/tracing");
+
+Sentry.init({
+  dsn: process.env.DSN,
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
+const transaction = Sentry.startTransaction({
+  op: "test",
+  name: "My First Test Transaction",
+});
+
+setTimeout(() => {
+  try {
+    foo();
+  } catch (e) {
+    Sentry.captureException(e);
+  } finally {
+    transaction.finish();
+  }
+}, 99);
 
 // const requestMiddleware = (req, res, next) => {
 //   console.log(
