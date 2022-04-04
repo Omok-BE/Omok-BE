@@ -66,7 +66,7 @@ const signup = async (req, res) => {
       message: '회원가입 성공',
     });
   } catch (err) {
-    Sentry.captureException(e);
+    Sentry.captureException(err);
     console.log(err);
     res.status(400).send({
       errorMessage: '요청한 데이터 형식이 올바르지 않습니다',
