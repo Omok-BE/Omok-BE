@@ -222,7 +222,6 @@ const gameFinishShow = async (req, res) => {
 const gameDelete = async (req, res) => {
   try {
     const { gameNum } = req.params;
-    console.log(",gameDelete:",gameDelete)
     const existGame = await Games.findOne({ gameNum });
     if (existGame){
       await Rooms.deleteOne({ roomNum: Number(gameNum) });
