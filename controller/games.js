@@ -183,19 +183,24 @@ const gameFinishShow = async (req, res) => {
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
 
-
+    
     //게임승리 player- black
     if (result.win === blackP.id) {
       console.log("show_API, 블랙승 if문 들어옴")
       const [ win, lose ] = await winBlackPointShow( gameNum );
+      console.log("show,블랙승if문 안,win:",win)
+      console.log("show,블랙승if문 안,lose:",lose)
     } 
     
     //게임승리 player- white 
     if (result.win === whiteP.id) {
       console.log("show_API, 화이트승 if문 들어옴")
       const [ win, lose ] = await winWhitePointShow( gameNum );
+      console.log("show,화이트승if문 안,win:",win)
+      console.log("show,화이트승if문 안,lose:",lose)
     } 
-
+    console.log("show,win:",win)
+    console.log("show,lose:",lose)
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     await outUserUpdate(id);
     console.log("201,API,결과창나가기옵저버 정보 변경 함수후")
