@@ -202,7 +202,8 @@ const gameFinishShow = async (req, res) => {
     //게임방 결과창 나가기 player의 state, connect변경
     if(id === blackP.id || id === whiteP.id)
       await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
-    res.status(200).json({
+    console.log("gameFinishShow,res.바로 윗줄")
+      res.status(200).json({
       win,
       lose,
       result,
