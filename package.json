@@ -24,7 +24,8 @@
     "mongoose-sequence": "^5.3.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
-    "socketio": "^1.0.0"
+    "socketio": "^1.0.0",
+    "swagger-autogen": "^2.20.8"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,8 @@
   },
   "homepage": "https://github.com/Omok-BE/Omok-BE#readme",
   "devDependencies": {
-    "artillery": "^2.0.0-12"
+    "artillery": "^2.0.0-12",
+    "swagger-jsdoc": "^6.2.0",
+    "swagger-ui-express": "^4.3.0"
   }
 }
