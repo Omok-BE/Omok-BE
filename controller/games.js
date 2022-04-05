@@ -195,9 +195,10 @@ const gameFinishShow = async (req, res) => {
       console.log("show_API, 화이트승 if문 들어옴")
       const [ win, lose ] = await winWhitePointShow( gameNum );
     } 
-    console.log("198,show,win:",win)
-    console.log("199,show,lose:",lose)
+    // console.log("198,show,win:",win)
+    // console.log("199,show,lose:",lose)
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
+    console.log("함수 포인트계산후 API넘어옴")
     await outUserUpdate(id);
     console.log("202,API,결과창나가기옵저버 정보 변경 함수후")
 
