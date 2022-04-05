@@ -1,5 +1,6 @@
 const Room = require('../models/rooms');
 const User = require('../models/users');
+const Sentry = require("@sentry/node");
 // 로비 들어가서 방리스트 가져오기
 const lobby = async (req, res) => {
   try {
@@ -9,6 +10,7 @@ const lobby = async (req, res) => {
 
     res.send(allRoom);
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: 'lobby 요청에러',
@@ -26,6 +28,7 @@ const userList = async (req, res) => {
 
     res.send(allUser);
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: 'lobby userlist err',
@@ -39,6 +42,7 @@ const leaderList = async (req, res) => {
 
     res.send(leaderList);
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: 'lobby leaderlist err',
@@ -52,6 +56,7 @@ const leaderBoard = async (req, res) => {
 
     res.send(leaderList);
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: 'lobby leaderboard err',
@@ -86,6 +91,7 @@ const createRoom = async (req, res) => {
     const roomNum = await newRoom.roomNum;
     res.send({ roomNum, userInfo });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: 'lobby create err',
@@ -99,6 +105,7 @@ const getJoinRoom = async (req, res) => {
     const room = await Room.findOne({ roomNum: roomNum });
     res.send(room);
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: 'lobby joinroom:roomNumber err',
@@ -153,6 +160,7 @@ const postJoinRoom = async (req, res) => {
     }
     
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(400).send({
       errorMessage: '/lobby/joinroom POST 에러',
@@ -189,6 +197,7 @@ const fastPlayer = async (req, res) => {
       roomNum: roomNum,
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(400).send({
       errorMessage: '빈 플레이어 방이 없습니다.',
@@ -232,6 +241,7 @@ const fastObserver = async (req, res) => {
       roomNum: roomNum,
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(400).send({
       errorMessage: '대기중인 방이 없습니다.',
@@ -267,6 +277,7 @@ const roomNumJoin = async (req, res) => {
         }
         
     }catch(err){
+        Sentry.captureException(err);
         console.log(err);
         res.status(400).send({
         errorMessage: '입장할 수 없는 방번호 입니다',
@@ -283,6 +294,7 @@ const logout = async (req, res) => {
       ok: 'ok',
     })
   }catch(err){
+    Sentry.captureException(err);
     console.log(err)
     res.status(401).send({
       ok: 'false',
