@@ -198,6 +198,7 @@ const gameFinishShow = async (req, res) => {
 
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     await outUserUpdate(id);
+    console.log("201,API,결과창나가기옵저버 정보 변경 함수후")
 
     //게임방 결과창 나가기 player의 state, connect변경
     if(id === blackP.id || id === whiteP.id)
