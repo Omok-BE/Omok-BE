@@ -7,6 +7,7 @@ const { gameUserInfo } = require('../lib/games/gameUserInfo');
 const { calculatePoint } = require('../lib/games/gamePoint');
 const { winBlackPointShow } = require('../lib/games/winBlackPointShow');
 const { winWhitePointShow } = require('../lib/games/winWhitePointShow');
+const { outUserUpdate } = require('../lib/games/outUserUpdate');
 
 
 //대기실 => 게임방 입장시 게임방 생성
@@ -184,20 +185,19 @@ const gameFinishShow = async (req, res) => {
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
 
+
     //게임승리 player- black
     if (result.win === blackP.id) {
-      await winBlackPointShow({ gameNum });
+      const [ win, lose ] = await winBlackPointShow({ gameNum });
     } 
     
     //게임승리 player- white 
     if (result.win === whiteP.id) {
-      await winWhitePointShow({ gameNum });
-      } 
+      const [ win, lose ] = await winWhitePointShow({ gameNum });
+    } 
 
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
-    const delTeachingCnt = await Users.findOne({ id },{ _id:0, id:1, state:1, teachingCnt:1 });
-    if(delTeachingCnt.state === 'blackObserver' || delTeachingCnt.state === 'whiteObserver')
-      await Users.updateOne({ id }, { $set: { teachingCnt: 0, state: 'online', connect: 'endGame' }});
+    await outUserUpdate(id);
 
     //게임방 결과창 나가기 player의 state, connect변경
     if(id === blackP.id || id === whiteP.id)
