@@ -12,7 +12,7 @@
 
 // const outputFile = "./swagger-output.json";
 // const endpointsFiles = ["./app.js"];
-
+ 
 // swaggerAutogen(outputFile, endpointsFiles, doc);
 // //swaggerAutogen으로 outputfile 파일을 app.js 루트로 api 들을 생성한다.
 // //이때 명령어는 터미널에서 node swagger.js
