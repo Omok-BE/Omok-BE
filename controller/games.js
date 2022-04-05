@@ -9,7 +9,6 @@ const { winBlackPointShow } = require('../lib/games/winBlackPointShow');
 const { winWhitePointShow } = require('../lib/games/winWhitePointShow');
 const { outUserUpdate } = require('../lib/games/outUserUpdate');
 
-
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
   try {
@@ -53,7 +52,6 @@ const gameStart = async (req, res) => {
     let gameInfo = await gameUserInfo(gameNum);
     const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
     const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
-    console.log("55,gameStart,gameInfo:",gameInfo, "findBoardColor>>", findBoardColor);
     gameInfo.push(findBoardColor)
     res.status(200).json({
       gameInfo,
@@ -154,7 +152,7 @@ const gameFinish = async (req, res) => {
       }
     }
     const myId = await Users.findOne({ id })
-    console.log("156,gameFinish,myId:",myId)
+    console.log("155,gameFinish,myId:",myId)
 
     res.status(200).json({
       ok: true,
@@ -173,10 +171,10 @@ const gameFinish = async (req, res) => {
 const gameFinishShow = async (req, res) => {
   try { 
     const { id, gameNum, result } = req.body;
-    console.log('175,결과창show,req.body:', req.body);
+    console.log('174,결과창show,req.body:', req.body);
     
     const myId = await Users.findOne({ id })
-    console.log("178,show,gameFinishShow,myId:",myId)
+    console.log("177,show,gameFinishShow,myId:",myId)
 
     //게임방내 유저 state별 정보
     const gameInfo = await gameUserInfo(gameNum);
