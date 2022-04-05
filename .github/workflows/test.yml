@@ -18,7 +18,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           script: |
-            cd testtest
+            cd Omok-BE
             git reset --hard
             git fetch
             git pull
