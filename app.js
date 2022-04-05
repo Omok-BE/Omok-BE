@@ -1,6 +1,7 @@
 const express = require('express');
 const connect = require('./models');
 const cors = require('cors');
+const Sentry = require("@sentry/node");
 const app = express();
 require('dotenv').config();
 connect();
@@ -9,6 +10,11 @@ const usersRouter = require('./routes/users');
 const lobbyRouter = require('./routes/lobby');
 const gameRouter = require('./routes/games');
 const adminRouter = require('./routes/admin');
+
+Sentry.init({
+  dsn: process.env.DSN,
+  tracesSampleRate: 1.0,
+});
 
 // const requestMiddleware = (req, res, next) => {
 //   console.log(

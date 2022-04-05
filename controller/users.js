@@ -1,6 +1,7 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const Sentry = require("@sentry/node");
 
 // 회원가입
 const signup = async (req, res) => {
@@ -64,6 +65,7 @@ const signup = async (req, res) => {
       message: '회원가입 성공',
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(400).send({
       errorMessage: '요청한 데이터 형식이 올바르지 않습니다',
@@ -106,6 +108,7 @@ const login = async (req, res) => {
       message: '로그인 성공',
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(400).send({
       errorMessage: '요청한 데이터 형식이 올바르지 않습니다.',
@@ -132,6 +135,7 @@ const findpass = async (req, res) => {
       message: 'id와 email을 확인 하였습니다.',
     })
   }catch(err){
+    Sentry.captureException(err);
     console.log(err)
     res.status(400).send({
       errorMessage: '입력 정보를 확인해 주세요',
@@ -156,6 +160,7 @@ const newpass = async (req, res) =>{
       message: '비밀번호 변경완료',
     });
   }catch(err){
+    Sentry.captureException(err);
     console.log(err)
     res.status(400).send({
       errorMessage: '입력 정보를 확인해 주세요',
@@ -178,6 +183,7 @@ const userinfo = async (req, res) => {
       profileImage: userinfo.profileImage,
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(err);
     res.status(401).send({
       errorMessage: '/로그인 체크 err',
