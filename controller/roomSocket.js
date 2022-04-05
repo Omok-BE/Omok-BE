@@ -1,5 +1,6 @@
 const app = require('../app');
 const Rooms = require('../models/rooms');
+const Sentry = require("@sentry/node");
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
 const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
@@ -157,6 +158,7 @@ exports.disconnecting = function(socket){
           const userInfos = await findUserInfos(roomNum);
           app.get("waitingRoom").to(roomNum).emit('bye', id, userInfos);
         } catch (error) {
+          Sentry.captureException(err);
           console.error('퇴장 errorMessage', error);
         }
         console.timeEnd('disconnecting')
