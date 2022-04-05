@@ -3,9 +3,9 @@ const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Rooms = require('../models/rooms');
 const Games = require('../models/games');
-const { check_33 } = require('../lib/games/check_33')
-const { check_44 } = require('../lib/games/check_44')
-const { xyToIndex } = require('../lib/games/xyToIndex')
+const { check_33 } = require('../lib/games/check_33');
+const { check_44 } = require('../lib/games/check_44');
+const { xyToIndex } = require('../lib/games/xyToIndex');
 
 
 //게임 소켓 접속자 수  
