@@ -5,8 +5,7 @@ const doc = {
         title: "omogjomog",
         description: "omogjomog API",
     },
-    // host: "localhost:3000",
-    host: "13.125.138.144",
+    host: "13.125.238.144",
     schemes: ["http"],
 };
 
