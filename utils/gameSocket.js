@@ -148,7 +148,6 @@ exports.disconnecting = function(socket){
             const observerCnt = gameRoomCount(gameNum) - 2; 
             if (observerCnt >= 0) 
             await Rooms.updateOne({ roomNum: gameNum }, { $set: { observerCnt } });
-
             await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
         } catch (err) {
             Sentry.captureException(err);
@@ -161,10 +160,6 @@ exports.disconnecting = function(socket){
 exports.byebye = function(socket){
     socket.on('byebye', async ( state, gameNum, id ) => {
         try{
-            console.log("겜방소켓,byebye,state:",state)
-            console.log("겜방소켓,byebye,gameNum:",gameNum)
-            console.log("겜방소켓,byebye,id:",id)
-            
             app.get("gameRoom").to(gameNum).emit("byebye",state, id);
             console.log("겜방소켓 byebye이벤트 성공");
         } catch(err) {
