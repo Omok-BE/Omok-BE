@@ -18,7 +18,8 @@ jobs:
           username: ${{ secrets.USER }}
           script: |
             cd Omok-BE
-            git reset --hard
+            git reset --hard origin/master
             git fetch
             git pull
+            npm install
             sudo pm2 restart all

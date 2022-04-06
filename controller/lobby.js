@@ -273,7 +273,6 @@ const roomNumJoin = async (req, res) => {
                 roomNum
             })
         };
-        
     } catch(err) {
         Sentry.captureException(err);
         console.error(err);

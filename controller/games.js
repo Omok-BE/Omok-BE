@@ -10,6 +10,7 @@ const { winBlackPointShow } = require('../lib/games/winBlackPointShow');
 const { winWhitePointShow } = require('../lib/games/winWhitePointShow');
 const { outUserUpdate } = require('../lib/games/outUserUpdate');
 
+
 //대기실 => 게임방 입장시 게임방 생성
 const gameCreate = async (req, res) => {
   try {
