@@ -3,6 +3,7 @@ const Games = require('../models/games')
 const Rooms = require('../models/rooms')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const Sentry = require("@sentry/node");
 
 // 관리자 로그인
 const adminLogin = async (req, res) => {
@@ -34,8 +35,9 @@ const adminLogin = async (req, res) => {
             token,
             message: '관리자 로그인 성공'
         })
-    } catch(error) {
-        console.error(error);
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err);
         res.status(403).json({
             errorMessage: '접근 권한이 없습니다'
         })
@@ -48,8 +50,9 @@ const getWaitingRooms = async (req, res) => {
         res.status(200).json({
             waitingRooms
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '데이터 불러오기에 실패했습니다.'
         })
@@ -63,8 +66,9 @@ const deleteWaitingRoom = async (req, res) => {
         res.status(200).json({
             message: '삭제되었습니다.'
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '오류가 발생하였습니다. 대기실을 확인해주세요.'
         })
@@ -77,8 +81,9 @@ const getGameRooms = async (req, res) => {
         res.status(200).json({
             gameRooms
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '데이터 불러오기에 실패했습니다.'
         })
@@ -93,8 +98,9 @@ const deleteGameRoom = async (req, res) => {
         res.status(200).json({
             message: '삭제되었습니다.'
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '오류가 발생하였습니다. 대기실을 확인해주세요.'
         })
@@ -107,8 +113,9 @@ const getUsers = async (req, res) => {
         res.status(200).json({
             userList
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '데이터 불러오기에 실패했습니다.'
         })
@@ -123,8 +130,9 @@ const editUserPoint = async (req, res) => {
         res.status(200).json({
             message: '포인트가 수정되었습니다.'
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '오류가 발생하였습니다. 다시 시도해주세요.'
         })
@@ -138,8 +146,9 @@ const deleteUser = async (req, res) => {
         res.status(200).json({
             message: '삭제되었습니다.'
         })
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        Sentry.captureException(err);
+        console.error(err)
         res.status(400).json({
             errorMessage: '오류가 발생하였습니다. 유저리스트를 확인해주세요.'
         })

@@ -1,0 +1,846 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "omogjomog",
+      "description": "omogjomog API",
+      "version": "1.0.0"
+    },
+    "host": "13.125.138.144",
+    "contact": { 
+      "git": "https://github.com/Omok-BE/Omok-BE" 
+    },
+    "basePath": "/",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/signup": {
+        "post": {
+          "tags": ["user"],
+          "description": "회원가입",
+          "summary": "회원가입",
+          "parameters": [
+            {
+              "name": "users",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "user1"
+                  },
+                  "email": {
+                    "example": "user1@naver.com"
+                  },
+                  "pass": {
+                    "example": "user1"
+                  },
+                  "confirmPass": {
+                    "example": "user1"
+                  },
+                  "profileImage": {
+                    "example": ".svg"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/login": {
+        "post": {
+          "tags": ["user"],
+          "description": "로그인",
+          "summary": "로그인",
+          "parameters": [
+            {
+              "name": "login",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "user1"
+                  },
+                  "pass": {
+                    "example": "user1"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/findpass": {
+        "post": {
+          "tags": ["user"],
+          "description": "비밀번호 찾기 [유저 확인]",
+          "summary": "비밀번호 찾기[유저 확인]",
+          "parameters": [
+            {
+              "name": "find",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "user1"
+                  },
+                  "email": {
+                    "example": "user1@naver.com"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/newpass": {
+        "post": {
+          "tags": ["user"],
+          "description": "비밀번호 찾기 [새 비밀번호 입력]",
+          "summary": "비밀번호 찾기 [새 비밀번호 입력]",
+          "parameters": [
+            {
+              "name": "newpass",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "user1"
+                  },
+                  "email": {
+                    "example": "user1@naver.com"
+                  },
+                  "newPass": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/userinfo/{id}": {
+        "get": {
+          "tags": ["user"],
+          "description": "로그인 체크",
+          "summary": "로그인 체크",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "로비첫 화면",
+          "summary": "로비첫 화면",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby/userList/{id}": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "로비에서 offline제외 유저리스트",
+          "summary": "로비에서 offline제외 유저리스트",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby/leaderList": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "로비에서 포인트기준 리더리스트",
+          "summary": "로비에서 포인트기준 리더리스트",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/leaderBoard": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "리더보드: 로비 순위표",
+          "summary": "리더보드: 로비 순위표",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby/create": {
+        "post": {
+          "tags": ["lobby"],
+          "description": "게임방 생성",
+          "summary": "로비에서 게임방 생성",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roomName": {
+                    "example": "1"
+                  },
+                  "id": {
+                    "example": "user1"
+                  },
+                  "timer": {
+                    "example": "5 : 00"
+                  },
+                  "boardColor": {
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby/joinroom/{roomNum}": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "방 참가: 모달창뜰때",
+          "summary": "방 참가: 모달창뜰때",
+          "parameters": [
+            {
+              "name": "roomNum",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby/joinroom": {
+        "post": {
+          "tags": ["lobby"],
+          "description": "방 참가: 모달창 입력",
+          "summary": "방 참가: 모달창 입력",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roomNum": {
+                    "example": "1"
+                  },
+                  "id": {
+                    "example": "user1"
+                  },
+                  "state": {
+                    "example": "inRoom"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/lobby/fastPlayer/{id}": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "빠른 참가(플레이어)",
+          "summary": "빠른 참가(플레이어)",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/lobby/fastObserver/{id}": {
+        "get": {
+          "tags": ["lobby"],
+          "description": "빠른 참가(관전자)",
+          "summary": "빠른 참가(관전자)",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/lobby/roomNumJoin": {
+        "post": {
+          "tags": ["lobby"],
+          "description": "방번호 참가",
+          "summary": "방번호 참가",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "user1"
+                  },
+                  "roomNum": {
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/lobby/logout": {
+        "post": {
+          "tags": ["user"],
+          "description": "로그아웃",
+          "summary": "로그아웃",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/game/create": {
+        "post": {
+          "tags": ["lobby"],
+          "description": "대기실 => 게임방 입장시 게임방 생성",
+          "summary": "대기실 => 게임방 입장시 게임방 생성",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roomNum": {
+                    "example": "1"
+                  },
+                  "blackTeamPlayer": {
+                    "example": "user1"
+                  },
+                  "blackTeamObserver": {
+                    "example": "user2"
+                  },
+                  "whiteTeamPlayer": {
+                    "example": "user3"
+                  },
+                  "whiteTeamObserver": {
+                    "example": "user4"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/game/start/{gameNum}": {
+        "get": {
+          "tags": ["game"],
+          "description": "게임방 입장해서 정보가져오기",
+          "summary": "게임방 입장해서 정보가져오기",
+          "parameters": [
+            {
+              "name": "gameNum",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/game/bugreport": {
+        "post": {
+          "tags": ["game"],
+          "description": "[버그리폿]",
+          "summary": "[버그리폿]",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "example": "text 설명"
+                  },
+                  "gameNum": {
+                    "example": "1"
+                  },
+                  "gameInfo": {
+                    "example": "[{ 'gameNum': 1, 'gameName':'게임ㄱㄱ', 'blackTeamPlayer': 'user1', 'blackTeamObserver': 'user2', 'whiteTeamPlayer': 'user3', 'whiteTeamObserver': 'user4', 'timer': '3 : 00' }]"
+                  },
+                  "userInfo": {
+                    "example": "{ 'id': 'user1', 'state': 'whitePlayer', 'score': {'win':1, 'lose':0}, 'point': 1000, 'profileImage': ' .svg' }"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Created"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/gameFinish": {
+        "post": {
+          "tags": ["game"],
+          "description": "[결과창]:게임이 끝나면 바로 보내는 내용",
+          "summary": "[결과창]:게임이 끝나면 바로 보내는 내용",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userInfo": {
+                    "example": "{ 'id': 'user1', 'state': 'whitePlayer', 'score': {'win':1, 'lose':0}, 'point': 1000, 'profileImage': ' .svg' }"
+                  },
+                  "gameNum": {
+                    "example": "1"
+                  },
+                  "result": {
+                    "example": "{'win': 'user1', 'state': 'whitePlayer'}"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/gameFinish/show": {
+        "post": {
+          "tags": ["game"],
+          "description": "[결과창]:페이지로 들어가자마자",
+          "summary": "[결과창]:페이지로 들어가자마자",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "user1"
+                  },
+                  "gameNum": {
+                    "example": "1"
+                  },
+                  "result": {
+                    "example": "{ 'win': 'user1', 'state': 'whitePlayer' }"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/game/delete/{gameNum}": {
+        "delete": {
+          "tags": ["game"],
+          "description": "방에서 나가기",
+          "summary": "방에서 나가기",
+          "parameters": [
+            {
+              "name": "gameNum",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/login": {
+        "post": {
+          "tags": ["admin"],
+          "description": "관리자 로그인",
+          "summary": "관리자 로그인",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "admin"
+                  },
+                  "pass": {
+                    "example": "gkr123"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "403": {
+              "description": "Forbidden"
+            }
+          }
+        }
+      },
+      "/admin/waitingRoom/list": {
+        "get": {
+          "tags": ["admin"],
+          "description": "대기방 리스트 불러오기",
+          "summary": "대기방 리스트 불러오기",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/waitingRoom/delete/{roomNum}": {
+        "delete": {
+          "tags": ["admin"],
+          "description": "대기방 삭제",
+          "summary": "대기방 삭제",
+          "parameters": [
+            {
+              "name": "roomNum",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/gameRoom/list": {
+        "get": {
+          "tags": ["admin"],
+          "description": "게임방 리스트 불러오기",
+          "summary": "게임방 리스트 불러오기",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/gameRoom/delete/{gameNum}": {
+        "delete": {
+          "tags": ["admin"],
+          "description": "게임방 삭제",
+          "summary": "게임방 삭제",
+          "parameters": [
+            {
+              "name": "gameNum",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/users/list": {
+        "get": {
+          "tags": ["admin"],
+          "description": "유저 리스트 불러오기",
+          "summary": "유저 리스트 불러오기",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/users/editPoint/{id}": {
+        "put": {
+          "tags": ["admin"],
+          "description": "유저 포인트 수정하기",
+          "summary": "유저 포인트 수정하기",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "point": {
+                    "example": 1000
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      },
+      "/admin/users/delete/{id}": {
+        "delete": {
+          "tags": ["admin"],
+          "description": "유저 삭제하기",
+          "summary": "유저 삭제하기",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            }
+          }
+        }
+      }
+    }
+  }

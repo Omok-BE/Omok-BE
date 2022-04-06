@@ -3,6 +3,7 @@ const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Rooms = require('../models/rooms');
 const Games = require('../models/games');
+const Sentry = require("@sentry/node");
 const { check_33 } = require('../lib/games/check_33');
 const { check_44 } = require('../lib/games/check_44');
 const { xyToIndex } = require('../lib/games/xyToIndex');
@@ -180,6 +181,7 @@ exports.disconnecting = function(socket){
             //게임방 퇴장시 (게임 중간에 나감) 옵저버 state변경, connect변경
             await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
         } catch (error) {
+            Sentry.captureException(err);
             console.log("게임소켓,disconnecting 에러:",error);
         }
     });
@@ -196,6 +198,7 @@ exports.byebye = function(socket){
             app.get("gameRoom").to(gameNum).emit("byebye",state, id);
             console.log("겜방소켓 byebye이벤트 성공");
         } catch(err) {
+            Sentry.captureException(err);
             console.log("겜방소켓 byebye이벤트 에러:",err);
         }
     });

@@ -3,6 +3,7 @@ const Rooms = require('../models/rooms');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Bugreport = require('../models/bugReports');
+const Sentry = require("@sentry/node");
 const { gameUserInfo } = require('../lib/games/gameUserInfo');
 const { calculatePoint } = require('../lib/games/gamePoint');
 const { winBlackPointShow } = require('../lib/games/winBlackPointShow');
@@ -38,6 +39,7 @@ const gameCreate = async (req, res) => {
     });
     res.status(201).json({ ok: true });
   } catch (error) {
+    Sentry.captureException(err);
     console.error(error);
     res.status(400).json({ ok: false });
   }
@@ -60,6 +62,7 @@ const gameStart = async (req, res) => {
       message: '게임방 입장해서 정보가져오기 성공!',
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(`API_gameStart 에러: ${err}`);
     res.status(400).json({
       ok: false,
@@ -93,6 +96,7 @@ const bugReport = async (req, res) => {
       message: '제보완료',
     });
   }catch(err){
+    Sentry.captureException(err);
     console.log(err)
     res.status(401).send({
       ok: false,
@@ -159,6 +163,7 @@ const gameFinish = async (req, res) => {
       message: '결과창gameFinish 성공!',
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,
@@ -216,6 +221,7 @@ const gameFinishShow = async (req, res) => {
       message: 'gameFinishShow 성공!',
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(`API_결과창gameFinishShow 에러: ${err}`);
     res.status(400).json({
       ok: false,
@@ -238,6 +244,7 @@ const gameDelete = async (req, res) => {
         message: '대기방, 게임방 삭제 성공!',
     });
   } catch (err) {
+    Sentry.captureException(err);
     console.log(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,

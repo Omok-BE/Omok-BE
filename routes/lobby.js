@@ -36,13 +36,13 @@ router.get('/lobby/joinroom/:roomNum', getJoinRoom);
 // [방 입장 모달창]: 버튼 입력
 router.post('/lobby/joinroom', postJoinRoom);
 
-//빠른 참가(플레이어)
+// 빠른 참가(플레이어)
 router.get('/lobby/fastPlayer/:id', fastPlayer);
 
 // 빠른 참가(관전자)
 router.get('/lobby/fastObserver/:id', fastObserver);
 
-// 방번호 참가
+// 방번호로 참가
 router.post('/lobby/roomNumJoin', roomNumJoin)
 
 // 로그아웃 
