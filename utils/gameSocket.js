@@ -149,7 +149,7 @@ exports.disconnecting = function(socket){
             const observerCnt = gameRoomCount(gameNum) - 2; 
             if (observerCnt >= 0) 
             await Rooms.updateOne({ roomNum: gameNum }, { $set: { observerCnt } });
-            await Users.updateOne({ id }, { $set: { state: 'online', connect: 'online' }});
+            await Users.updateOne({ id }, { $set: { connect: 'online' }});
         } catch (err) {
             Sentry.captureException(err);
             console.error("게임소켓,disconnecting 에러:",err);
