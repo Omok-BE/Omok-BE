@@ -109,6 +109,7 @@ const bugReport = async (req, res) => {
 const gameFinish = async (req, res) => {
   try {
     const { userInfo, result } = req.body;
+    console.log(userInfo, result)
     const id = userInfo.id;
     const point = userInfo.point;
     const state = userInfo.state;
