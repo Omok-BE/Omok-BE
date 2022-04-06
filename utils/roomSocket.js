@@ -3,7 +3,7 @@ const Rooms = require('../models/rooms');
 const Sentry = require("@sentry/node");
 const { findUserInfos } = require('../lib/roomSocket/findUserInfos')
 const { enterRoomByPlayer, enterRoomByObserver } = require('../lib/roomSocket/roomInUpdate')
-const { ToPlayerFromPlayer, ToPlayerFromObserver, ToObserverFromPlayer, ToObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
+const { toPlayerFromPlayer, toPlayerFromObserver, toObserverFromPlayer, toObserverFromObserver } = require('../lib/roomSocket/changeRoleUpdate')
 const { participantUpdate } = require('../lib/roomSocket/roomOutUpdate')
 
 // socket evnet 알림
@@ -64,7 +64,7 @@ exports.changeToPlayer = function(socket){
         const { id } = socket.nickname
         const { roomNum, previousTeam, wantTeam } = data;
         if (previousTeam.includes('Player')) {
-          await ToPlayerFromPlayer({
+          await toPlayerFromPlayer({
             id,
             roomNum,
             wantTeam
@@ -74,7 +74,7 @@ exports.changeToPlayer = function(socket){
           socket.join(`${roomNum}player`);
           const playerCnt = waitingRoomCount(`${roomNum}player`);
           const observerCnt = waitingRoomCount(`${roomNum}observer`);
-          await ToPlayerFromObserver({
+          await toPlayerFromObserver({
             id,
             roomNum,
             playerCnt,
@@ -99,7 +99,7 @@ exports.changeToObserver = function(socket){
           socket.join(`${roomNum}observer`);
           const playerCnt = waitingRoomCount(`${roomNum}player`);
           const observerCnt = waitingRoomCount(`${roomNum}observer`);
-          await ToObserverFromPlayer({
+          await toObserverFromPlayer({
             id,
             roomNum,
             playerCnt,
@@ -108,7 +108,7 @@ exports.changeToObserver = function(socket){
             wantTeam
           })
         } else {
-          await ToObserverFromObserver({
+          await toObserverFromObserver({
             id,
             roomNum,
             previousTeam,
@@ -157,9 +157,15 @@ exports.disconnecting = function(socket){
           });
           const userInfos = await findUserInfos(roomNum);
           app.get("waitingRoom").to(roomNum).emit('bye', id, userInfos);
+<<<<<<< HEAD:utils/roomSocket.js
+        } catch (err) {
+          Sentry.captureException(err);
+          console.error('퇴장 errorMessage', err);
+=======
         } catch (error) {
           Sentry.captureException(err);
           console.error('퇴장 errorMessage', error);
+>>>>>>> master:controller/roomSocket.js
         }
         console.timeEnd('disconnecting')
     });

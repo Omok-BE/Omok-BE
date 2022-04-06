@@ -1,8 +1,7 @@
-const app = require('../app');
-const Users = require('../models/users');
-const RoomSocketEvent = require('../controller/roomSocket')
-const GameSocketEvent = require('../controller/gameSocket')
-
+const app = require('./app');
+const LobbySocketEvent = require('./utils/lobbySocket')
+const RoomSocketEvent = require('./utils/roomSocket')
+const GameSocketEvent = require('./utils/gameSocket')
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
 const { instrument } = require('@socket.io/admin-ui');
@@ -12,28 +11,27 @@ const io = new Server(httpServer, {
     credentials: true,
   },
 });
-
 instrument(io, {
   auth: false,
 });
 
-// 로비
+// 로비 socketIO
 const lobby = io.of('/lobby');
-
 lobby.on('connection', (socket) => {
   console.log('connect lobby socket', socket.id);
   
-  socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
+  // socket evnet 알림
+  LobbySocketEvent.onAny(socket);
 
-  socket.on('lobby', async (id) => {
-    // console.log('check Event lobby', id)
-    await Users.updateOne({id}, {$set: { connect: 'online'}})
-  })
+  // socket nickname 설정
+  LobbySocketEvent.nicknameEvent(socket);
 
-  socket.on('disconnect', async () => {
-    console.log("34,로비소켓,socket.nickname:",socket.nickname)
-    await Users.updateOne({id: socket.nickname}, {$set: { connect: 'offline'}})
-  })
+  // 로비 접속시 online으로 변경
+  LobbySocketEvent.connectUpdate(socket);
+
+  // 접속 종료시 offline으로 변경
+  LobbySocketEvent.disconnect(socket);
+
 });
 
 // 대기실 socketIO
@@ -43,7 +41,7 @@ app.set('waitingRoom', waitingRoom);
 waitingRoom.on('connection', (socket) => {
   console.log('connect client on waitingRoom ✅', socket.id);
 
-// socket evnet 알림
+  // socket evnet 알림
   RoomSocketEvent.onAny(socket);
 
   // socket nickname 설정
@@ -73,7 +71,7 @@ waitingRoom.on('connection', (socket) => {
 });
 
 
-//게임방 socketIO 
+// 게임방 socketIO 
 const gameRoom = io.of('/game');
 app.set('gameRoom', gameRoom);
 
@@ -116,7 +114,6 @@ gameRoom.on('connection', (socket) => {
   //게임방 나갈떄
   GameSocketEvent.byebye(socket);
 
-  
 });
 
 module.exports = { httpServer };
