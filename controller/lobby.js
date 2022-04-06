@@ -147,8 +147,8 @@ const postJoinRoom = async (req, res) => {
       res.status(400).json({
         message: '게임이 시작된 방입니다.',
       })
-    }else {
-      const user = await User.updateOne({ id }, { $set: { state: state } });
+    } else {
+      await User.updateOne({ id }, { $set: { state } });
       const postuser = await User.findOne({ id });
       const userInfo = {
         id: postuser.id,

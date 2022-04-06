@@ -113,7 +113,7 @@ const gameFinish = async (req, res) => {
     const point = userInfo.point;
     const state = userInfo.state;
     const resultId = result.win;
-    await Users.updateOne({ id }, { $set: { state: "inGame "}});
+    await Users.updateOne({ id }, { $set: { connect: "inGame "}});
     
     if (state === 'blackPlayer' || state === 'whitePlayer') {
       if (resultId === id) {
