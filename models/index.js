@@ -5,8 +5,8 @@ const connect = () => {
     .connect(process.env.MONGO_URL || 'mongodb://localhost:27017/Omok', {
       ignoreUndefined: true,
     })
-    .catch((error) => {
-      console.error(error);
+    .catch((err) => {
+      console.error(err);
     });
 };
 
