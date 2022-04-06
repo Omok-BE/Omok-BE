@@ -126,7 +126,7 @@ const gameFinish = async (req, res) => {
     if (result.state === 'whitePlayer') {
       if (state === 'whiteObserver') {
         await calculatePoint({ id, isWin: true }); 
-      } else {
+      } else if (state === 'blackObserver') {
         await calculatePoint({ id, isWin: false }); 
       }
     }
@@ -134,7 +134,7 @@ const gameFinish = async (req, res) => {
     if (result.state === 'blackPlayer') {
       if (state === 'blackObserver') {
         await calculatePoint({ id, isWin: true }); 
-      } else {
+      } else if (state === 'whiteObserver') {
         await calculatePoint({ id, isWin: false }); 
       }
     }
