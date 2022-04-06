@@ -29,13 +29,12 @@ exports.nicknameEvent = function(socket){
 exports.joinGame = function(socket){
     socket.on('joinGame', async (gameNum, id) => {
         socket.join(gameNum);
-        const joinGameIds = await Games.findOne({ gameNum });
-
-        if(joinGameIds.blackTeamPlayer === id || joinGameIds.whiteTeamPlayer === id){
-            await Users.updateOne({ id }, { $set: { connect:'inGame' } });
+        const userInfo = await Users.findOne({ id },{ state: 1});
+        if(userInfo.state.includes("Player")){
+            await Users.updateOne({ id }, { $set: { connect: 'inGame' } });
         } else {
             await Users.updateOne({ id }, { $set: { teachingCnt: 0, connect: 'inGame' } });
-        };    
+        };
         const observerCnt = gameRoomCount(gameNum) - 2;
         await Rooms.updateOne({ roomNum: gameNum }, { $set: { observerCnt, playerCnt: 2 } });
     });
