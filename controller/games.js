@@ -196,7 +196,7 @@ const gameFinishShow = async (req, res) => {
       winLose = await winWhitePointShow( gameNum );
     } 
     const [ win, lose ] = winLose
-
+  
     console.log("202,show,win:",win)
     console.log("203,show,lose:",lose)
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
