@@ -1,7 +1,7 @@
-const app = require('../app');
-const LobbySocketEvent = require('../controller/lobbySocket')
-const RoomSocketEvent = require('../controller/roomSocket')
-const GameSocketEvent = require('../controller/gameSocket')
+const app = require('./app');
+const LobbySocketEvent = require('./utils/lobbySocket')
+const RoomSocketEvent = require('./utils/roomSocket')
+const GameSocketEvent = require('./utils/gameSocket')
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
 const { instrument } = require('@socket.io/admin-ui');

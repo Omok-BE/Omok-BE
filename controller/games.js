@@ -38,9 +38,9 @@ const gameCreate = async (req, res) => {
       board
     });
     res.status(201).json({ ok: true });
-  } catch (error) {
+  } catch (err) {
     Sentry.captureException(err);
-    console.error(error);
+    console.error(err);
     res.status(400).json({ ok: false });
   }
 };
@@ -49,12 +49,11 @@ const gameCreate = async (req, res) => {
 const gameStart = async (req, res) => {
   try {
     const { gameNum } = req.params;
-    console.log("50,gameStart,req.params:", req.params)
-    //게임방내 유저 state별 정보
     let gameInfo = await gameUserInfo(gameNum);
-    const gameName = await Games.findOne({ gameNum },{ _id:0, gameNum:1, gameName:1 });  
-    const findBoardColor = await Rooms.findOne({ roomNum:gameNum }, { _id:0, boardColor:1 }); 
+    const gameName = await Games.findOne({ gameNum },{ _id: 0, gameNum: 1, gameName: 1 });  
+    const findBoardColor = await Rooms.findOne({ roomNum: gameNum }, { _id: 0, boardColor: 1 }); 
     gameInfo.push(findBoardColor)
+
     res.status(200).json({
       gameInfo,
       gameName,
@@ -63,7 +62,7 @@ const gameStart = async (req, res) => {
     });
   } catch (err) {
     Sentry.captureException(err);
-    console.log(`API_gameStart 에러: ${err}`);
+    console.error(`API_gameStart 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '게임방 입장해서 정보를 가져오지 못했어요',
@@ -71,13 +70,13 @@ const gameStart = async (req, res) => {
   }
 };
 
-// [버그리폿] 
+// [버그리폿]
+// 유저 인포를 통해 버그 제보한 사람 정보 저정하기
+// 버그 내용 인풋으로 간략히 받기
+// 게임넘 으로 제보당시의 게임방 정보를 db에서 꺼내와서 저장하기(게임이 끝나서 최신화되거나 삭제되기전 상태용)
+// 게임인포를 통해 해당 방에 있는 유저들 가져오기 
+// 게임 인포에 있는 유저들의 상태 혹은 정보 확인해보기
 const bugReport = async (req, res) => {
-  // 유저 인포를 통해 버그 제보한 사람 정보 저정하기
-  // 버그 내용 인풋으로 간략히 받기
-  // 게임넘 으로 제보당시의 게임방 정보를 db에서 꺼내와서 저장하기(게임이 끝나서 최신화되거나 삭제되기전 상태용)
-  // 게임인포를 통해 해당 방에 있는 유저들 가져오기 
-  // 게임 인포에 있는 유저들의 상태 혹은 정보 확인해보기
   try{
     const { input, gameNum, gameInfo, userInfo } = req.body;
 
@@ -97,74 +96,55 @@ const bugReport = async (req, res) => {
     });
   }catch(err){
     Sentry.captureException(err);
-    console.log(err)
+    console.error(err)
     res.status(401).send({
       ok: false,
       errorMessage: '입력받지 못하였습니다'
     })
-  }
-  
+  } 
+};
 
-   
-
-}
-
-//[결과창]게임이 끝나면 바로 보내는 내용
+// 게임 점수 계산
 const gameFinish = async (req, res) => {
   try {
-    const { userInfo, gameNum, result } = req.body;
-    console.log("113,gameFinish,req.body:", req.body)
+    const { userInfo, result } = req.body;
     const id = userInfo.id;
     const point = userInfo.point;
     const state = userInfo.state;
-
-    //승자id
     const resultId = result.win;
-    //Player
+
     if (state === 'blackPlayer' || state === 'whitePlayer') {
       if (resultId === id) {
-        //승Player
-        await Users.updateOne({ id:resultId }, { $inc: { 'score.0.win': 1 } });  //승 +1
-        await Users.updateOne({ id:resultId }, { $set: { point: point + 200 } });  //포인트 +200
+        await Users.updateOne({ id:resultId }, { $inc: { 'score.0.win': 1 } });
+        await Users.updateOne({ id:resultId }, { $set: { point: point + 200 } });
       } else if(resultId !== id) {
-        //패Player
-        await Users.updateOne({ id }, { $inc: { 'score.1.lose': 1 } });  //패 +1
-        await Users.updateOne({ id }, { $set: { point: point - 100 } });  //포인트 -100
+        await Users.updateOne({ id }, { $inc: { 'score.1.lose': 1 } });
+        await Users.updateOne({ id }, { $set: { point: point - 100 } });
       }
-    }
+    };
     
-    //whitePlayer 승
     if (result.state === 'whitePlayer') {
-      //whiteObserver 승
       if (state === 'whiteObserver') {
-        await calculatePoint({ id, isWin:true }); 
-        
-        //blackObserver 패
-      } else if (state === 'blackObserver') {
-        await calculatePoint({ id, isWin:false }); 
+        await calculatePoint({ id, isWin: true }); 
+      } else {
+        await calculatePoint({ id, isWin: false }); 
       }
     }
-    //blackPlayer 승
+
     if (result.state === 'blackPlayer') {
-      //blackObserver 승
       if (state === 'blackObserver') {
-        await calculatePoint({ id, isWin:true }); 
-
-        //whiteObserver 패
-      } else if (state === 'whiteObserver') {
-        await calculatePoint({ id, isWin:false }); 
+        await calculatePoint({ id, isWin: true }); 
+      } else {
+        await calculatePoint({ id, isWin: false }); 
       }
     }
-    const myId = await Users.findOne({ id })
-    console.log("155,gameFinish,myId:",myId)
-
-    res.status(200).json({
+     res.status(200).json({
       ok: true,
       message: '결과창gameFinish 성공!',
     });
   } catch (err) {
     Sentry.captureException(err);
-    console.log(`API_결과창gameFinish 에러: ${err}`);
+    console.error(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '결과창gameFinish 실패',
@@ -172,47 +152,26 @@ const gameFinish = async (req, res) => {
   }
 };
 
-//[결과창]페이지로 들어가자마자
+// [게임 결과창] 게임 결과 전달
 const gameFinishShow = async (req, res) => {
   try { 
-    const { id, gameNum, result } = req.body;
-    console.log('174,결과창show,req.body:', req.body);
-    
-    const myId = await Users.findOne({ id })
-    console.log("177,show,gameFinishShow,myId:",myId)
-
-    //게임방내 유저 state별 정보
+    const { id, gameNum, result } = req.body;    
     const gameInfo = await gameUserInfo(gameNum);
-    // console.log(",show,게임디비서찾은,gameInfo[0]:",gameInfo[0]); 
 
     const blackP = gameInfo[0].blackTeamPlayer[0]
     const whiteP = gameInfo[0].whiteTeamPlayer[0]
 
     let winLose;
-    //게임승리 player- black
     if (result.win === blackP.id) {
-      console.log("show_API, 블랙승 if문 들어옴")
       winLose = await winBlackPointShow( gameNum );
     } 
-    
-    //게임승리 player- white 
     if (result.win === whiteP.id) {
-      console.log("show_API, 화이트승 if문 들어옴")
       winLose = await winWhitePointShow( gameNum );
     } 
     const [ win, lose ] = winLose
   
-    console.log("202,show,win:",win)
-    console.log("203,show,lose:",lose)
-    //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
-    console.log("함수 포인트계산후 API넘어옴")
     await outUserUpdate(id);
-    console.log("207,API,결과창나가기옵저버 정보 변경 함수후")
 
-    //게임방 결과창 나가기 player의 state, connect변경
-    if(id === blackP.id || id === whiteP.id)
-      await Users.updateMany({ id }, { $set: { state: 'online', connect: 'endGame' }});
-    console.log("gameFinishShow,res.바로 윗줄")
       res.status(200).json({
       win,
       lose,
@@ -222,7 +181,7 @@ const gameFinishShow = async (req, res) => {
     });
   } catch (err) {
     Sentry.captureException(err);
-    console.log(`API_결과창gameFinishShow 에러: ${err}`);
+    console.error(`API_결과창gameFinishShow 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: 'gameFinishShow 실패',
@@ -245,14 +204,13 @@ const gameDelete = async (req, res) => {
     });
   } catch (err) {
     Sentry.captureException(err);
-    console.log(`API_결과창gameFinish 에러: ${err}`);
+    console.error(`API_결과창gameFinish 에러: ${err}`);
     res.status(400).json({
       ok: false,
       errorMessage: '대기방, 게임방 삭제 실패',
     });
   }
 };
-
 
 module.exports = {
   gameCreate,

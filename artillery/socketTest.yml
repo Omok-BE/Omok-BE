@@ -14,10 +14,6 @@ scenarios:
   - name: "test socket"
     engine: socketio
     flow:
-      # - get:
-      #     url: "/lobby"
-      #     think: 5
-
       - namespace: "/waiting"
         emit:
           channel: "nickname"
