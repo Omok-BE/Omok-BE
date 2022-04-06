@@ -133,22 +133,22 @@ const gameFinish = async (req, res) => {
     if (result.state === 'whitePlayer') {
       //whiteObserver 승
       if (state === 'whiteObserver') {
-        await calculatePoint({ id, isWin }); 
+        await calculatePoint({ id, isWin:true }); 
         
         //blackObserver 패
       } else if (state === 'blackObserver') {
-        await calculatePoint({ id, isWin }); 
+        await calculatePoint({ id, isWin:false }); 
       }
     }
     //blackPlayer 승
     if (result.state === 'blackPlayer') {
       //blackObserver 승
       if (state === 'blackObserver') {
-        await calculatePoint({ id, isWin }); 
+        await calculatePoint({ id, isWin:true }); 
 
         //whiteObserver 패
       } else if (state === 'whiteObserver') {
-        await calculatePoint({ id, isWin }); 
+        await calculatePoint({ id, isWin:false }); 
       }
     }
     const myId = await Users.findOne({ id })
