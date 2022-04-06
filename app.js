@@ -18,6 +18,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
