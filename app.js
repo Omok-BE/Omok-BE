@@ -2,6 +2,8 @@ const express = require('express');
 const connect = require('./models');
 const cors = require('cors');
 const Sentry = require("@sentry/node");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output.json");
 const app = express();
 require('dotenv').config();
 connect();
@@ -16,6 +18,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.static('./views'));
