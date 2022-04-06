@@ -21,4 +21,5 @@ jobs:
             git reset --hard
             git fetch
             git pull
+            npm install
             sudo pm2 restart all
