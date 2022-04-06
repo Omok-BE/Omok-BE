@@ -157,9 +157,9 @@ exports.disconnecting = function(socket){
           });
           const userInfos = await findUserInfos(roomNum);
           app.get("waitingRoom").to(roomNum).emit('bye', id, userInfos);
-        } catch (error) {
+        } catch (err) {
           Sentry.captureException(err);
-          console.error('퇴장 errorMessage', error);
+          console.error('퇴장 errorMessage', err);
         }
         console.timeEnd('disconnecting')
     });
