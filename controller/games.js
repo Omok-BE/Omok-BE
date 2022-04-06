@@ -188,19 +188,23 @@ const gameFinishShow = async (req, res) => {
     if (result.win === blackP.id) {
       console.log("show_API, 블랙승 if문 들어옴")
       const [ win, lose ] = await winBlackPointShow( gameNum );
+      console.log("191,show블랙,win:",win)
+      console.log("192,show블랙,lose:",lose)
     } 
     
     //게임승리 player- white 
     if (result.win === whiteP.id) {
       console.log("show_API, 화이트승 if문 들어옴")
       const [ win, lose ] = await winWhitePointShow( gameNum );
+      console.log("199,show화이트,win:",win)
+      console.log("200,show화이트,lose:",lose)
     } 
-    // console.log("198,show,win:",win)
-    // console.log("199,show,lose:",lose)
+    console.log("202,show,win:",win)
+    console.log("203,show,lose:",lose)
     //게임방 결과창 나가기 Observer의 teachingCnt, state, connect변경
     console.log("함수 포인트계산후 API넘어옴")
     await outUserUpdate(id);
-    console.log("202,API,결과창나가기옵저버 정보 변경 함수후")
+    console.log("207,API,결과창나가기옵저버 정보 변경 함수후")
 
     //게임방 결과창 나가기 player의 state, connect변경
     if(id === blackP.id || id === whiteP.id)
