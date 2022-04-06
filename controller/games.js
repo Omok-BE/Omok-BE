@@ -173,12 +173,12 @@ const gameFinishShow = async (req, res) => {
   
     await outUserUpdate(id);
 
-      res.status(200).json({
-      win,
-      lose,
-      result,
-      ok: true,
-      message: 'gameFinishShow 성공!',
+    res.status(200).json({
+    win,
+    lose,
+    result,
+    ok: true,
+    message: 'gameFinishShow 성공!',
     });
   } catch (err) {
     Sentry.captureException(err);
