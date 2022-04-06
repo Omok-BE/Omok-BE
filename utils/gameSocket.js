@@ -144,6 +144,7 @@ exports.disconnecting = function(socket){
     socket.on('disconnecting', async () => {
         try {
             const { id, gameNum } = socket.nickname
+            console.log("gameNUm",gameNum)
             app.get("gameRoom").to(gameNum).emit('bye', id);
             const observerCnt = gameRoomCount(gameNum) - 2; 
             if (observerCnt >= 0) 
@@ -161,10 +162,9 @@ exports.byebye = function(socket){
     socket.on('byebye', async ( state, gameNum, id ) => {
         try{
             app.get("gameRoom").to(gameNum).emit("byebye",state, id);
-            console.log("겜방소켓 byebye이벤트 성공");
         } catch(err) {
             Sentry.captureException(err);
-            console.log("겜방소켓 byebye이벤트 에러:",err);
+            console.error("겜방소켓 byebye이벤트 에러:",err);
         }
     });
 };
