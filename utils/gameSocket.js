@@ -125,10 +125,15 @@ exports.pointerOmog = function(socket){
         const findBoard = await Boards.findOne({ gameNum });
         let bboard = findBoard.board;
         let count = findBoard.count;
-        bboard[xyToIndex(data.x, data.y)] = 3;
-        data.board = bboard;
-        let pointer = false;
-        app.get("gameRoom").to(gameNum).emit("pointerOmog", data, count, pointer);        
+
+        if (bboard[xyToIndex(data.x, data.y)] != -1) {
+            return;
+        } else {
+            bboard[xyToIndex(data.x, data.y)] = 3;
+            data.board = bboard;
+            let pointer = false;
+            app.get("gameRoom").to(gameNum).emit("pointerOmog", data, count, pointer);            
+         };
     });
 };
     
