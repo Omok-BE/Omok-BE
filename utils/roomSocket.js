@@ -17,7 +17,7 @@ const { participantUpdate } = require('../lib/roomSocket/roomOutUpdate');
 // socket evnet 알림
 exports.onAny = function (socket) {
   socket.onAny((event) => {
-    console.log(`Socket Event: ${event}`);
+    console.log(`Room Socket Event: ${event}`);
   });
 };
 
