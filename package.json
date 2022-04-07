@@ -9,7 +9,7 @@
     "prettify": "prettier --write *.js **/*.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "김지성, 박수지, 이학진",
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^6.19.4",
@@ -38,6 +38,9 @@
   "homepage": "https://github.com/Omok-BE/Omok-BE#readme",
   "devDependencies": {
     "artillery": "^2.0.0-12",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "swagger-jsdoc": "^6.2.0",
     "swagger-ui-express": "^4.3.0"
   }
