@@ -2,43 +2,43 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    adminLogin,
-    getWaitingRooms,
-    deleteWaitingRoom,
-    getGameRooms,
-    deleteGameRoom,
-    getUsers,
-    editUserPoint,
-    deleteUser
+  adminLogin,
+  getWaitingRooms,
+  deleteWaitingRoom,
+  getGameRooms,
+  deleteGameRoom,
+  getUsers,
+  editUserPoint,
+  deleteUser,
 } = require('../controller/admin');
 
 // 관리자 로그인 페이지
 router.get('/', (req, res) => {
-    res.render('adminLogin');
+  res.render('adminLogin');
 });
 
 // 관리자 페이지
 router.get('/page', (req, res) => {
-    res.render('admin');
+  res.render('admin');
 });
 
 // 대기실 관리 페이지
 router.get('/waitingRoom', (req, res) => {
-    res.render('waitingRoom');
+  res.render('waitingRoom');
 });
 
 // 게임방 관리 페이지
 router.get('/gameRoom', (req, res) => {
-    res.render('gameRoom');
+  res.render('gameRoom');
 });
 
 // 유저 관리 페이지
 router.get('/users', (req, res) => {
-    res.render('users');
+  res.render('users');
 });
 
-// 관리자 로그인      
-router.post('/login', adminLogin)
+// 관리자 로그인
+router.post('/login', adminLogin);
 
 // 대기방 리스트 불러오기
 router.get('/waitingRoom/list', getWaitingRooms);

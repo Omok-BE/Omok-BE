@@ -1,6 +1,6 @@
 const Room = require('../models/rooms');
 const User = require('../models/users');
-const Sentry = require("@sentry/node");
+const Sentry = require('@sentry/node');
 
 // 로비 들어가서 방리스트 가져오기
 const lobby = async (req, res) => {
@@ -20,10 +20,18 @@ const lobby = async (req, res) => {
 // 로비에서 offline제외 유저리스트
 const userList = async (req, res) => {
   try {
-    let id = req.params.id
-    await User.updateOne({ id }, {$set : { connect: 'online' }})
-    const allUser = await User.find({ $and: [{ connect: { $ne:'offline' }}, { connect: {$ne:'endRoom' }}, {connect: { $ne:'endGame' }}]}, 
-    { _id:0, pass:0, state:0, teachingCnt:0, connect:0 });
+    let id = req.params.id;
+    await User.updateOne({ id }, { $set: { connect: 'online' } });
+    const allUser = await User.find(
+      {
+        $and: [
+          { connect: { $ne: 'offline' } },
+          { connect: { $ne: 'endRoom' } },
+          { connect: { $ne: 'endGame' } },
+        ],
+      },
+      { _id: 0, pass: 0, state: 0, teachingCnt: 0, connect: 0 }
+    );
 
     res.status(200).send(allUser);
   } catch (err) {
@@ -38,7 +46,12 @@ const userList = async (req, res) => {
 // 로비에서 포인트기준 리더리스트
 const leaderList = async (req, res) => {
   try {
-    const leaderList = await User.find({}, {_id:0, pass:0, state:0, teachingCnt:0, connect:0}).sort({ point: -1 }).limit(5);
+    const leaderList = await User.find(
+      {},
+      { _id: 0, pass: 0, state: 0, teachingCnt: 0, connect: 0 }
+    )
+      .sort({ point: -1 })
+      .limit(5);
 
     res.status(200).send(leaderList);
   } catch (err) {
@@ -53,7 +66,12 @@ const leaderList = async (req, res) => {
 // 리더보드
 const leaderBoard = async (req, res) => {
   try {
-    const leaderList = await User.find({}, {_id:0, pass:0, state:0, teachingCnt:0, connect:0}).sort({ point: -1 }).limit(50);
+    const leaderList = await User.find(
+      {},
+      { _id: 0, pass: 0, state: 0, teachingCnt: 0, connect: 0 }
+    )
+      .sort({ point: -1 })
+      .limit(50);
 
     res.status(200).send(leaderList);
   } catch (err) {
@@ -86,7 +104,7 @@ const createRoom = async (req, res) => {
       state: 'wait',
       blackPlayer: id,
       timer: timer,
-      boardColor: boardColor
+      boardColor: boardColor,
     });
     await newRoom.save();
 
@@ -120,33 +138,34 @@ const postJoinRoom = async (req, res) => {
 
   try {
     // res의 body값 확인(비정상적 접근막아주기)
-    if( !roomNum || !id || !state ){
+    if (!roomNum || !id || !state) {
       res.status(400).json({
-        message: '비정상적인 접근 입니다.'
-      })
-      return
-    };
+        message: '비정상적인 접근 입니다.',
+      });
+      return;
+    }
 
-    if(state === 'blackPlayer' || state === 'whitePlayer'){
+    if (state === 'blackPlayer' || state === 'whitePlayer') {
       let findplayer = await Room.findOne({ roomNum });
-      if(findplayer.blackTeamPlayer && state === 'blackPlayer'){
+      if (findplayer.blackTeamPlayer && state === 'blackPlayer') {
         res.status(400).json({
-          message: '앗 블랙플레이어가 이미 있네요. 누군가 자리이동을 했나봐요!'
-        })
-        return
-      }else if(findplayer.whiteTeamPlayer && state === 'whitePlayer'){
+          message: '앗 블랙플레이어가 이미 있네요. 누군가 자리이동을 했나봐요!',
+        });
+        return;
+      } else if (findplayer.whiteTeamPlayer && state === 'whitePlayer') {
         res.status(400).json({
-          message: '앗 화이트플레이어가 이미 있네요. 누군가 자리이동을 했나봐요!'
-        })
-        return
-      };
-    };
+          message:
+            '앗 화이트플레이어가 이미 있네요. 누군가 자리이동을 했나봐요!',
+        });
+        return;
+      }
+    }
 
-    const roomState = await Room.findOne({ roomNum }, { state: true })
-    if(roomState.state === 'ingame'){
+    const roomState = await Room.findOne({ roomNum }, { state: true });
+    if (roomState.state === 'ingame') {
       res.status(400).json({
         message: '게임이 시작된 방입니다.',
-      })
+      });
     } else {
       await User.updateOne({ id }, { $set: { state } });
       const postuser = await User.findOne({ id });
@@ -158,8 +177,7 @@ const postJoinRoom = async (req, res) => {
       };
 
       res.status(201).send(userInfo);
-    };
-    
+    }
   } catch (err) {
     Sentry.captureException(err);
     console.error(err);
@@ -212,14 +230,14 @@ const fastObserver = async (req, res) => {
   try {
     const { id } = req.params;
     const existRooms = await Room.findOne({ state: 'wait' });
-    
+
     if (existRooms.length === 0) {
       res.status(400).json({
         ok: false,
         message: '대기중인 방이 없습니다.',
       });
-      return
-    };
+      return;
+    }
 
     // 블랙옵저버, 화이트옵저버 수가 블랙이 많은 경우만 화이트로 참가
     if (
@@ -254,51 +272,51 @@ const fastObserver = async (req, res) => {
 
 // 방번호로 참가
 const roomNumJoin = async (req, res) => {
-    try{
-        const { id, roomNum } = req.body
+  try {
+    const { id, roomNum } = req.body;
 
-        const findroom = await Room.findOne({ roomNum });
-        if(findroom.length !== 0){
-            if(!findroom.whiteTeamPlayer){
-                await User.updateOne({ id }, {$set : { state: 'whitePlayer' }})
-            } else {
-                await User.updateOne({ id }, {$set : { state: 'blackObserver' }})
-            }
-            const userInfo = await User.findOne(
-                { id },
-                { _id: false, id: true, score: true, point: true, state: true }
-              );
-            res.status(201).json({
-                userInfo,
-                roomNum
-            })
-        };
-    } catch(err) {
-        Sentry.captureException(err);
-        console.error(err);
-        res.status(400).json({
-        errorMessage: '입장할 수 없는 방번호 입니다',
-        });
-    };
+    const findroom = await Room.findOne({ roomNum });
+    if (findroom.length !== 0) {
+      if (!findroom.whiteTeamPlayer) {
+        await User.updateOne({ id }, { $set: { state: 'whitePlayer' } });
+      } else {
+        await User.updateOne({ id }, { $set: { state: 'blackObserver' } });
+      }
+      const userInfo = await User.findOne(
+        { id },
+        { _id: false, id: true, score: true, point: true, state: true }
+      );
+      res.status(201).json({
+        userInfo,
+        roomNum,
+      });
+    }
+  } catch (err) {
+    Sentry.captureException(err);
+    console.error(err);
+    res.status(400).json({
+      errorMessage: '입장할 수 없는 방번호 입니다',
+    });
+  }
 };
 
-// 로그아웃 
+// 로그아웃
 const logout = async (req, res) => {
-  try{
+  try {
     const { id } = req.body;
 
     await User.updateOne({ id }, { connect: 'offline' });
     res.status(201).json({
       ok: 'ok',
-    })
-  }catch(err){
+    });
+  } catch (err) {
     Sentry.captureException(err);
-    console.error(err)
+    console.error(err);
     res.status(401).json({
       ok: 'false',
-    })
+    });
   }
-}
+};
 
 module.exports = {
   lobby,
@@ -311,5 +329,5 @@ module.exports = {
   fastPlayer,
   fastObserver,
   roomNumJoin,
-  logout
+  logout,
 };

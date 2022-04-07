@@ -12,7 +12,7 @@ const {
   fastPlayer,
   fastObserver,
   roomNumJoin,
-  logout
+  logout,
 } = require('../controller/lobby');
 
 // 로비첫 화면
@@ -43,9 +43,9 @@ router.get('/lobby/fastPlayer/:id', fastPlayer);
 router.get('/lobby/fastObserver/:id', fastObserver);
 
 // 방번호로 참가
-router.post('/lobby/roomNumJoin', roomNumJoin)
+router.post('/lobby/roomNumJoin', roomNumJoin);
 
-// 로그아웃 
+// 로그아웃
 router.post('/lobby/logout', logout);
 
 module.exports = router;
