@@ -6,14 +6,14 @@
 
 ## 📚목차   |  Contents
 1. [웹 사이트 | 프로젝트 발표 영상](#웹-사이트---프로젝트-발표-영상)
-2. [프로젝트 기간 | 팀원](#프로젝트-기간)
-3. [아키텍쳐](#아키텍쳐--architecture)
-4. [피그마](#피그마--figma)
-5. [개발환경](#개발환경--development-environment)
-6. [라이브러리](#라이브러리--library)
+2. [프로젝트 기간 | 팀원](#프로젝트-기간----팀원)
+3. [아키텍쳐 | Architecture](#아키텍쳐--architecture)
+4. [피그마 | figma](#피그마--figma)
+5. [개발환경 | Development Enviroment](#개발환경--development-environment)
+6. [라이브러리 | Library](#라이브러리--library)
 7. [주요 API기능 | API](#주요-api기능--api)
 8. [DB Modeling](#db-modeling)
-9. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅)
+9. [트러블 슈팅 | Trouble Shooting](#트러블-슈팅--trouble-shooting)
 <br><br><br>
 
 ---
@@ -23,7 +23,7 @@
 오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.
 <br><br><br>
 
-## 📆프로젝트 기간  |  👨‍👩‍👧‍👧팀원  -- 이모지 추가? 
+## 📆프로젝트 기간  |  👨‍👩‍👧‍👧팀원
 2022년 2월 25일 ~ 2022년 4월 07일 (총 6주)
 <br><br>
 
@@ -34,12 +34,12 @@
 * [Back-end gitgub](https://github.com/Omok-BE/Omok-BE.git)
 <br><br><br>
 
-## 🖌️아키텍쳐  |  Architecture
+## 💡아키텍쳐  |  Architecture
 ![image](https://user-images.githubusercontent.com/84648177/162151194-238465bb-7c57-4096-a9e2-94986272f0c4.png)
 
 <br><br>
 
-## 피그마 | Figma
+## 🚀피그마 | Figma
 [오목조목 피그마 보러가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
 <br><br>
 
