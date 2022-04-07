@@ -11,7 +11,7 @@
 4. [피그마 | figma](#피그마--figma)
 5. [개발 환경 | Development Environment](#개발-환경--development-environment)
 6. [라이브러리 | Library](#라이브러리----library)
-7. [API | http socket](#api--http-socket)
+7. [API http | socket](#api-http---socket)
 8. [DB Modeling](#db-modeling)
 9. [트러블 슈팅 | Trouble Shooting](#트러블-슈팅--trouble-shooting)
 <br><br><br>
@@ -40,7 +40,7 @@
 <br><br>
 
 ## 🚀피그마 | Figma
-[오목조목 피그마 보러가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
+[오목조목 피그마 바로가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
 <br><br>
 
 ## 💎개발 환경 | Development Environment
@@ -84,7 +84,7 @@
 
 <br><br>
 
-## 📣API | http socket
+## 📣API http |  socket
 [API(http & socket) 노션 바로가기](https://www.notion.so/API-6d0bc66baee54f9fb606ccb0970a2323)
 <details> 
  <summary><strong> API 문서 UI-swagger (http API만) </strong></summary>
@@ -104,7 +104,7 @@
 <br><br>
 
 ## 💡DB Modeling
-[DB 노션](https://www.notion.so/DB-Modeling-253f60c0231842c29f044bf6b374ce1b)
+[DB Modling 노션 바로가기](https://www.notion.so/DB-Modeling-253f60c0231842c29f044bf6b374ce1b)
 <br><br>
 
 ## 🎯트러블 슈팅 | Trouble Shooting
