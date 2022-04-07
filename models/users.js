@@ -9,7 +9,7 @@ const usersSchema = new mongoose.Schema({
   state: String,
   teachingCnt: {
     type: Number,
-    default:0
+    default: 0,
   },
   profileImage: String,
   connect: String,

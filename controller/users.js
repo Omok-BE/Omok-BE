@@ -1,7 +1,7 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const Sentry = require("@sentry/node");
+const Sentry = require('@sentry/node');
 
 // 회원가입
 const signup = async (req, res) => {
@@ -14,16 +14,16 @@ const signup = async (req, res) => {
         errorMessage: '회원가입 실패: 비밀번호가 일치하지 않습니다',
       });
       return;
-    };
-    
+    }
+
     const existEmail = await User.find({ email });
-    if(existEmail.length){
+    if (existEmail.length) {
       res.status(400).json({
         ok: 'false',
-        errorMessage: '회원가입 실패: 이미 사용된 이메일 입니다.'
-      })
+        errorMessage: '회원가입 실패: 이미 사용된 이메일 입니다.',
+      });
       return;
-    };
+    }
 
     const existId = await User.find({ id });
     if (existId.length) {
@@ -32,17 +32,17 @@ const signup = async (req, res) => {
         errorMessage: '이미 사용중인 ID입니다.',
       });
       return;
-    };
+    }
 
-    if(!profileImage){
-        res.status(400).json({
-            ok: 'false',
-            errorMessage: '프로필을 선택하지 않았습니다.'
-        });
-        return;
+    if (!profileImage) {
+      res.status(400).json({
+        ok: 'false',
+        errorMessage: '프로필을 선택하지 않았습니다.',
+      });
+      return;
     } else {
-        profileUrl = 'https://haksae90.shop/images/'+ profileImage + '.svg'
-    };
+      profileUrl = 'https://haksae90.shop/images/' + profileImage + '.svg';
+    }
 
     const encodedPass = crypto
       .createHash(process.env.Algorithm)
@@ -89,17 +89,19 @@ const login = async (req, res) => {
         errorMessage: '아이디 또는 패스워드를 확인해주세요',
       });
       return;
-    }
-    else if(user.connect === 'online'){
+    } else if (user.connect === 'online') {
       res.status(401).json({
-        errorMessage: '비정상적 로그아웃을 하였거나 이미 접속중인 id입니다.'
+        errorMessage: '비정상적 로그아웃을 하였거나 이미 접속중인 id입니다.',
       });
-      return
-    };
+      return;
+    }
 
     const token = jwt.sign({ id: user.id }, process.env.TOKENKEY);
     if (token) {
-      await User.updateOne({ id: user.id }, { $set: { state: 'online' , connect: "online"} });
+      await User.updateOne(
+        { id: user.id },
+        { $set: { state: 'online', connect: 'online' } }
+      );
     }
     res.status(200).json({
       token,
@@ -118,55 +120,55 @@ const login = async (req, res) => {
 
 // 비밀번호 찾기 가기 [유저 확인]
 const findpass = async (req, res) => {
-  try{
-    const { id, email } = req.body
+  try {
+    const { id, email } = req.body;
 
     const findUser = await User.findOne({ id, email });
 
-    if(!findUser){
+    if (!findUser) {
       res.status(401).json({
         errorMessage: '입력 정보를 확인해 주세요',
       });
       return;
-    };
+    }
 
     res.status(201).json({
       ok: true,
       message: 'id와 email을 확인 하였습니다.',
-    })
-  }catch(err){
+    });
+  } catch (err) {
     Sentry.captureException(err);
-    console.error(err)
+    console.error(err);
     res.status(400).json({
       errorMessage: '입력 정보를 확인해 주세요',
     });
   }
-}
+};
 
 // 비밀번호 찾기 [새 비밀번호 입력]
-const newpass = async (req, res) =>{
-  try{
+const newpass = async (req, res) => {
+  try {
     const { id, email, newPass } = req.body;
 
     const encodedPass = crypto
-    .createHash(process.env.Algorithm)
-    .update(newPass + process.env.salt)
-    .digest('base64');
+      .createHash(process.env.Algorithm)
+      .update(newPass + process.env.salt)
+      .digest('base64');
 
-    await User.updateOne({ id, email }, { $set: { pass: encodedPass }})
+    await User.updateOne({ id, email }, { $set: { pass: encodedPass } });
 
     res.status(201).json({
       ok: true,
       message: '비밀번호 변경완료',
     });
-  }catch(err){
+  } catch (err) {
     Sentry.captureException(err);
-    console.error(err)
+    console.error(err);
     res.status(400).json({
       errorMessage: '입력 정보를 확인해 주세요',
     });
   }
-}
+};
 
 // 유저인포
 const userinfo = async (req, res) => {

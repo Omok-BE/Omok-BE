@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
   try {
     const { id } = jwt.verify(tokenValue, process.env.TOKENKEY);
     const user = await Users.findOne({ id });
-    res.locals.userId = user.userId
+    res.locals.userId = user.userId;
   } catch (err) {
     res.status(401).send({
       errMessage: '로그인후 사용하세요.',

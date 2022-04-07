@@ -1,7 +1,7 @@
 const app = require('./app');
-const LobbySocketEvent = require('./utils/lobbySocket')
-const RoomSocketEvent = require('./utils/roomSocket')
-const GameSocketEvent = require('./utils/gameSocket')
+const LobbySocketEvent = require('./utils/lobbySocket');
+const RoomSocketEvent = require('./utils/roomSocket');
+const GameSocketEvent = require('./utils/gameSocket');
 const httpServer = require('http').createServer(app);
 const { Server } = require('socket.io');
 const { instrument } = require('@socket.io/admin-ui');
@@ -19,7 +19,7 @@ instrument(io, {
 const lobby = io.of('/lobby');
 lobby.on('connection', (socket) => {
   console.log('connect lobby socket', socket.id);
-  
+
   // socket evnet 알림
   LobbySocketEvent.onAny(socket);
 
@@ -31,7 +31,6 @@ lobby.on('connection', (socket) => {
 
   // 접속 종료시 offline으로 변경
   LobbySocketEvent.disconnect(socket);
-
 });
 
 // 대기실 socketIO
@@ -67,11 +66,9 @@ waitingRoom.on('connection', (socket) => {
 
   //퇴장시 방 인원 숫자 최신화
   RoomSocketEvent.disconnecting(socket);
-
 });
 
-
-// 게임방 socketIO 
+// 게임방 socketIO
 const gameRoom = io.of('/game');
 app.set('gameRoom', gameRoom);
 
@@ -83,7 +80,7 @@ gameRoom.on('connection', (socket) => {
 
   //game socket nickname 설정
   GameSocketEvent.nicknameEvent(socket);
-  
+
   //game socket Join
   GameSocketEvent.joinGame(socket);
 
@@ -92,28 +89,27 @@ gameRoom.on('connection', (socket) => {
 
   //game방 훈수채팅W
   GameSocketEvent.teachingW(socket);
-  
+
   //game방 훈수채팅B
   GameSocketEvent.teachingB(socket);
-  
+
   //game방 훈수채팅- 플라잉
   GameSocketEvent.flyingWord(socket);
-  
+
   //game방 신의한수- 마우스 포인트
   GameSocketEvent.Pointer(socket);
-  
+
   //오목 게임 좌표값을 받아 좌표값에 해당하는 값
   GameSocketEvent.omog(socket);
-  
+
   //Pointer 훈수 실질적으로 오목두는 부분
   GameSocketEvent.pointerOmog(socket);
-  
+
   //game방 퇴장
   GameSocketEvent.disconnecting(socket);
-  
+
   //게임방 나갈떄
   GameSocketEvent.byebye(socket);
-
 });
 
 module.exports = { httpServer };
