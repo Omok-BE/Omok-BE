@@ -1,27 +1,29 @@
- # :black_circle::white_circle: 오목조목 Omok-BE --오목조목을 뱃지로 만들고 링크걸기?
+ # :black_circle::white_circle: 오목조목 Omok-BE 
 실시간 훈수 오목 게임 <br>
-오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.<br><br><br>
-![image](https://user-images.githubusercontent.com/84648177/162130022-7a8879ce-532c-491a-8569-8c2c76fc4d72.png)
+오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.
+<br><br><br>
 
+![image](https://user-images.githubusercontent.com/84648177/162130022-7a8879ce-532c-491a-8569-8c2c76fc4d72.png)
 <br><br>
-## :books: 목차  &nbsp; | &nbsp; Contents
-1. 웹 사이트 | 프로젝트 설명 영상
-2. 프로젝트 기간 | 팀원
-3. 아키텍쳐
-4. 개발 환경  
-5. 라이브러리
-6. 주요 API기능 / API
-7. 트러블 슈팅
+
+## 📚 목차   |  Contents
+1. [웹 사이트 | 프로젝트 발표 영상](#웹-사이트)
+2. [프로젝트 기간 | 팀원](#프로젝트-기간)
+3. [아키텍쳐](#아키텍쳐--Architecture)
+4. [개발 환경](#개발-환경--Development-Enviornment)
+5. [라이브러리](#라이브러리--Lirary)
+6. [주요 API기능 | API](#주요-API기능--API)
+7. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅--Backend-Trouble-Shooting)
 <br><br><br>
 
 ---
 
-## :earth_asia: [Home Page](https://omogjomog.com/) &nbsp; | &nbsp; [프로젝트 설명 영상](설명영상주소넣기)
+## 🌏[웹 사이트](https://omogjomog.com/) |  [프로젝트 발표 영상](https://youtu.be/uGsDLXacve4)
 ### **실시간 훈수 오목 게임** <br>
 오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.
 <br><br><br>
 
-## :calendar: 프로젝트 기간 &nbsp; | &nbsp; 👨‍👩‍👧‍👧팀원  -- 이모지 추가? 
+## 📆프로젝트 기간  |  👨‍👩‍👧‍👧팀원  -- 이모지 추가? 
 2022년 2월 25일 ~ 2022년 4월 07일 (총 6주)
 <br><br>
 
@@ -32,12 +34,12 @@
 * [Back-end gitgub](https://github.com/Omok-BE/Omok-BE.git)
 <br><br><br>
 
-## 🖌️ 아키텍쳐 &nbsp; | &nbsp; Architecture
+## 🖌️아키텍쳐  |  Architecture
 ![image](https://user-images.githubusercontent.com/84648177/162151194-238465bb-7c57-4096-a9e2-94986272f0c4.png)
 
 <br><br>
 
-## ⚙️ 개발 환경 &nbsp; | &nbsp; Development Enviornment
+## ⚙️개발 환경  |  Development Enviornment
 ![image](https://user-images.githubusercontent.com/84648177/162178084-1b9f830b-36c8-4a1b-8fee-d20d3fb41244.png)
 ![image](https://user-images.githubusercontent.com/84648177/162178154-5d51bab6-27c0-4e03-b47e-1a41ddb38d68.png)
 ![image](https://user-images.githubusercontent.com/84648177/162159039-b926d31a-4533-43cf-a024-4a28369fc618.png)
@@ -57,7 +59,7 @@
 
 <br><br>
 
-## :computer: 라이브러리 &nbsp; | &nbsp; Lirary
+## 💻라이브러리  |  Lirary
 | Library | Description | Version |
 |--|--|--|
 |express |웹 프레임워크 |4.17.3 |
@@ -78,8 +80,8 @@
 
 <br><br>
 
-## :mega: 주요 API기능 &nbsp; | &nbsp; API
-[API 노션 바로가기](https://www.notion.so/API-b2107de5871142b6a76f2cf3b3e20e42)
+## 📣주요 API기능  |  API
+[API 노션 바로가기](https://www.notion.so/API-6d0bc66baee54f9fb606ccb0970a2323)
 <details> 
  <summary><strong> API 문서 UI </strong></summary>
  <div markdown="1">
@@ -96,7 +98,7 @@
 </details>
 <br>
 
-## 🎯 백엔드 트러블 슈팅 &nbsp; | &nbsp;  Backend Trouble Shooting
+## 🎯백엔드 트러블 슈팅  |  Backend Trouble Shooting
 <details>
 <summary><strong> 서버 부하 테스트 & 스케일 업 </strong></summary>
  <br>
