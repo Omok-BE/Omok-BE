@@ -2,7 +2,6 @@ const app = require('../app');
 const Users = require('../models/users');
 const Boards = require('../models/boards');
 const Rooms = require('../models/rooms');
-const Games = require('../models/games');
 const Sentry = require("@sentry/node");
 const { check_33 } = require('../lib/gameSocket/check_33');
 const { check_44 } = require('../lib/gameSocket/check_44');

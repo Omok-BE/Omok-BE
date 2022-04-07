@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const bugReportSchema = new mongoose.Schema({
   reportUser: Object,
-  gameData: Object, //제보당시의 gameroom 정보 
+  gameData: Object,
   gameInfo: Object,
-  content: String, // 간단 내용 
+  content: String, 
 });
 
 module.exports = mongoose.model('bugReport', bugReportSchema);
