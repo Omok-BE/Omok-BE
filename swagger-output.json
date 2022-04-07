@@ -5,13 +5,13 @@
     "description": "omogjomog API",
     "version": "1.0.0"
   },
-  "host": "13.125.238.144",
+  "host": "13.125.229.125",
   "contact": { 
     "git": "https://github.com/Omok-BE/Omok-BE" 
   },
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/signup": {
@@ -433,7 +433,7 @@
     },
     "/lobby/logout": {
       "post": {
-        "tags": ["user"],
+        "tags": ["lobby"],
         "description": "로그아웃",
         "summary": "로그아웃",
         "parameters": [
@@ -462,7 +462,7 @@
     },
     "/game/create": {
       "post": {
-        "tags": ["lobby"],
+        "tags": ["game"],
         "description": "대기실 => 게임방 입장시 게임방 생성",
         "summary": "대기실 => 게임방 입장시 게임방 생성",
         "parameters": [
@@ -671,7 +671,7 @@
                   "example": "admin"
                 },
                 "pass": {
-                  "example": "gkr123"
+                  "example": "pass"
                 }
               }
             }

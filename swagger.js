@@ -5,8 +5,8 @@ const doc = {
         title: "omogjomog",
         description: "omogjomog API",
     },
-    host: "13.125.238.144",
-    schemes: ["http"],
+    host: "13.125.229.125",
+    schemes: ["https"],
 };
 
 const outputFile = "./swagger-output.json";
