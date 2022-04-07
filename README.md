@@ -5,15 +5,15 @@
 <br><br>
 
 ## 📚목차   |  Contents
-1. [웹 사이트 | 프로젝트 발표 영상](#오목조목은)
+1. [웹 사이트 | 프로젝트 발표 영상](#웹-사이트)
 2. [프로젝트 기간 | 팀원](#프로젝트-기간)
 3. [아키텍쳐](#아키텍쳐--architecture)
-4. [피그마](#피그마)
-5. [개발환경](#개발환경--development-enviornment)
-6. [라이브러리](#라이브러리--lirary)
+4. [피그마](#피그마--figma)
+5. [개발환경](#개발환경--development-environment)
+6. [라이브러리](#라이브러리--library)
 7. [주요 API기능 | API](#주요-api기능--api)
 8. [DB Modeling](#db-modeling)
-9. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅--backend-trouble-shooting)
+9. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅)
 <br><br><br>
 
 ---
@@ -43,7 +43,7 @@
 [오목조목 피그마 보러가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
 <br><br>
 
-## ⚙️개발환경  |  Development Enviornment
+## ⚙️개발환경  |  Development Environment
 ![image](https://user-images.githubusercontent.com/84648177/162178084-1b9f830b-36c8-4a1b-8fee-d20d3fb41244.png)
 ![image](https://user-images.githubusercontent.com/84648177/162178154-5d51bab6-27c0-4e03-b47e-1a41ddb38d68.png)
 ![image](https://user-images.githubusercontent.com/84648177/162159039-b926d31a-4533-43cf-a024-4a28369fc618.png)
