@@ -125,7 +125,6 @@ exports.pointerOmog = function(socket){
         const findBoard = await Boards.findOne({ gameNum });
         let bboard = findBoard.board;
         let count = findBoard.count;
-
         if (bboard[xyToIndex(data.x, data.y)] != -1) {
             return;
         } else {
