@@ -29,7 +29,7 @@
 
 * Front-end: [최종현](https://github.com/fatchoi3), [이가람](https://github.com/devmagrfs)
 * Back-end: [김지성](https://github.com/jableee), [박수지](https://github.com/suzyp0223), [이학진](https://github.com/Haksae90)
-* Designer: 이가람, 백수진
+* Designer: 허화영, 백수진
 * [Front-end gitgub](https://github.com/fatchoi3/omog.git)
 * [Back-end gitgub](https://github.com/Omok-BE/Omok-BE.git)
 <br><br><br>
