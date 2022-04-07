@@ -1,8 +1,6 @@
  # :black_circle::white_circle: 오목조목 Omok-BE 
 실시간 훈수 오목 게임 <br>
-오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.
-<br><br><br>
-
+<br>
 ![image](https://user-images.githubusercontent.com/84648177/162130022-7a8879ce-532c-491a-8569-8c2c76fc4d72.png)
 <br><br>
 
