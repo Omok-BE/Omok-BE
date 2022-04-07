@@ -53,11 +53,10 @@
 |Load Balancer |AWS ALB |
 |Error Monitoring |Sentry |
 |Server Monitoring |AWS Cloud Watch |
-|Tools |VSCode, Github, Notion |  
-
-
+|Tools |VSCode, Github, Notion | 
 
 <br><br>
+
 ## :computer: 라이브러리 &nbsp; | &nbsp; Lirary
 | Library | Description | Version |
 |--|--|--|
@@ -75,8 +74,9 @@
 |ejs |템플릿 엔진 |3.1.6 | 
 |prettier |클린 코드 |2.5.1 |
 |eslint |클린 코드 |8.12.0  |
-|eslint-config-prettier,<br> eslint-plugin-prettier |eslint, prettier 충돌방지 |8.5.0,<br> 4.0.0 |  
-<br><br><br>
+|eslint-config-prettier,<br> eslint-plugin-prettier |eslint, prettier 충돌방지 |8.5.0, 4.0.0 |
+
+<br><br>
 
 ## :mega: 주요 API기능 &nbsp; | &nbsp; API
 [API 노션 바로가기](https://www.notion.so/API-b2107de5871142b6a76f2cf3b3e20e42)
