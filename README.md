@@ -85,9 +85,9 @@
 <br><br>
 
 ## 📣API | http socket
-[API 노션 바로가기](https://www.notion.so/API-6d0bc66baee54f9fb606ccb0970a2323)
+[API(http & socket) 노션 바로가기](https://www.notion.so/API-6d0bc66baee54f9fb606ccb0970a2323)
 <details> 
- <summary><strong> API 문서 UI-swagger </strong></summary>
+ <summary><strong> API 문서 UI-swagger (http API만) </strong></summary>
  <div markdown="1">
   <br>  
   
