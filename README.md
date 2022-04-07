@@ -44,6 +44,7 @@
 ![image](https://user-images.githubusercontent.com/84648177/162159055-af51d57b-7757-4cc9-a47d-1c847010bd6b.png)
 | 이름 | 구분 |
 |--|--|
+|Platform |Node.js v16.13.1 |
 |Server |AWS EC2(Amazon Linux 2 AMI (HVM), 64bit) |
 |Framework |Express(Node.js) |
 |개발 언어 |JaveScript |
@@ -53,7 +54,12 @@
 |Tools |VSCode, Git, Github, Slack, Notion |
 
 <br><br><br>
-## :book: 라이브러리 &nbsp; | &nbsp; Lirary
+## :computer: 라이브러리 &nbsp; | &nbsp; Lirary
+| Library | Description | Version |
+|--|--|--|
+|Express |웹 프레임워크 |4.17.3 
+|Mongoose|MongoDB ODM |6.24
+|
 
 <br><br><br>
 
