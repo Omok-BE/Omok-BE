@@ -7,13 +7,13 @@
 <br><br>
 
 ## 📚 목차   |  Contents
-1. [웹 사이트 | 프로젝트 발표 영상](#웹-사이트)
+1. [웹 사이트 | 프로젝트 발표 영상](#실시간-훈수-오목-게임)
 2. [프로젝트 기간 | 팀원](#프로젝트-기간)
-3. [아키텍쳐](#아키텍쳐--Architecture)
-4. [개발 환경](#개발-환경--Development-Enviornment)
-5. [라이브러리](#라이브러리--Lirary)
-6. [주요 API기능 | API](#주요-API기능--API)
-7. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅--Backend-Trouble-Shooting)
+3. [아키텍쳐](#아키텍쳐--architecture)
+4. [개발환경](#개발환경--development-enviornment)
+5. [라이브러리](#라이브러리--lirary)
+6. [주요 API기능 | API](#주요-api기능--api)
+7. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅--backend-trouble-shooting)
 <br><br><br>
 
 ---
@@ -39,7 +39,7 @@
 
 <br><br>
 
-## ⚙️개발 환경  |  Development Enviornment
+## ⚙️개발환경  |  Development Enviornment
 ![image](https://user-images.githubusercontent.com/84648177/162178084-1b9f830b-36c8-4a1b-8fee-d20d3fb41244.png)
 ![image](https://user-images.githubusercontent.com/84648177/162178154-5d51bab6-27c0-4e03-b47e-1a41ddb38d68.png)
 ![image](https://user-images.githubusercontent.com/84648177/162159039-b926d31a-4533-43cf-a024-4a28369fc618.png)
