@@ -8,10 +8,12 @@
 1. [웹 사이트 | 프로젝트 발표 영상](#오목조목은)
 2. [프로젝트 기간 | 팀원](#프로젝트-기간)
 3. [아키텍쳐](#아키텍쳐--architecture)
-4. [개발환경](#개발환경--development-enviornment)
-5. [라이브러리](#라이브러리--lirary)
-6. [주요 API기능 | API](#주요-api기능--api)
-7. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅--backend-trouble-shooting)
+4. [피그마](#피그마)
+5. [개발환경](#개발환경--development-enviornment)
+6. [라이브러리](#라이브러리--lirary)
+7. [주요 API기능 | API](#주요-api기능--api)
+8. [DB Modeling](#db-modeling)
+9. [백엔드 트러블 슈팅](#백엔드-트러블-슈팅--backend-trouble-shooting)
 <br><br><br>
 
 ---
@@ -35,6 +37,10 @@
 ## 🖌️아키텍쳐  |  Architecture
 ![image](https://user-images.githubusercontent.com/84648177/162151194-238465bb-7c57-4096-a9e2-94986272f0c4.png)
 
+<br><br>
+
+## 피그마 | Figma
+[오목조목 피그마 보러가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
 <br><br>
 
 ## ⚙️개발환경  |  Development Enviornment
@@ -81,7 +87,7 @@
 ## 📣주요 API기능  |  API
 [API 노션 바로가기](https://www.notion.so/API-6d0bc66baee54f9fb606ccb0970a2323)
 <details> 
- <summary><strong> API 문서 UI </strong></summary>
+ <summary><strong> API 문서 UI-swagger </strong></summary>
  <div markdown="1">
   <br>  
   
@@ -95,7 +101,11 @@
   
 </div>
 </details>
-<br>
+<br><br>
+
+## 💡DB Modeling
+[DB 노션](https://www.notion.so/DB-Modeling-253f60c0231842c29f044bf6b374ce1b)
+<br><br>
 
 ## 🎯백엔드 트러블 슈팅  |  Backend Trouble Shooting
 <details>
