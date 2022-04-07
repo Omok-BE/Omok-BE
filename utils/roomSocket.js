@@ -165,9 +165,7 @@ exports.disconnecting = function(socket){
     });
 };
 
-
 // 해당 소켓 방 인원 카운트 메소드
 function waitingRoomCount(roomNum) {
     return app.get("waitingRoom").adapter.rooms.get(roomNum)?.size;
   };
-  
