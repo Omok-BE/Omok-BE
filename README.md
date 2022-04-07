@@ -7,11 +7,11 @@
 ## 📚목차   |  Contents
 1. [웹 사이트 | 프로젝트 발표 영상](#웹-사이트---프로젝트-발표-영상)
 2. [프로젝트 기간 | 팀원](#프로젝트-기간----팀원)
-3. [아키텍쳐 | Architecture](#아키텍쳐--architecture)
+3. [아키텍쳐 | Architecture](#아키텍쳐----architecture)
 4. [피그마 | figma](#피그마--figma)
-5. [개발환경 | Development Enviroment](#개발환경--development-environment)
-6. [라이브러리 | Library](#라이브러리--library)
-7. [주요 API기능 | API](#주요-api기능--api)
+5. [개발 환경 | Development Environment](#개발-환경----development-environment)
+6. [라이브러리 | Library](#라이브러리----library)
+7. [주요 API기능 | Main API](#주요-api기능--main-api)
 8. [DB Modeling](#db-modeling)
 9. [트러블 슈팅 | Trouble Shooting](#트러블-슈팅--trouble-shooting)
 <br><br><br>
@@ -43,7 +43,7 @@
 [오목조목 피그마 보러가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
 <br><br>
 
-## ⚙️개발환경  |  Development Environment
+## ⚙️개발 환경 | Development Environment
 ![image](https://user-images.githubusercontent.com/84648177/162178084-1b9f830b-36c8-4a1b-8fee-d20d3fb41244.png)
 ![image](https://user-images.githubusercontent.com/84648177/162178154-5d51bab6-27c0-4e03-b47e-1a41ddb38d68.png)
 ![image](https://user-images.githubusercontent.com/84648177/162159039-b926d31a-4533-43cf-a024-4a28369fc618.png)
@@ -63,7 +63,7 @@
 
 <br><br>
 
-## 💻라이브러리  |  Lirary
+## 💻라이브러리  |  Library
 | Library | Description | Version |
 |--|--|--|
 |express |웹 프레임워크 |4.17.3 |
@@ -84,7 +84,7 @@
 
 <br><br>
 
-## 📣주요 API기능  |  API
+## 📣주요 API기능 | Main API
 [API 노션 바로가기](https://www.notion.so/API-6d0bc66baee54f9fb606ccb0970a2323)
 <details> 
  <summary><strong> API 문서 UI-swagger </strong></summary>
@@ -107,7 +107,7 @@
 [DB 노션](https://www.notion.so/DB-Modeling-253f60c0231842c29f044bf6b374ce1b)
 <br><br>
 
-## 🎯백엔드 트러블 슈팅  |  Backend Trouble Shooting
+## 🎯트러블 슈팅 | Trouble Shooting
 <details>
 <summary><strong> 서버 부하 테스트 & 스케일 업 </strong></summary>
  <br>
