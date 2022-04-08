@@ -48,7 +48,7 @@
 ![image](https://user-images.githubusercontent.com/84648177/162178154-5d51bab6-27c0-4e03-b47e-1a41ddb38d68.png)
 ![image](https://user-images.githubusercontent.com/84648177/162159039-b926d31a-4533-43cf-a024-4a28369fc618.png)
 ![image](https://user-images.githubusercontent.com/84648177/162159055-af51d57b-7757-4cc9-a47d-1c847010bd6b.png)
-| 이름 | 구분 |
+| 구분 | 이름 |
 |--|--|
 |Language |JaveScript |
 |Platform |Node.js v16.13.1 |
