@@ -48,8 +48,10 @@
 <br><br>
 
 ## 🚀피그마 | Figma
-[오목조목 피그마 바로가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
-<br><br>
+[![오목조목 피그마 바로가기](https://user-images.githubusercontent.com/84648177/162569764-27b71d82-2a88-42bf-87a4-ef754cc384d6.JPG "오목조목 피그마.jpg")](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
+<br>
+**이미지를 클릭하면 오목조목 피그마**:  https://www.youtube.com/embed/uGsDLXacve4 로 이동합니다.
+<br><br><br>
 
 ## 💎개발 환경 | Development Environment
 ![image](https://user-images.githubusercontent.com/84648177/162178084-1b9f830b-36c8-4a1b-8fee-d20d3fb41244.png)
@@ -113,7 +115,7 @@
 
 ## 💡DB Modeling
 [DB Modling 노션 바로가기](https://www.notion.so/DB-Modeling-253f60c0231842c29f044bf6b374ce1b)
-<br><br>
+<br><br><br><br>
 
 ## 🎯트러블 슈팅 | Trouble Shooting
 <details>
