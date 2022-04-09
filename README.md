@@ -1,6 +1,5 @@
  # :black_circle::white_circle: 오목조목 Omok-BE 
-실시간 훈수 오목 게임 <br>
-<br>
+### **실시간 훈수 오목 게임** <br><br>
 [![image](https://user-images.githubusercontent.com/84648177/162130022-7a8879ce-532c-491a-8569-8c2c76fc4d72.png "https://omogjomog.com")](https://omogjomog.com)
 <br><br>
 
@@ -19,17 +18,18 @@
 ---
 
 ## 🌏웹 사이트 |  🎬프로젝트 발표 영상
-[![오목조목 웹 사이트](https://user-images.githubusercontent.com/84648177/162561226-108d54e2-93f4-4db2-bf2b-434dde01fd07.png "https://omogjomog.com")](https://omogjomog.com)
-<br>
-이미지를 클릭하면 오목조목 웹 사이트 https://omogjomog.com 로 이동합니다.
-<br>
-
-프로젝트 발표 영상: ![오목조목 발표영상](https://youtu.be/uGsDLXacve4)
-
-<br>
 ### **실시간 훈수 오목 게임** <br>
 오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.
 <br><br><br>
+[![오목조목 웹 사이트](https://user-images.githubusercontent.com/84648177/162561226-108d54e2-93f4-4db2-bf2b-434dde01fd07.png "https://omogjomog.com")](https://omogjomog.com)
+<br>
+**이미지를 클릭하면 오목조목 웹 사이트**:  https://omogjomog.com 로 이동합니다.
+<br><br><br><br>
+[![오목조목 훈수쳇gif](https://user-images.githubusercontent.com/84648177/162568508-6a60cdae-4955-492b-a77c-8a20d9422ba8.gif "오목조목 시연 영상 바로가기")](https://www.youtube.com/embed/uGsDLXacve4)
+<br><br>
+**이미지를 클릭하면 오목조목 시연 영상**:  https://www.youtube.com/embed/uGsDLXacve4 로 이동합니다.
+<br><br>
+
 
 ## 📆프로젝트 기간  |  👨‍👩‍👧‍👧팀원
 2022년 2월 25일 ~ 2022년 4월 07일 (총 6주)
