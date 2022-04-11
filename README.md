@@ -79,7 +79,7 @@
 |express |웹 프레임워크 |4.17.3 |
 |mongoose|MongoDB ODM |6.24 |
 |sentry |에러 모니터링 |6.19.4 |
-|artilery |서버 부하테스트 |2.0.0-12 |
+|artillery |서버 부하테스트 |2.0.0-12 |
 |cors |교차 리소스 공유 |2.8.5 |
 |socket.io |Socket 통신 |4.4.1 |
 |crypto |비밀번호 암호화 |1.0.1 |
