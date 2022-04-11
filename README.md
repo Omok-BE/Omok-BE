@@ -132,7 +132,7 @@
     <p> 처음에는 오픈소스로 대중적인 J METER를 이용하여 서버 부하 테스트를 진행하려했으나, socket.io와 호환 이슈가 있음을 발견
     <p> Node.js 라이브러리 중 socket.io에서 공식적으로 추천하는 Artillery를 통하여 서버 부하 테스트를 진행하기로 결정
     <p> 서비스 중 채팅과 팀 변경으로 인한 부하가 가장 클 것으로 판단되어, 두 가지를 집중적으로 반복하는 시나리오를 작성함
-    <p> Artillery report와 AWS Cloud Watch로 서버 부하 수준을 파악하였고, 100명까지 서비스가 충분히 가능하다고 판단된 사양으로 스케일 업을 진행함
+    <p> 예정대로 한 단계 스케일 업을 진행하여, Artillery report와 AWS Cloud Watch로 서버 부하 수준을 파악하였고, 스케일 업 한 서버가 동시접속자 100명까지는 안정적으로 서비스 될 것으로 판단되어 추가적인 스케일 아웃은 진행하지 않음
     <li><strong>서버 부하 테스트 결과</strong>
      <p> 시나리오 1 결과
       <img src="https://user-images.githubusercontent.com/95196634/162210742-d6ccfe60-2701-448d-8dd8-2b84a2cdd64e.png", width="1000">
@@ -176,8 +176,8 @@
   <p> 테스트를 거쳐 평균 대략 10분 정도 딜레이가 되는 것을 파악하였고, 시간대상 큰 무리가 없을 것으로 판단되어, 서버에 공식적으로 새벽 4:00~4:30을 서버 업데이트 시간으로 공지하고 자동배포를 시작함
    <li><strong>결과</strong>
   <p> Github Actions를 통해 버그 리폿으로 파악된 버그들을 수정하여, 매일 새벽 4시 경에 자동 배포하는 방식으로 서비스를 운영하고 있음
-<img width="969" alt="스크린샷 2022-04-07 오후 10 55 09" src="https://user-images.githubusercontent.com/95196634/162215800-7839ac4b-9ba2-4df9-ab2a-9f9e90d240c9.png">
-
+<img width="969" alt="스크린샷 2022-04-07 오후 10 55 09" src="https://user-images.githubusercontent.com/95196634/162688937-29939494-e11c-4904-9f8d-1b75a3d6ba74.png">
+   
  </ul>
 </details>
 
