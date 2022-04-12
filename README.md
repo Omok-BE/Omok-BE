@@ -1,7 +1,6 @@
  # :black_circle::white_circle: 오목조목 Omok-BE 
-실시간 훈수 오목 게임 <br>
-<br>
-![image](https://user-images.githubusercontent.com/84648177/162130022-7a8879ce-532c-491a-8569-8c2c76fc4d72.png)
+### **실시간 훈수 오목 게임** <br><br>
+[![image](https://user-images.githubusercontent.com/84648177/162130022-7a8879ce-532c-491a-8569-8c2c76fc4d72.png "https://omogjomog.com")](https://omogjomog.com)
 <br><br>
 
 ## 📚목차   |  Contents
@@ -18,10 +17,19 @@
 
 ---
 
-## 🌏[웹 사이트](https://omogjomog.com/) |  [프로젝트 발표 영상](https://youtu.be/uGsDLXacve4)
+## 🌏웹 사이트 |  🎬프로젝트 발표 영상
 ### **실시간 훈수 오목 게임** <br>
 오목조목은 플레이어로 게임에 참여할 수 있고 관전자로 훈수채팅을 하여 게임에 참여할 수 있는 서비스 입니다.
 <br><br><br>
+[![오목조목 웹 사이트](https://user-images.githubusercontent.com/84648177/162561226-108d54e2-93f4-4db2-bf2b-434dde01fd07.png "https://omogjomog.com")](https://omogjomog.com)
+<br>
+**이미지를 클릭하면 오목조목 웹 사이트**:  https://omogjomog.com 로 이동합니다.
+<br><br><br><br>
+[![오목조목 훈수쳇gif](https://user-images.githubusercontent.com/84648177/162568508-6a60cdae-4955-492b-a77c-8a20d9422ba8.gif "오목조목 시연 영상 바로가기")](https://www.youtube.com/embed/uGsDLXacve4)
+<br><br>
+**이미지를 클릭하면 오목조목 시연 영상**:  https://www.youtube.com/embed/uGsDLXacve4 로 이동합니다.
+<br><br>
+
 
 ## 📆프로젝트 기간  |  👨‍👩‍👧‍👧팀원
 2022년 2월 25일 ~ 2022년 4월 07일 (총 6주)
@@ -40,8 +48,10 @@
 <br><br>
 
 ## 🚀피그마 | Figma
-[오목조목 피그마 바로가기](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
-<br><br>
+[![오목조목 피그마 바로가기](https://user-images.githubusercontent.com/84648177/162569764-27b71d82-2a88-42bf-87a4-ef754cc384d6.JPG "오목조목 피그마.jpg")](https://www.figma.com/file/xe93TTBrEOv0uUJykYl7cN/%ED%95%AD%ED%95%B4-99-2%EC%A1%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1)
+<br>
+**이미지를 클릭하면 오목조목 피그마**:  https://www.youtube.com/embed/uGsDLXacve4 로 이동합니다.
+<br><br><br>
 
 ## 💎개발 환경 | Development Environment
 ![image](https://user-images.githubusercontent.com/84648177/162178084-1b9f830b-36c8-4a1b-8fee-d20d3fb41244.png)
@@ -69,7 +79,7 @@
 |express |웹 프레임워크 |4.17.3 |
 |mongoose|MongoDB ODM |6.24 |
 |sentry |에러 모니터링 |6.19.4 |
-|artilery |서버 부하테스트 |2.0.0-12 |
+|artillery |서버 부하테스트 |2.0.0-12 |
 |cors |교차 리소스 공유 |2.8.5 |
 |socket.io |Socket 통신 |4.4.1 |
 |crypto |비밀번호 암호화 |1.0.1 |
@@ -105,23 +115,26 @@
 
 ## 💡DB Modeling
 [DB Modling 노션 바로가기](https://www.notion.so/DB-Modeling-253f60c0231842c29f044bf6b374ce1b)
-<br><br>
+<br><br><br><br>
 
 ## 🎯트러블 슈팅 | Trouble Shooting
 <details>
 <summary><strong> 서버 부하 테스트 & 스케일 업 </strong></summary>
  <br>
  <ul>
-   <li><strong>상황</strong>
-    <p> 유저 테스트 중 무한 채팅으로 인한 서버 과부하가 발생하여, DB가 정상 작동을 안하는 문제 발생
+   <li><strong>문제</strong>
+    <p>유저 테스트 중 DB가 정상적으로 작동하지 않는 문제 발생
+     <li><strong>원인</strong>
+      <p>여러 유저가 계속해서 훈수 무한채팅을 시도하였고, socket과 DB에서 병목 현상이 일어나 서버 과부화로 이어진 것으로 판단됨
    <li><strong>해결 방안</strong> 
-    <p> 내부 논의를 통해 무한 채팅은 FE에서 해결하기로 하였으나, 적어도 70명이 동시에 플레이 가능한 서버가 필요할 것으로 판단함되어 스케일 업 하기로 결정
+    <p> 내부 논의를 통해 무한 채팅은 FE에서 채팅을 1초에 1번으로 제한하고, 서버도 적어도 70명이 동시에 플레이 가능한 상태로 구축해야겠다고 판단
+    <p> 우선 한 단계 스케일 업 하고, 해결되지 않으면 향후 스케일 아웃도 고려해보기로 결정
    <li><strong>서버 부하 테스트 관련</strong> 
     <p> 서비스 특성상 서버 부하 테스트는 socket 부분만 진행하면 될 것으로 판단
     <p> 처음에는 오픈소스로 대중적인 J METER를 이용하여 서버 부하 테스트를 진행하려했으나, socket.io와 호환 이슈가 있음을 발견
     <p> Node.js 라이브러리 중 socket.io에서 공식적으로 추천하는 Artillery를 통하여 서버 부하 테스트를 진행하기로 결정
     <p> 서비스 중 채팅과 팀 변경으로 인한 부하가 가장 클 것으로 판단되어, 두 가지를 집중적으로 반복하는 시나리오를 작성함
-    <p> Artillery report와 AWS Cloud Watch로 서버 부하 수준을 파악하였고, 100명까지 서비스가 충분히 가능하다고 판단된 사양으로 스케일 업을 진행함
+    <p> 예정대로 한 단계 스케일 업을 진행하여, Artillery report와 AWS Cloud Watch로 서버 부하 수준을 파악하였고, 스케일 업 한 서버가 동시접속자 100명까지는 안정적으로 서비스 될 것으로 판단되어 추가적인 스케일 아웃은 진행하지 않음
     <li><strong>서버 부하 테스트 결과</strong>
      <p> 시나리오 1 결과
       <img src="https://user-images.githubusercontent.com/95196634/162210742-d6ccfe60-2701-448d-8dd8-2b84a2cdd64e.png", width="1000">
@@ -130,7 +143,7 @@
      <p> 시나리오 3 결과
       <img src="https://user-images.githubusercontent.com/95196634/162212142-798233d7-5870-4f3b-9351-239f12aec47b.png", width="1000">
    <li><strong>결과</strong> 
-    <p> 스케일 업을 진행한 후로 부하 없이 서비스를 안정적으로 제공하고 있음
+    <p> 스케일 업을 진행한 후로 부하 없이 서비스를 안정적으로 제공하고 있으며, AWS Cloud Watch로 지속적으로 모니터링 하고 있음
  </ul>
 </details>
 
@@ -153,20 +166,21 @@
  <summary><strong> 자동 배포 </strong></summary>
  <br>
  <ul>
-  <li><strong>상황 1</strong>
+  <li><strong>문제</strong>
   <p> 배포하여 서비스를 운영하다보니 버그나 기능을 수정하여도, 서비스를 운영 중인 유저로 인해 즉시 배포하기가 어려움
   <li><strong>해결 과정</strong>
-  <p> 스케일 아웃을 하여 무중단 배포를 하는 것을 고려했으나, 정확하게 서버마다 같은 방에서 게임을 하는 사람들을 배분하는 것이 불가능하고, 포인트와 승패가 민감한 게임이라 무중단 배포가 현재 서비스에 맞지 않는 배포 방식이라 판단함 
+  <P> 1) 서비스 특성에 맞추어 자동 배포로 결정
+   <p> 스케일 아웃을 하여 무중단 배포를 하는 것을 고려했으나, 정확하게 서버마다 같은 방에서 게임을 하는 사람들을 배분하는 것이 불가능하고, 포인트와 승패가 민감한 게임이라 무중단 배포가 현재 서비스에 맞지 않는 배포 방식이라 판단함 
   <p> 사용자의 이용 시간대를 보니 새벽 4시경에는 이용자가 거의 없다고 판단되어, 해당 시간대에 자동 배포하여 업데이트 하는 것으로 문제를 해결할 수 있다고 판단함.
   <p> 여러 자동 배포 툴 중에 전반적으로 효율적인 Github Actions를 사용하기로 결정함
  <br><br>
- <li><strong>상황 2</strong>  
-  <p> Github Actions를 테스트하던 중, Actions schedule의 실행 딜레이가 있음을 알게 발견하였고, 실제로 해당 이슈가 있음을 발견함
+  <p> 2) Github Actions Issue 관련
+   <p> Github Actions를 테스트하던 중, Actions schedule의 실행 딜레이가 있음을 알게 발견하였고, 실제로 해당 이슈가 있음을 발견함
   <p> 테스트를 거쳐 평균 대략 10분 정도 딜레이가 되는 것을 파악하였고, 시간대상 큰 무리가 없을 것으로 판단되어, 서버에 공식적으로 새벽 4:00~4:30을 서버 업데이트 시간으로 공지하고 자동배포를 시작함
    <li><strong>결과</strong>
   <p> Github Actions를 통해 버그 리폿으로 파악된 버그들을 수정하여, 매일 새벽 4시 경에 자동 배포하는 방식으로 서비스를 운영하고 있음
-<img width="969" alt="스크린샷 2022-04-07 오후 10 55 09" src="https://user-images.githubusercontent.com/95196634/162215800-7839ac4b-9ba2-4df9-ab2a-9f9e90d240c9.png">
-
+<img width="969" alt="스크린샷 2022-04-07 오후 10 55 09" src="https://user-images.githubusercontent.com/95196634/162688937-29939494-e11c-4904-9f8d-1b75a3d6ba74.png">
+   
  </ul>
 </details>
 
