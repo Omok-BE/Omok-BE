@@ -104,6 +104,7 @@ exports.Pointer = function (socket) {
 //오목 게임 좌표값을 받아 좌표값에 해당하는 값
 exports.omog = function (socket) {
   socket.on('omog', async (data, state, gameNum) => {
+    console.log(data, state)
     const findBoard = await Boards.findOne({ gameNum });
     let bboard = findBoard.board;
     let count = findBoard.count;
