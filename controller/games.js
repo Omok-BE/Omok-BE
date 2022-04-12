@@ -76,12 +76,7 @@ const gameStart = async (req, res) => {
   }
 };
 
-// [버그리폿]
-// 유저 인포를 통해 버그 제보한 사람 정보 저정하기
-// 버그 내용 인풋으로 간략히 받기
-// 게임넘 으로 제보당시의 게임방 정보를 db에서 꺼내와서 저장하기(게임이 끝나서 최신화되거나 삭제되기전 상태용)
-// 게임인포를 통해 해당 방에 있는 유저들 가져오기
-// 게임 인포에 있는 유저들의 상태 혹은 정보 확인해보기
+// [버그리폿] 버그 내용 및 유저 정보 저정하기
 const bugReport = async (req, res) => {
   try {
     const { input, gameNum, gameInfo, userInfo } = req.body;
