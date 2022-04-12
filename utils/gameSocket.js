@@ -104,7 +104,6 @@ exports.Pointer = function (socket) {
 //오목 게임 좌표값을 받아 좌표값에 해당하는 값
 exports.omog = function (socket) {
   socket.on('omog', async (data, state, gameNum) => {
-    console.log(data, state)
     const findBoard = await Boards.findOne({ gameNum });
     let bboard = findBoard.board;
     let count = findBoard.count;
@@ -123,12 +122,10 @@ exports.omog = function (socket) {
       bboard[xyToIndex(data.x, data.y)] != -1 &&
       bboard[xyToIndex(data.x, data.y)] != 3
     ) {
-      console.log('돌아가');
     } else if (
       (state == 'whitePlayer' && count % 2 == 0) ||
       (state == 'blackPlayer' && count % 2 !== 0)
     ) {
-      console.log('너의 순서가 아니다 돌아가');
     } else {
       count % 2 == 0
         ? (bboard[xyToIndex(data.x, data.y)] = 1)
