@@ -123,12 +123,10 @@ exports.omog = function (socket) {
       bboard[xyToIndex(data.x, data.y)] != -1 &&
       bboard[xyToIndex(data.x, data.y)] != 3
     ) {
-      console.log('돌아가');
     } else if (
       (state == 'whitePlayer' && count % 2 == 0) ||
       (state == 'blackPlayer' && count % 2 !== 0)
     ) {
-      console.log('너의 순서가 아니다 돌아가');
     } else {
       count % 2 == 0
         ? (bboard[xyToIndex(data.x, data.y)] = 1)
