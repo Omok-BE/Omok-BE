@@ -147,6 +147,7 @@ exports.gameStart = function (socket) {
 // 퇴장시 방 인원 숫자 최신화
 exports.disconnecting = function (socket) {
   socket.on('disconnecting', async () => {
+    console.time("나감")
     try {
       const { id, roomNum } = socket.nickname;
       if (socket.rooms.has(`${roomNum}player`)) {
@@ -167,6 +168,7 @@ exports.disconnecting = function (socket) {
       Sentry.captureException(err);
       console.error('퇴장 errorMessage', err);
     }
+    console.timeEnd("나감")
   });
 };
 
