@@ -118,6 +118,7 @@ const createRoom = async (req, res) => {
     });
   }
 };
+
 // 방 참가: 모달창뜰때
 const getJoinRoom = async (req, res) => {
   try {
@@ -132,6 +133,7 @@ const getJoinRoom = async (req, res) => {
     });
   }
 };
+
 // 방 참가: 모달창 입력
 const postJoinRoom = async (req, res) => {
   const { roomNum, id, state } = req.body;
@@ -239,7 +241,6 @@ const fastObserver = async (req, res) => {
       return;
     }
 
-    // 블랙옵저버, 화이트옵저버 수가 블랙이 많은 경우만 화이트로 참가
     if (
       existRooms.blackTeamObserver.length ===
         existRooms.whiteTeamObserver.length ||
