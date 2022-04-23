@@ -7,11 +7,6 @@ const { check_33 } = require('../lib/gameSocket/check_33');
 const { check_44 } = require('../lib/gameSocket/check_44');
 const { xyToIndex } = require('../lib/gameSocket/xyToIndex');
 
-//유저 id를 닉네임 설정
-exports.nicknameEvent = function (socket) {
-  socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
-};
-
 // socket event 메시지
 exports.onAny = function (socket) {
   socket.onAny((event) => {
@@ -95,7 +90,7 @@ exports.flyingWord = function (socket) {
 //game방 신의한수- 마우스 포인트
 exports.Pointer = function (socket) {
   socket.on('Pointer', (chat, gameNum) => {
-    pointer = true;
+    let pointer = true;
     const data = { name: socket.nickname.id, pointer };
     app.get('gameRoom').to(gameNum).emit('Pointer', data, chat);
   });
@@ -104,7 +99,6 @@ exports.Pointer = function (socket) {
 //오목 게임 좌표값을 받아 좌표값에 해당하는 값
 exports.omog = function (socket) {
   socket.on('omog', async (data, state, gameNum) => {
-    console.log(data, state)
     const findBoard = await Boards.findOne({ gameNum });
     let bboard = findBoard.board;
     let count = findBoard.count;
@@ -134,7 +128,7 @@ exports.omog = function (socket) {
       data.board = bboard;
       count++;
       data.count = count;
-      await Boards.updateMany({ gameNum }, { $set: { count, board: bboard } });
+      await Boards.updateOne({ gameNum }, { $set: { count, board: bboard } });
       app.get('gameRoom').to(gameNum).emit('omog', data);
     }
   });
@@ -162,7 +156,6 @@ exports.disconnecting = function (socket) {
   socket.on('disconnecting', async () => {
     try {
       const { id, gameNum } = socket.nickname;
-      console.log('gameNUm', gameNum);
       app.get('gameRoom').to(gameNum).emit('bye', id);
       const observerCnt = gameRoomCount(gameNum) - 2;
       if (observerCnt >= 0)
