@@ -108,7 +108,7 @@ exports.omog = function (socket) {
     const findBoard = await Boards.findOne({ gameNum });
     let bboard = findBoard.board;
     let count = findBoard.count;
-    if (count % 2 == 0) {
+    if (count % 2 === 0) {
       if (
         check_33(data.x, data.y, bboard) ||
         check_44(data.x, data.y, bboard)
@@ -120,15 +120,15 @@ exports.omog = function (socket) {
     }
 
     if (
-      bboard[xyToIndex(data.x, data.y)] != -1 &&
-      bboard[xyToIndex(data.x, data.y)] != 3
+      bboard[xyToIndex(data.x, data.y)] !== -1 &&
+      bboard[xyToIndex(data.x, data.y)] !== 3
     ) {
     } else if (
-      (state == 'whitePlayer' && count % 2 == 0) ||
-      (state == 'blackPlayer' && count % 2 !== 0)
+      (state === 'whitePlayer' && count % 2 === 0) ||
+      (state === 'blackPlayer' && count % 2 !== 0)
     ) {
     } else {
-      count % 2 == 0
+      count % 2 === 0
         ? (bboard[xyToIndex(data.x, data.y)] = 1)
         : (bboard[xyToIndex(data.x, data.y)] = 2);
       data.board = bboard;
@@ -146,7 +146,7 @@ exports.pointerOmog = function (socket) {
     const findBoard = await Boards.findOne({ gameNum });
     let bboard = findBoard.board;
     let count = findBoard.count;
-    if (bboard[xyToIndex(data.x, data.y)] != -1) {
+    if (bboard[xyToIndex(data.x, data.y)] !== -1) {
       return;
     } else {
       bboard[xyToIndex(data.x, data.y)] = 3;
