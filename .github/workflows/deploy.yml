@@ -1,25 +1,25 @@
-name: deploy
+# name: deploy
 
-on:
-  schedule:
-    - cron: "0 19 * * *"
+# on:
+#   schedule:
+#     - cron: "0 19 * * *"
 
-jobs:
-  cron:
-    runs-on: ubuntu-latest
+# jobs:
+#   cron:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run scripts in server
-        uses: appleboy/ssh-action@master
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          script: |
-            cd Omok-BE
-            git reset --hard origin/master
-            git fetch
-            git pull
-            npm install
-            sudo pm2 restart all
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Run scripts in server
+#         uses: appleboy/ssh-action@master
+#         with:
+#           key: ${{ secrets.SSH_KEY }}
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USER }}
+#           script: |
+#             cd Omok-BE
+#             git reset --hard origin/master
+#             git fetch
+#             git pull
+#             npm install
+#             sudo pm2 restart all
